@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,45,68,70"/>
+<area shape="rect" id="Node000001" href="$de/d1b/classqugar_1_1TensorIndexTP.html" title="Class representing a dim&#45;dimensional tensor&#45;product indices." alt="" coords="116,5,277,45"/>
+<area shape="poly" id="edge47_Node000000_Node000001" title=" " alt="" coords="81,46,115,39,116,44,82,51"/>
+<area shape="rect" id="Node000002" href="$d3/d39/classqugar_1_1TensorSizeTP.html" title="Class representing a dim&#45;dimensional tensor&#45;product sizes container." alt="" coords="121,69,273,109"/>
+<area shape="poly" id="edge48_Node000000_Node000002" title=" " alt="" coords="82,64,121,71,120,77,81,69"/>
+</map>

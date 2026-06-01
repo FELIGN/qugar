@@ -1,0 +1,83 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$db/ded/classqugar_1_1impl_1_1funcs_1_1AnnulusBase.html" title="2D annulus base class. The function is defined by the annulus center and major and inner radii...." alt="" coords="507,101,645,141"/>
+<area shape="rect" id="Node000001" href="$da/dd6/classqugar_1_1impl_1_1funcs_1_1Annulus.html" title="2D annulus function. The function is defined by the annulus center and outer and inner radii...." alt="" coords="737,133,875,173"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="659,130,737,141,736,146,659,135"/>
+<area shape="rect" id="Node000019" href="$dc/d68/classqugar_1_1impl_1_1funcs_1_1AnnulusBzr.html" title="2D annulus function. The function is defined by the annulus center and outer and inner radii...." alt="" coords="737,5,875,45"/>
+<area shape="poly" id="edge2_Node000000_Node000019" title=" " alt="" coords="631,93,719,55,749,43,751,48,721,60,634,98"/>
+<area shape="rect" id="Node000005" href="$d1/d78/classqugar_1_1impl_1_1funcs_1_1ConstantBase.html" title="Dimension independent constant function." alt="" coords="507,741,645,781"/>
+<area shape="rect" id="Node000004" href="$d7/d02/classqugar_1_1impl_1_1funcs_1_1Constant.html" title="Dimension independent constant function." alt="" coords="735,741,877,781"/>
+<area shape="poly" id="edge3_Node000005_Node000004" title=" " alt="" coords="659,759,735,759,735,764,659,764"/>
+<area shape="rect" id="Node000006" href="$dd/da4/classqugar_1_1impl_1_1funcs_1_1ConstantBzr.html" title="Dimension independent constant function." alt="" coords="724,997,888,1037"/>
+<area shape="poly" id="edge4_Node000005_Node000006" title=" " alt="" coords="659,779,674,792,691,816,699,841,701,865,699,889,699,936,706,960,722,984,736,995,732,999,718,987,701,962,694,937,694,889,695,865,694,842,686,819,670,795,656,784"/>
+<area shape="rect" id="Node000022" href="$d5/d65/classqugar_1_1impl_1_1funcs_1_1CylinderBase.html" title="Infinite cylinder base class." alt="" coords="507,261,645,301"/>
+<area shape="rect" id="Node000023" href="$d6/dcd/classqugar_1_1impl_1_1funcs_1_1Cylinder.html" title="Infinite cylinder." alt="" coords="737,261,875,301"/>
+<area shape="poly" id="edge5_Node000022_Node000023" title=" " alt="" coords="659,279,737,279,737,284,659,284"/>
+<area shape="rect" id="Node000021" href="$dc/de2/classqugar_1_1impl_1_1funcs_1_1CylinderBzr.html" title="Infinite cylinder." alt="" coords="737,69,875,109"/>
+<area shape="poly" id="edge6_Node000022_Node000021" title=" " alt="" coords="656,258,670,247,683,232,689,217,694,185,698,153,705,136,718,119,735,107,738,111,722,123,710,139,703,154,699,186,694,218,687,235,674,251,659,262"/>
+<area shape="rect" id="Node000027" href="$dd/d80/classqugar_1_1impl_1_1DomainFunc.html" title="Domain functions." alt="" coords="5,1077,191,1117"/>
+<area shape="rect" id="Node000028" href="$d2/d05/classqugar_1_1impl_1_1PolynomialTP.html" title=" " alt="" coords="239,1109,432,1149"/>
+<area shape="poly" id="edge7_Node000027_Node000028" title=" " alt="" coords="204,1109,239,1114,238,1119,204,1114"/>
+<area shape="rect" id="Node000017" href="$d2/d05/classqugar_1_1impl_1_1PolynomialTP.html" title="Base class for tensor&#45;product polynomial functions." alt="" coords="239,613,432,653"/>
+<area shape="poly" id="edge10_Node000027_Node000017" title=" " alt="" coords="113,1064,321,652,326,655,118,1066"/>
+<area shape="rect" id="Node000029" href="$de/dca/classqugar_1_1impl_1_1BezierTP.html" title="dim&#45;dimensional tensor&#45;product Bezier polynomial function." alt="" coords="495,1109,657,1149"/>
+<area shape="poly" id="edge8_Node000028_Node000029" title=" " alt="" coords="445,1127,495,1127,495,1132,445,1132"/>
+<area shape="rect" id="Node000030" href="$d2/d87/classqugar_1_1impl_1_1MonomialsTP.html" title="dim&#45;dimensional tensor&#45;product monomials function." alt="" coords="480,1173,672,1213"/>
+<area shape="poly" id="edge9_Node000028_Node000030" title=" " alt="" coords="425,1150,501,1171,500,1176,424,1156"/>
+<area shape="rect" id="Node000018" href="$de/dca/classqugar_1_1impl_1_1BezierTP.html" title=" " alt="" coords="495,21,657,61"/>
+<area shape="poly" id="edge11_Node000017_Node000018" title=" " alt="" coords="334,599,339,502,346,438,358,368,376,295,402,221,435,151,478,88,495,71,515,59,517,64,498,76,482,91,440,154,406,223,381,296,364,369,351,439,344,503,339,599"/>
+<area shape="rect" id="Node000007" href="$de/dca/classqugar_1_1impl_1_1BezierTP.html" title=" " alt="" coords="495,1045,657,1085"/>
+<area shape="poly" id="edge13_Node000017_Node000007" title=" " alt="" coords="344,667,357,737,382,829,400,878,422,927,450,974,482,1016,499,1031,520,1043,517,1048,496,1035,478,1019,445,977,418,930,395,880,377,831,351,738,338,667"/>
+<area shape="rect" id="Node000020" href="$de/dca/classqugar_1_1impl_1_1BezierTP.html" title=" " alt="" coords="495,197,657,237"/>
+<area shape="poly" id="edge18_Node000017_Node000020" title=" " alt="" coords="337,599,348,527,372,433,391,383,414,334,443,288,478,247,494,235,498,240,482,251,447,291,419,337,396,385,377,435,353,528,342,600"/>
+<area shape="poly" id="edge12_Node000018_Node000019" title=" " alt="" coords="670,32,736,27,737,33,671,37"/>
+<area shape="poly" id="edge14_Node000007_Node000006" title=" " alt="" coords="670,1043,723,1032,724,1037,671,1048"/>
+<area shape="rect" id="Node000008" href="$d6/d06/classqugar_1_1impl_1_1funcs_1_1EllipsoidBzr.html" title="Dimension independent ellipsoidal function. The function is defined by the ellipsoid&#39;s semi&#45;axes and ..." alt="" coords="725,1061,887,1101"/>
+<area shape="poly" id="edge15_Node000007_Node000008" title=" " alt="" coords="671,1069,725,1073,725,1078,670,1075"/>
+<area shape="rect" id="Node000011" href="$dd/d35/classqugar_1_1impl_1_1funcs_1_1PlaneBzr.html" title="Plane function." alt="" coords="735,1125,877,1165"/>
+<area shape="poly" id="edge16_Node000007_Node000011" title=" " alt="" coords="651,1087,673,1095,751,1123,749,1128,671,1100,650,1092"/>
+<area shape="rect" id="Node000014" href="$d1/dfc/classqugar_1_1impl_1_1funcs_1_1SphereBzr.html" title="Dimension independent spherical function. The function is defined by its center and radius...." alt="" coords="731,1189,881,1229"/>
+<area shape="poly" id="edge17_Node000007_Node000014" title=" " alt="" coords="667,1090,674,1095,691,1116,699,1136,706,1156,722,1175,739,1187,737,1191,718,1179,701,1159,694,1138,686,1118,670,1099,664,1095"/>
+<area shape="poly" id="edge19_Node000020_Node000021" title=" " alt="" coords="617,187,719,119,745,107,747,112,721,124,620,192"/>
+<area shape="rect" id="Node000024" href="$d0/dc9/classqugar_1_1impl_1_1funcs_1_1TorusBzr.html" title="3D torus function. The function is defined by the torus center, axis, and major and inner radii...." alt="" coords="737,197,875,237"/>
+<area shape="poly" id="edge20_Node000020_Node000024" title=" " alt="" coords="670,215,737,215,737,220,670,220"/>
+<area shape="rect" id="Node000002" href="$dd/d80/classqugar_1_1impl_1_1DomainFunc.html" title=" " alt="" coords="483,569,669,609"/>
+<area shape="poly" id="edge22_Node000002_Node000001" title=" " alt="" coords="592,555,630,475,669,376,677,347,681,321,682,275,689,231,700,208,718,183,735,170,738,174,722,187,705,210,694,232,687,275,686,322,683,348,675,378,635,477,597,558"/>
+<area shape="poly" id="edge23_Node000002_Node000004" title=" " alt="" coords="604,618,655,673,687,702,721,727,743,739,741,743,719,732,684,706,651,677,600,622"/>
+<area shape="poly" id="edge24_Node000002_Node000023" title=" " alt="" coords="588,555,648,422,685,355,718,311,736,299,739,304,722,315,689,358,653,425,593,557"/>
+<area shape="rect" id="Node000003" href="$d3/deb/classqugar_1_1impl_1_1funcs_1_1AddFunctions.html" title="This function adds two functions together." alt="" coords="720,533,892,573"/>
+<area shape="poly" id="edge21_Node000002_Node000003" title=" " alt="" coords="682,570,719,564,720,569,683,575"/>
+<area shape="rect" id="Node000010" href="$d7/d1f/classqugar_1_1impl_1_1funcs_1_1Ellipsoid.html" title="Dimension independent ellipsoidal function. The function is defined by the ellipsoid&#39;s semi&#45;axes and ..." alt="" coords="736,805,876,845"/>
+<area shape="poly" id="edge25_Node000002_Node000010" title=" " alt="" coords="601,619,673,724,722,791,741,803,738,808,718,795,668,727,596,622"/>
+<area shape="rect" id="Node000031" href="$d0/de9/classqugar_1_1impl_1_1funcs_1_1FuncWithAffineTransf.html" title="Function containing an affine transformation." alt="" coords="723,598,889,653"/>
+<area shape="poly" id="edge26_Node000002_Node000031" title=" " alt="" coords="683,603,723,610,722,615,682,609"/>
+<area shape="rect" id="Node000035" href="$d2/d90/classqugar_1_1impl_1_1funcs_1_1Negative.html" title="This function computes the negative of a given function." alt="" coords="734,677,878,717"/>
+<area shape="poly" id="edge30_Node000002_Node000035" title=" " alt="" coords="625,614,721,663,749,675,747,680,719,668,622,618"/>
+<area shape="rect" id="Node000013" href="$d2/d3b/classqugar_1_1impl_1_1funcs_1_1Plane.html" title="Plane function." alt="" coords="737,869,875,909"/>
+<area shape="poly" id="edge31_Node000002_Node000013" title=" " alt="" coords="604,619,639,669,674,728,688,765,693,797,701,826,722,855,738,868,735,872,718,859,696,828,688,798,683,767,670,730,635,672,599,622"/>
+<area shape="rect" id="Node000016" href="$d1/def/classqugar_1_1impl_1_1funcs_1_1Sphere.html" title="Dimension independent spherical function. The function is defined by its center and radius...." alt="" coords="737,933,875,973"/>
+<area shape="poly" id="edge32_Node000002_Node000016" title=" " alt="" coords="605,619,641,669,674,728,685,757,689,784,690,831,695,874,705,896,722,919,738,933,735,937,718,923,700,899,690,876,685,831,684,784,679,759,670,730,637,671,601,622"/>
+<area shape="rect" id="Node000036" href="$dc/dde/classqugar_1_1impl_1_1funcs_1_1SubtractFunctions.html" title="This function subtracts two functions." alt="" coords="733,390,879,445"/>
+<area shape="poly" id="edge33_Node000002_Node000036" title=" " alt="" coords="603,557,654,507,718,455,740,442,742,447,722,460,658,511,607,561"/>
+<area shape="rect" id="Node000026" href="$db/d99/classqugar_1_1impl_1_1funcs_1_1Torus.html" title="3D torus function. The function is defined by the torus center, axis, and major and inner radii...." alt="" coords="737,325,875,365"/>
+<area shape="poly" id="edge34_Node000002_Node000026" title=" " alt="" coords="589,555,610,514,638,466,675,418,718,375,737,363,740,368,722,379,679,421,643,469,614,517,594,557"/>
+<area shape="rect" id="Node000037" href="$dc/df7/classqugar_1_1impl_1_1tpms_1_1TPMSBase.html" title=" " alt="" coords="733,469,879,509"/>
+<area shape="poly" id="edge35_Node000002_Node000037" title=" " alt="" coords="629,561,719,519,748,507,750,512,721,524,631,566"/>
+<area shape="rect" id="Node000032" href="$d8/dba/classqugar_1_1impl_1_1funcs_1_1DimLinear.html" title="dim&#45;linear function." alt="" coords="947,541,1099,581"/>
+<area shape="poly" id="edge27_Node000031_Node000032" title=" " alt="" coords="902,594,954,579,956,584,904,599"/>
+<area shape="rect" id="Node000033" href="$da/d38/classqugar_1_1impl_1_1funcs_1_1Square.html" title="Dimension independent square function in domain [&#45;1,1]^dim." alt="" coords="954,605,1093,645"/>
+<area shape="poly" id="edge28_Node000031_Node000033" title=" " alt="" coords="903,623,954,623,954,628,903,628"/>
+<area shape="rect" id="Node000034" href="$da/db2/classqugar_1_1impl_1_1funcs_1_1TransformedFunction.html" title="Creates a new implicit function that is just a base function to which an affine transformation is app..." alt="" coords="940,670,1107,725"/>
+<area shape="poly" id="edge29_Node000031_Node000034" title=" " alt="" coords="903,655,941,667,940,673,901,660"/>
+<area shape="rect" id="Node000009" href="$d9/d7e/classqugar_1_1impl_1_1funcs_1_1EllipsoidBase.html" title="Dimension independent ellipsoidal function (base cass). The function is defined by the ellipsoid&#39;s se..." alt="" coords="490,805,662,845"/>
+<area shape="poly" id="edge37_Node000009_Node000008" title=" " alt="" coords="670,852,674,856,691,880,699,905,701,929,699,953,699,1000,706,1024,722,1048,736,1059,732,1063,718,1051,701,1026,694,1001,694,953,695,929,694,906,686,883,670,859,666,856"/>
+<area shape="poly" id="edge36_Node000009_Node000010" title=" " alt="" coords="676,823,736,823,736,828,676,828"/>
+<area shape="rect" id="Node000012" href="$db/d5b/classqugar_1_1impl_1_1funcs_1_1PlaneBase.html" title="Plane base class." alt="" coords="499,869,653,909"/>
+<area shape="poly" id="edge39_Node000012_Node000011" title=" " alt="" coords="633,914,655,931,674,952,687,974,694,995,696,1035,700,1073,708,1092,722,1111,736,1123,733,1127,718,1115,703,1095,695,1074,691,1036,688,996,682,976,670,955,651,935,629,919"/>
+<area shape="poly" id="edge38_Node000012_Node000013" title=" " alt="" coords="667,887,737,887,737,892,667,892"/>
+<area shape="rect" id="Node000015" href="$d7/d90/classqugar_1_1impl_1_1funcs_1_1SphereBase.html" title="Dimension independent spherical function." alt="" coords="495,965,657,1005"/>
+<area shape="poly" id="edge41_Node000015_Node000014" title=" " alt="" coords="648,1010,674,1032,687,1051,694,1070,698,1106,702,1141,709,1158,722,1175,737,1187,733,1191,718,1179,704,1161,696,1142,692,1107,689,1071,682,1053,670,1035,645,1014"/>
+<area shape="poly" id="edge40_Node000015_Node000016" title=" " alt="" coords="671,970,736,960,737,966,671,975"/>
+<area shape="rect" id="Node000025" href="$db/dc8/classqugar_1_1impl_1_1funcs_1_1TorusBase.html" title="3D torus function base class. The function is defined by the torus center, axis, and major and inner ..." alt="" coords="507,325,645,365"/>
+<area shape="poly" id="edge43_Node000025_Node000024" title=" " alt="" coords="656,320,670,311,686,296,694,280,702,264,718,247,738,235,741,240,722,251,707,267,698,283,690,299,674,315,659,324"/>
+<area shape="poly" id="edge42_Node000025_Node000026" title=" " alt="" coords="659,343,737,343,737,348,659,348"/>
+</map>

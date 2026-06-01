@@ -1,0 +1,904 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qugar.impl &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="qugar.quad" href="qugar.quad.html" />
+    <link rel="prev" title="qugar.mesh" href="qugar.mesh.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../demos.html">Demos</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api_python.html">Python</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../api_python.html#public-user-interface">Public user interface</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="qugar.html">qugar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.mesh.html">qugar.mesh</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">qugar.impl</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.quad.html">qugar.quad</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.reparam.html">qugar.reparam</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.plot.html">qugar.plot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.dolfinx.html">qugar.dolfinx</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_python.html#nanobind-c-interface">nanobind/C++interface</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_cpp.html">C++</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API reference</a></li>
+          <li class="breadcrumb-item"><a href="../api_python.html">Python</a></li>
+      <li class="breadcrumb-item active">qugar.impl</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/qugar.impl.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-qugar.impl">
+<span id="qugar-impl"></span><h1>qugar.impl<a class="headerlink" href="#module-qugar.impl" title="Link to this heading"></a></h1>
+<p>Implicit domains module for QUGaR</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.impl.create_disk" title="qugar.impl.create_disk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_disk</span></code></a>(radius[, center, use_bzr])</p></td>
+<td><p>Creates a 2D disk with the given radius and optional center.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.impl.create_sphere" title="qugar.impl.create_sphere"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_sphere</span></code></a>(radius[, center, use_bzr])</p></td>
+<td><p>Creates a 3D sphere with the given radius and optional center.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.impl.create_ellipse" title="qugar.impl.create_ellipse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_ellipse</span></code></a>(semi_axes[, ref_system, use_bzr])</p></td>
+<td><p>Creates a 2D ellipse with the given semi-axes and optional reference system.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.impl.create_ellipsoid" title="qugar.impl.create_ellipsoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_ellipsoid</span></code></a>(semi_axes[, ref_system, ...])</p></td>
+<td><p>Creates a 3D ellipsoid with the given semi-axes and optional reference system.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.impl.create_cylinder" title="qugar.impl.create_cylinder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_cylinder</span></code></a>(radius, origin, axis[, use_bzr])</p></td>
+<td><p>Creates a 3D cylinder with the given radius, origin, and axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.impl.create_annulus" title="qugar.impl.create_annulus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_annulus</span></code></a>(inner_radius, outer_radius[, ...])</p></td>
+<td><p>Creates a 2D annulus (a ring-shaped object) with the specified inner and outer radii, and optional center.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.impl.create_torus" title="qugar.impl.create_torus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_torus</span></code></a>(major_radius, minor_radius[, ...])</p></td>
+<td><p>Creates a 3D torus (a ring-shaped object) with the specified major and outer radii, and optional center and axis</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.impl.create_constant" title="qugar.impl.create_constant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_constant</span></code></a>(value, dim[, use_bzr])</p></td>
+<td><p>Creates a constant implicit function with the specified value and dimension.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.impl.create_plane" title="qugar.impl.create_plane"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_plane</span></code></a>(origin, normal[, use_bzr])</p></td>
+<td><p>Creates an implicit plane function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.impl.create_line" title="qugar.impl.create_line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_line</span></code></a>(origin, normal[, use_bzr])</p></td>
+<td><p>Creates an implicit line function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.impl.create_dim_linear" title="qugar.impl.create_dim_linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_dim_linear</span></code></a>(coefs[, affine_trans])</p></td>
+<td><p>Creates a dimensional linear implicit function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.impl.create_box" title="qugar.impl.create_box"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_box</span></code></a>([affine_trans, dim])</p></td>
+<td><p>Creates a box (square in 2D or cube in 3D) with an optional affine transformation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.impl.create_negative" title="qugar.impl.create_negative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_negative</span></code></a>(func)</p></td>
+<td><p>Creates a new implicit function that represents the negative of the input function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.impl.create_functions_addition" title="qugar.impl.create_functions_addition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_functions_addition</span></code></a>(lhs_func, rhs_func)</p></td>
+<td><p>Creates a new implicit function that represents the addition of two given implicit functions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.impl.create_functions_subtraction" title="qugar.impl.create_functions_subtraction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_functions_subtraction</span></code></a>(lhs_func, rhs_func)</p></td>
+<td><p>Creates a new implicit function that represents the subtraction of two given implicit functions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.impl.create_affinely_transformed_functions" title="qugar.impl.create_affinely_transformed_functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_affinely_transformed_functions</span></code></a>(func, ...)</p></td>
+<td><p>Creates a new implicit function that is an affine transformation of the given function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.impl.create_Schoen" title="qugar.impl.create_Schoen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Schoen</span></code></a>(periods[, z])</p></td>
+<td><p>Creates a Schoen gyroid implicit function object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.impl.create_Schoen_IWP" title="qugar.impl.create_Schoen_IWP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Schoen_IWP</span></code></a>(periods[, z])</p></td>
+<td><p>Creates a Schoen-IWP gyroid implicit function object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.impl.create_Schoen_FRD" title="qugar.impl.create_Schoen_FRD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Schoen_FRD</span></code></a>(periods[, z])</p></td>
+<td><p>Creates a Schoen-FRD gyroid implicit function object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.impl.create_Fischer_Koch_S" title="qugar.impl.create_Fischer_Koch_S"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Fischer_Koch_S</span></code></a>(periods[, z])</p></td>
+<td><p>Creates a Fischer-Koch-S gyroid implicit function object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.impl.create_Schwarz_Primitive" title="qugar.impl.create_Schwarz_Primitive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Schwarz_Primitive</span></code></a>(periods[, z])</p></td>
+<td><p>Creates a Schwarz Primitive gyroid implicit function object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.impl.create_Schwarz_Diamond" title="qugar.impl.create_Schwarz_Diamond"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_Schwarz_Diamond</span></code></a>(periods[, z])</p></td>
+<td><p>Creates a Schwarz Diamond gyroid implicit function object.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ImplicitFunc</span></code></a>(cpp_object)</p></td>
+<td><p>Class for storing an implicit function that describes a domain.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.impl.ImplicitFunc">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">ImplicitFunc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cpp_object</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="qugar.cpp.html#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><span class="pre">ImplicitFunc_2D</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="qugar.cpp.html#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><span class="pre">ImplicitFunc_3D</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#ImplicitFunc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.ImplicitFunc" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for storing an implicit function that describes a domain.</p>
+<p>Constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cpp_object</strong> (<a class="reference internal" href="qugar.cpp.html#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><em>ImplicitFunc_2D</em></a><em> | </em><a class="reference internal" href="qugar.cpp.html#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><em>ImplicitFunc_3D</em></a>) – Already generated implicit function binary object.</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.impl.ImplicitFunc.cpp_object">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cpp_object</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="qugar.cpp.html#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><span class="pre">ImplicitFunc_2D</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="qugar.cpp.html#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><span class="pre">ImplicitFunc_3D</span></a></span><a class="headerlink" href="#qugar.impl.ImplicitFunc.cpp_object" title="Link to this definition"></a></dt>
+<dd><p>Returns the C++ object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Underlying function C++ object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="qugar.cpp.html#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D">ImplicitFunc_2D</a> | <a class="reference internal" href="qugar.cpp.html#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D">ImplicitFunc_3D</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.impl.ImplicitFunc.dim">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dim</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#qugar.impl.ImplicitFunc.dim" title="Link to this definition"></a></dt>
+<dd><p>Gets the dimension of the function’s domain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Function’s dimension.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.impl.ImplicitFunc.eval">
+<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#ImplicitFunc.eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.ImplicitFunc.eval" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the implicit function at the given points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>points</strong> (<em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em>) – Points to evaluate the implicit function.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Evaluated values of the implicit function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>npt.NDArray[np.float32 | np.float64]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.impl.ImplicitFunc.grad">
+<span class="sig-name descname"><span class="pre">grad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#ImplicitFunc.grad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.ImplicitFunc.grad" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the implicit function gradient at the given points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>points</strong> (<em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em>) – Points to evaluate the implicit function.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Evaluated gradients
+values of the implicit function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>npt.NDArray[np.float32 | np.float64]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_Fischer_Koch_S">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_Fischer_Koch_S</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">periods</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_Fischer_Koch_S"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_Fischer_Koch_S" title="Link to this definition"></a></dt>
+<dd><p>Creates a Fischer-Koch-S gyroid implicit function object.</p>
+<p>This function generates a Fischer-Koch-S gyroid implicit function based on the provided periods.
+The periods can be a list of floats or a NumPy array of float32 or float64 values.
+The dimension of the periods must be either 2 or 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>periods</strong> (<em>list</em><em>[</em><em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em><em>] </em><em>| </em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em>) – The periods for the Fischer-Koch-S function. It can be a list of floats or
+a NumPy array.</p></li>
+<li><p><strong>z</strong> (<em>Optional</em><em>[</em><em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>, </em><em>optional</em>) – The constant z-coordinate for 2D cases. 2D cases are
+generated by setting the z-coordinate to a constant value
+and apply the 3D expression.
+If the periods are 3D, an exception is raised.
+Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An implicit function object representing the Fischer-Koch-S function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the dimension of the periods is not 2 or 3.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_Schoen">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_Schoen</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">periods</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_Schoen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_Schoen" title="Link to this definition"></a></dt>
+<dd><p>Creates a Schoen gyroid implicit function object.</p>
+<p>This function generates a Schoen gyroid implicit function based on the provided periods.
+The periods can be a list of floats or a NumPy array of float32 or float64 values.
+The dimension of the periods must be either 2 or 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>periods</strong> (<em>list</em><em>[</em><em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em><em>] </em><em>| </em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em>) – The periods for the Schoen function. It can be a list of floats or a NumPy array.</p></li>
+<li><p><strong>z</strong> (<em>Optional</em><em>[</em><em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>, </em><em>optional</em>) – The constant z-coordinate for 2D cases. 2D cases are
+generated by setting the z-coordinate to a constant value
+and apply the 3D expression.
+If the periods are 3D, an exception is raised.
+Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An implicit function object representing the Schoen function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the dimension of the periods is not 2 or 3.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_Schoen_FRD">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_Schoen_FRD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">periods</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_Schoen_FRD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_Schoen_FRD" title="Link to this definition"></a></dt>
+<dd><p>Creates a Schoen-FRD gyroid implicit function object.</p>
+<p>This function generates a Schoen-FRD gyroid implicit function based on the provided periods.
+The periods can be a list of floats or a NumPy array of float32 or float64 values.
+The dimension of the periods must be either 2 or 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>periods</strong> (<em>list</em><em>[</em><em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em><em>] </em><em>| </em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em>) – The periods for the Schoen-FRD function. It can be a list of floats or a NumPy array.</p></li>
+<li><p><strong>z</strong> (<em>Optional</em><em>[</em><em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>, </em><em>optional</em>) – The constant z-coordinate for 2D cases. 2D cases are
+generated by setting the z-coordinate to a constant value
+and apply the 3D expression.
+If the periods are 3D, an exception is raised.
+Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An implicit function object representing the Schoen-FRD function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the dimension of the periods is not 2 or 3.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_Schoen_IWP">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_Schoen_IWP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">periods</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_Schoen_IWP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_Schoen_IWP" title="Link to this definition"></a></dt>
+<dd><p>Creates a Schoen-IWP gyroid implicit function object.</p>
+<p>This function generates a Schoen-IWP gyroid implicit function based on the provided periods.
+The periods can be a list of floats or a NumPy array of float32 or float64 values.
+The dimension of the periods must be either 2 or 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>periods</strong> (<em>list</em><em>[</em><em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em><em>] </em><em>| </em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em>) – The periods for the Schoen-IWP function. It can be a list of floats or a NumPy array.</p></li>
+<li><p><strong>z</strong> (<em>Optional</em><em>[</em><em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>, </em><em>optional</em>) – The constant z-coordinate for 2D cases. 2D cases are
+generated by setting the z-coordinate to a constant value
+and apply the 3D expression.
+If the periods are 3D, an exception is raised.
+Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An implicit function object representing the Schoen-IWP function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the dimension of the periods is not 2 or 3.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_Schwarz_Diamond">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_Schwarz_Diamond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">periods</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_Schwarz_Diamond"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_Schwarz_Diamond" title="Link to this definition"></a></dt>
+<dd><p>Creates a Schwarz Diamond gyroid implicit function object.</p>
+<p>This function generates a Schwarz Diamond gyroid implicit function based on the
+provided periods. The periods can be a list of floats or a NumPy array of float32 or
+float64 values. The dimension of the periods must be either 2 or 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>periods</strong> (<em>list</em><em>[</em><em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em><em>] </em><em>| </em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em>) – The periods for the Schwarz Diamond function. It can be a list of floats or
+a NumPy array.</p></li>
+<li><p><strong>z</strong> (<em>Optional</em><em>[</em><em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>, </em><em>optional</em>) – The constant z-coordinate for 2D cases. 2D cases are
+generated by setting the z-coordinate to a constant value
+and apply the 3D expression.
+If the periods are 3D, an exception is raised.
+Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An implicit function object representing the Schwarz Diamond function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the dimension of the periods is not 2 or 3.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_Schwarz_Primitive">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_Schwarz_Primitive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">periods</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_Schwarz_Primitive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_Schwarz_Primitive" title="Link to this definition"></a></dt>
+<dd><p>Creates a Schwarz Primitive gyroid implicit function object.</p>
+<p>This function generates a Schwarz Primitive gyroid implicit function based on the
+provided periods. The periods can be a list of floats or a NumPy array of float32 or
+float64 values. The dimension of the periods must be either 2 or 3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>periods</strong> (<em>list</em><em>[</em><em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em><em>] </em><em>| </em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em>) – The periods for the Schwarz Primitive function. It can be a list of floats or
+a NumPy array.</p></li>
+<li><p><strong>z</strong> (<em>Optional</em><em>[</em><em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>, </em><em>optional</em>) – The constant z-coordinate for 2D cases. 2D cases are
+generated by setting the z-coordinate to a constant value
+and apply the 3D expression.
+If the periods are 3D, an exception is raised.
+Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An implicit function object representing the Schwarz Primitive function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the dimension of the periods is not 2 or 3.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_affinely_transformed_functions">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_affinely_transformed_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">affine_transf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="qugar.cpp.html#qugar.cpp.AffineTransf_2D" title="qugar.cpp.AffineTransf_2D"><span class="pre">AffineTransf_2D</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="qugar.cpp.html#qugar.cpp.AffineTransf_3D" title="qugar.cpp.AffineTransf_3D"><span class="pre">AffineTransf_3D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_affinely_transformed_functions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_affinely_transformed_functions" title="Link to this definition"></a></dt>
+<dd><p>Creates a new implicit function that is an affine transformation of the given function.</p>
+<p>Note that the polynomial nature of <cite>func</cite> (if it is the case) will not be preserved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc"><em>ImplicitFunc</em></a>) – The original implicit function to be transformed.</p></li>
+<li><p><strong>affine_transf</strong> (<a class="reference internal" href="qugar.cpp.html#qugar.cpp.AffineTransf_2D" title="qugar.cpp.AffineTransf_2D"><em>qugar.cpp.AffineTransf_2D</em></a><em> | </em><a class="reference internal" href="qugar.cpp.html#qugar.cpp.AffineTransf_3D" title="qugar.cpp.AffineTransf_3D"><em>qugar.cpp.AffineTransf_3D</em></a>) – The affine transformation to apply.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A new implicit function that represents the affine transformation</dt><dd><p>of the original function.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_annulus">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_annulus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inner_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outer_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_bzr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_annulus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_annulus" title="Link to this definition"></a></dt>
+<dd><p>Creates a 2D annulus (a ring-shaped object) with the specified inner and outer radii,
+and optional center.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inner_radius</strong> (<em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em>) – The inner radius of the annulus.
+Must be positive.</p></li>
+<li><p><strong>outer_radius</strong> (<em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em>) – The outer radius of the annulus.
+Must be positive.</p></li>
+<li><p><strong>center</strong> (<em>Optional</em><em>[</em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The center coordinates
+of the annulus. Must be a 2-dimensional array. Defaults to None.</p></li>
+<li><p><strong>use_bzr</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to use Bezier representation. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An implicit function representing the created annulus.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If the inner or outer radius is not positive.</p></li>
+<li><p><strong>AssertionError</strong> – If the center array, if provided, does not have exactly 2 coordinates.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_box">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">affine_trans</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="qugar.cpp.html#qugar.cpp.AffineTransf_2D" title="qugar.cpp.AffineTransf_2D"><span class="pre">AffineTransf_2D</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_box" title="Link to this definition"></a></dt>
+<dd><p>Creates a box (square in 2D or cube in 3D) with an optional affine transformation.</p>
+<p>A box, before transforming it affinely, is a domain [-1,1]^dim.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>affine_trans</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="qugar.cpp.html#qugar.cpp.AffineTransf_2D" title="qugar.cpp.AffineTransf_2D"><em>qugar.cpp.AffineTransf_2D</em></a><em> | </em><a class="reference internal" href="qugar.cpp.html#qugar.cpp.AffineTransf_2D" title="qugar.cpp.AffineTransf_2D"><em>qugar.cpp.AffineTransf_2D</em></a><em>]</em>) – An optional affine transformation to apply to the box. If None, a default box
+is created.</p></li>
+<li><p><strong>dim</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – The dimension of the box. Must be either 2 or 3. If affine_trans is provided,
+this must match the dimension of the affine transformation. If None, defaults to 2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An implicit function representing the created box.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the dimension is not 2 or 3, or if the dimension does not match the
+    affine transformation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_constant">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_bzr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_constant" title="Link to this definition"></a></dt>
+<dd><p>Creates a constant implicit function with the specified value and dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em>) – The constant value for the implicit function.</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – The dimension of the implicit function. Must be 2 or 3.</p></li>
+<li><p><strong>use_bzr</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to use Bezier representation. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of ImplicitFunc representing the constant function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the dimension is not 2 or 3.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_cylinder">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_cylinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_bzr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_cylinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_cylinder" title="Link to this definition"></a></dt>
+<dd><p>Creates a 3D cylinder with the given radius, origin, and axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em>) – Cylider’s radius.</p></li>
+<li><p><strong>origin</strong> (<em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em>) – Cylinder’s origin
+(a point in the revolution axis).</p></li>
+<li><p><strong>axis</strong> (<em>Optional</em><em>[</em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>]</em>) – Cylinder’s axis. If not provided, the cylinder is aligned with the z-axis.</p></li>
+<li><p><strong>use_bzr</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to use Bezier representation. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If the radius is not positive.</p></li>
+<li><p><strong>AssertionError</strong> – If the origin array, if provided, does not have exactly 3 coordinates.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_dim_linear">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_dim_linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coefs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">affine_trans</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="qugar.cpp.html#qugar.cpp.AffineTransf_2D" title="qugar.cpp.AffineTransf_2D"><span class="pre">AffineTransf_2D</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_dim_linear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_dim_linear" title="Link to this definition"></a></dt>
+<dd><p>Creates a dimensional linear implicit function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coefs</strong> (<em>list</em><em>[</em><em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em><em>] </em><em>| </em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em>) – Coefficients for the linear function. Must be a list or numpy array of floats.
+4 coefficients in 2D and 8 coefficients in 3D.</p></li>
+<li><p><strong>affine_trans</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="qugar.cpp.html#qugar.cpp.AffineTransf_2D" title="qugar.cpp.AffineTransf_2D"><em>qugar.cpp.AffineTransf_2D</em></a><em> | </em><a class="reference internal" href="qugar.cpp.html#qugar.cpp.AffineTransf_2D" title="qugar.cpp.AffineTransf_2D"><em>qugar.cpp.AffineTransf_2D</em></a><em>]</em>) – Optional affine transformation to be applied. If provided, it must be an instance
+of <cite>qugar.cpp.AffineTransf_2D</cite> or <cite>qugar.cpp.AffineTransf_2D</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>An instance of <cite>ImplicitFunc</cite> representing the created dimensional</dt><dd><p>linear function.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the size of <cite>coefs</cite> is not 4 or 8, or if the size of <cite>coefs</cite> does
+    not match the expected dimension based on the optionally provided affine transformation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_disk">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_disk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_bzr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_disk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_disk" title="Link to this definition"></a></dt>
+<dd><p>Creates a 2D disk with the given radius and optional center.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em>) – The radius of the disk.</p></li>
+<li><p><strong>center</strong> (<em>Optional</em><em>[</em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The center of the disk. Defaults to None. If not provided,
+the radius is centered at the origin.</p></li>
+<li><p><strong>use_bzr</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to use Bezier representation. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The implicit function representing the disk.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If the radius is not positive.</p></li>
+<li><p><strong>AssertionError</strong> – If the origin array, if provided, does not have exactly 2 coordinates.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_ellipse">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_ellipse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">semi_axes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="qugar.cpp.html#qugar.cpp.RefSystem_2D" title="qugar.cpp.RefSystem_2D"><span class="pre">RefSystem_2D</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_bzr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_ellipse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_ellipse" title="Link to this definition"></a></dt>
+<dd><p>Creates a 2D ellipse with the given semi-axes and optional reference system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>semi_axes</strong> (<em>Optional</em><em>[</em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The semi-axes of the ellipse. It must have two entries.</p></li>
+<li><p><strong>ref_system</strong> (<em>Optional</em><em>[</em><em>qugar.cpp.RefSystem</em><em>]</em><em>, </em><em>optional</em>) – The reference system of the ellipse.
+Defaults to None. If not provided, the ellipse is aligned with the Cartesian system.</p></li>
+<li><p><strong>use_bzr</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to use Bezier representation. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The implicit function representing the ellipse.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If any of the semi_axes is not positive or it does
+    not have exactly 2 coordinates.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_ellipsoid">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_ellipsoid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">semi_axes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_system</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="qugar.cpp.html#qugar.cpp.RefSystem_3D" title="qugar.cpp.RefSystem_3D"><span class="pre">RefSystem_3D</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_bzr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_ellipsoid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_ellipsoid" title="Link to this definition"></a></dt>
+<dd><p>Creates a 3D ellipsoid with the given semi-axes and optional reference system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>semi_axes</strong> (<em>Optional</em><em>[</em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The semi-axes of the ellipsoid. It must have three entries.</p></li>
+<li><p><strong>ref_system</strong> (<em>Optional</em><em>[</em><em>qugar.cpp.RefSystem</em><em>]</em><em>, </em><em>optional</em>) – The reference system of the ellipsoid.
+Defaults to None. If not provided, the ellipsoid is aligned with the Cartesian system.</p></li>
+<li><p><strong>use_bzr</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to use Bezier representation. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The implicit function representing the ellipsoid.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If any of the semi_axes is not positive or it does
+    not have exactly 3 coordinates.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_functions_addition">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_functions_addition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lhs_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_functions_addition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_functions_addition" title="Link to this definition"></a></dt>
+<dd><p>Creates a new implicit function that represents the addition of two given implicit functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lhs_func</strong> (<a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc"><em>ImplicitFunc</em></a>) – The left-hand side implicit function.</p></li>
+<li><p><strong>rhs_func</strong> (<a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc"><em>ImplicitFunc</em></a>) – The right-hand side implicit function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new implicit function representing the addition of the two input functions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_functions_subtraction">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_functions_subtraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lhs_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_functions_subtraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_functions_subtraction" title="Link to this definition"></a></dt>
+<dd><p>Creates a new implicit function that represents the subtraction of two given implicit functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lhs_func</strong> (<a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc"><em>ImplicitFunc</em></a>) – The left-hand side implicit function.</p></li>
+<li><p><strong>rhs_func</strong> (<a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc"><em>ImplicitFunc</em></a>) – The right-hand side implicit function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A new implicit function representing the subtraction of the two input</dt><dd><p>functions.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_line">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_bzr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_line" title="Link to this definition"></a></dt>
+<dd><p>Creates an implicit line function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>origin</strong> (<em>Optional</em><em>[</em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>]</em>) – The origin point of the line.
+If None, defaults to [0.0, 0.0].</p></li>
+<li><p><strong>normal</strong> (<em>Optional</em><em>[</em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>]</em>) – The normal vector of the line.
+If None, defaults to [1.0, 0.0].</p></li>
+<li><p><strong>use_bzr</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to use Bezier representation. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An implicit function representing the line.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If the origin array, if provided, does not have exactly 2 coordinates.</p></li>
+<li><p><strong>AssertionError</strong> – If the normal array, if provided, does not have exactly 2 coordinates.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_negative">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_negative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_negative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_negative" title="Link to this definition"></a></dt>
+<dd><p>Creates a new implicit function that represents the negative of the input function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> (<a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc"><em>ImplicitFunc</em></a>) – The input function.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new implicit function representing the negative of the input function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_plane">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_bzr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_plane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_plane" title="Link to this definition"></a></dt>
+<dd><p>Creates an implicit plane function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>origin</strong> (<em>Optional</em><em>[</em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>]</em>) – The origin point of the plane.
+If None, defaults to [0.0, 0.0, 0.0].</p></li>
+<li><p><strong>normal</strong> (<em>Optional</em><em>[</em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>]</em>) – The normal vector of the plane.
+If None, defaults to [1.0, 0.0, 0.0].</p></li>
+<li><p><strong>use_bzr</strong> (<em>bool</em>) – A flag indicating whether to use BZR. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An implicit function representing the plane.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If the origin array, if provided, does not have exactly 3 coordinates.</p></li>
+<li><p><strong>AssertionError</strong> – If the normal array, if provided, does not have exactly 3 coordinates.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_sphere">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_sphere</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_bzr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_sphere"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_sphere" title="Link to this definition"></a></dt>
+<dd><p>Creates a 3D sphere with the given radius and optional center.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em>) – The radius of the sphere.</p></li>
+<li><p><strong>center</strong> (<em>Optional</em><em>[</em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The center of the sphere. Defaults to None. If not provided,
+the radius is centered at the origin.</p></li>
+<li><p><strong>use_bzr</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to use Bezier representation. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The implicit function representing the sphere.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If the radius is not positive.</p></li>
+<li><p><strong>AssertionError</strong> – If the origin array, if provided, does not have exactly 3 coordinates.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.impl.create_torus">
+<span class="sig-prename descclassname"><span class="pre">qugar.impl.</span></span><span class="sig-name descname"><span class="pre">create_torus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">major_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minor_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float32</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_bzr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.impl_function.ImplicitFunc"><span class="pre">ImplicitFunc</span></a></span></span><a class="reference internal" href="../_modules/qugar/impl/impl_function.html#create_torus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.impl.create_torus" title="Link to this definition"></a></dt>
+<dd><p>Creates a 3D torus (a ring-shaped object) with the specified major and outer radii,
+and optional center and axis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>major_radius</strong> (<em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em>) – The major radius of the annulus.
+Must be positive.</p></li>
+<li><p><strong>minor_radius</strong> (<em>float</em><em> | </em><em>np.float32</em><em> | </em><em>np.float64</em>) – The outer radius of the annulus.
+Must be positive.</p></li>
+<li><p><strong>center</strong> (<em>Optional</em><em>[</em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The center coordinates
+of the annulus. Must be a 3-dimensional array. Defaults to None.</p></li>
+<li><p><strong>axis</strong> (<em>Optional</em><em>[</em><em>npt.NDArray</em><em>[</em><em>np.float32</em><em> | </em><em>np.float64</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – The axis coordinates
+of the torus (perpendicular to the torus plane). Must be a 3-dimensional array.
+Defaults to None.</p></li>
+<li><p><strong>use_bzr</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to use Bezier representation. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An implicit function representing the created annulus.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc">ImplicitFunc</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>AssertionError</strong> – If the major or outer radius are not positive.</p></li>
+<li><p><strong>AssertionError</strong> – If the center array, if provided, does not have exactly 3 coordinates.</p></li>
+<li><p><strong>AssertionError</strong> – If the axis array, if provided, does not have exactly 3 coordinates.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="qugar.mesh.html" class="btn btn-neutral float-left" title="qugar.mesh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="qugar.quad.html" class="btn btn-neutral float-right" title="qugar.quad" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

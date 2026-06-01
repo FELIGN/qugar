@@ -1,0 +1,11 @@
+<map id="qugar::impl::funcs::SphereBzr&lt; dim &gt;" name="qugar::impl::funcs::SphereBzr&lt; dim &gt;">
+<area shape="rect" id="Node000001" title="Dimension independent spherical function. The function is defined by its center and radius...." alt="" coords="105,269,255,309"/>
+<area shape="rect" id="Node000002" href="$d7/d90/classqugar_1_1impl_1_1funcs_1_1SphereBase.html" title="Dimension independent spherical function." alt="" coords="5,181,168,221"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,229,161,267,158,271,116,233"/>
+<area shape="rect" id="Node000003" href="$de/dca/classqugar_1_1impl_1_1BezierTP.html" title=" " alt="" coords="193,181,354,221"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="244,233,202,271,199,267,241,229"/>
+<area shape="rect" id="Node000004" href="$d2/d05/classqugar_1_1impl_1_1PolynomialTP.html" title="Base class for tensor&#45;product polynomial functions." alt="" coords="177,93,370,133"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="276,147,276,181,271,181,271,147"/>
+<area shape="rect" id="Node000005" href="$dd/d80/classqugar_1_1impl_1_1DomainFunc.html" title="Domain functions." alt="" coords="181,5,366,45"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="276,59,276,93,271,93,271,59"/>
+</map>

@@ -1,0 +1,27 @@
+<map id="/__w/qugar/qugar/cpp/include/qugar/affine_transf.hpp" name="/__w/qugar/qugar/cpp/include/qugar/affine_transf.hpp">
+<area shape="rect" id="Node000001" title="Declaration of affine transformation class." alt="" coords="276,5,436,60"/>
+<area shape="rect" id="Node000002" href="$db/d83/numbers_8hpp.html" title="Declaration of constant values." alt="" coords="62,108,210,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="290,63,179,105,177,100,288,58"/>
+<area shape="rect" id="Node000003" href="$dd/de3/types_8hpp.html" title="Declaration of types." alt="" coords="191,181,318,207"/>
+<area shape="poly" id="edge12_Node000001_Node000003" title=" " alt="" coords="325,62,303,84,284,109,270,139,262,169,257,167,265,137,279,107,299,81,321,58"/>
+<area shape="rect" id="Node000007" href="$d0/de4/point_8hpp.html" title="Definition and implementation of Point class." alt="" coords="294,108,418,133"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="359,60,359,94,353,94,353,60"/>
+<area shape="rect" id="Node000008" href="$da/d16/vector_8hpp.html" title=" " alt="" coords="481,181,612,207"/>
+<area shape="poly" id="edge13_Node000001_Node000008" title=" " alt="" coords="389,58,524,170,521,174,386,62"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="494,108,554,133"/>
+<area shape="poly" id="edge14_Node000001_Node000011" title=" " alt="" coords="409,58,490,99,488,104,406,62"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="156,131,225,172,222,176,154,136"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,181,64,207"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="121,136,64,175,61,171,118,131"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="89,181,167,207"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="137,134,133,168,128,168,132,133"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="270,255,341,280"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="265,205,291,242,287,245,261,209"/>
+<area shape="poly" id="edge7_Node000007_Node000003" title=" " alt="" coords="341,136,284,175,281,171,338,131"/>
+<area shape="poly" id="edge10_Node000007_Node000004" title=" " alt="" coords="355,134,332,208,318,243,313,241,327,206,350,133"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="388,131,504,174,502,179,386,136"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="394,181,457,207"/>
+<area shape="poly" id="edge11_Node000007_Node000010" title=" " alt="" coords="369,132,407,170,403,173,366,136"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="473,255,620,280"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="549,207,549,241,544,241,544,207"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="qugar::impl::funcs::Ellipsoid&lt; dim &gt;" name="qugar::impl::funcs::Ellipsoid&lt; dim &gt;">
+<area shape="rect" id="Node000001" title="Dimension independent ellipsoidal function. The function is defined by the ellipsoid&#39;s semi&#45;axes and ..." alt="" coords="115,93,255,133"/>
+<area shape="rect" id="Node000002" href="$d9/d7e/classqugar_1_1impl_1_1funcs_1_1EllipsoidBase.html" title="Dimension independent ellipsoidal function (base cass). The function is defined by the ellipsoid&#39;s se..." alt="" coords="5,5,177,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,53,166,91,162,95,120,57"/>
+<area shape="rect" id="Node000003" href="$dd/d80/classqugar_1_1impl_1_1DomainFunc.html" title=" " alt="" coords="201,13,357,38"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="258,49,207,95,204,91,254,45"/>
+</map>

@@ -1,0 +1,1857 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qugar.cpp &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="C++" href="../api_cpp.html" />
+    <link rel="prev" title="qugar.dolfinx" href="qugar.dolfinx.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../demos.html">Demos</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api_python.html">Python</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../api_python.html#public-user-interface">Public user interface</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../api_python.html#nanobind-c-interface">nanobind/C++interface</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">qugar.cpp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_cpp.html">C++</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API reference</a></li>
+          <li class="breadcrumb-item"><a href="../api_python.html">Python</a></li>
+      <li class="breadcrumb-item active">qugar.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/qugar.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-qugar.cpp">
+<span id="qugar-cpp"></span><h1>qugar.cpp<a class="headerlink" href="#module-qugar.cpp" title="Link to this heading"></a></h1>
+<p>QUGaR Python interface</p>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.AddFunctions_2D" title="qugar.cpp.AddFunctions_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AddFunctions_2D</span></code></a></p></td>
+<td><p>Add functions</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.AddFunctions_3D" title="qugar.cpp.AddFunctions_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AddFunctions_3D</span></code></a></p></td>
+<td><p>Add functions</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.AffineTransf_2D" title="qugar.cpp.AffineTransf_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AffineTransf_2D</span></code></a></p></td>
+<td><p>Affine transformation</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.AffineTransf_3D" title="qugar.cpp.AffineTransf_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AffineTransf_3D</span></code></a></p></td>
+<td><p>Affine transformation</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.Annulus" title="qugar.cpp.Annulus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Annulus</span></code></a></p></td>
+<td><p>Annulus class (non-Bezier version)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.AnnulusBzr" title="qugar.cpp.AnnulusBzr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AnnulusBzr</span></code></a></p></td>
+<td><p>Annulus class (Bezier version)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.BoundBox_2D" title="qugar.cpp.BoundBox_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BoundBox_2D</span></code></a></p></td>
+<td><p>BoundBox object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.BoundBox_3D" title="qugar.cpp.BoundBox_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BoundBox_3D</span></code></a></p></td>
+<td><p>BoundBox object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.CartGridTP_2D" title="qugar.cpp.CartGridTP_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CartGridTP_2D</span></code></a></p></td>
+<td><p>CartGridTP object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.CartGridTP_3D" title="qugar.cpp.CartGridTP_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CartGridTP_3D</span></code></a></p></td>
+<td><p>CartGridTP object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.ConstantBzr_2D" title="qugar.cpp.ConstantBzr_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConstantBzr_2D</span></code></a></p></td>
+<td><p>Constant function (Bezier version)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.ConstantBzr_3D" title="qugar.cpp.ConstantBzr_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConstantBzr_3D</span></code></a></p></td>
+<td><p>Constant function (Bezier version)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.Constant_2D" title="qugar.cpp.Constant_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constant_2D</span></code></a></p></td>
+<td><p>Constant function (non-Bezier version)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.Constant_3D" title="qugar.cpp.Constant_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constant_3D</span></code></a></p></td>
+<td><p>Constant function (non-Bezier version)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.CutCellsQuad_2D" title="qugar.cpp.CutCellsQuad_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CutCellsQuad_2D</span></code></a></p></td>
+<td><p>CutCellsQuad object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.CutCellsQuad_3D" title="qugar.cpp.CutCellsQuad_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CutCellsQuad_3D</span></code></a></p></td>
+<td><p>CutCellsQuad object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.CutIsoBoundsQuad_1D" title="qugar.cpp.CutIsoBoundsQuad_1D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CutIsoBoundsQuad_1D</span></code></a></p></td>
+<td><p>CutIsoBoundsQuad object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.CutIsoBoundsQuad_2D" title="qugar.cpp.CutIsoBoundsQuad_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CutIsoBoundsQuad_2D</span></code></a></p></td>
+<td><p>CutIsoBoundsQuad object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.CutUnfBoundsQuad_2D" title="qugar.cpp.CutUnfBoundsQuad_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CutUnfBoundsQuad_2D</span></code></a></p></td>
+<td><p>CutUnfBoundsQuad object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.CutUnfBoundsQuad_3D" title="qugar.cpp.CutUnfBoundsQuad_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CutUnfBoundsQuad_3D</span></code></a></p></td>
+<td><p>CutUnfBoundsQuad object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.Cylinder" title="qugar.cpp.Cylinder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Cylinder</span></code></a></p></td>
+<td><p>Cylinder function (non-Bezier version)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.CylinderBzr" title="qugar.cpp.CylinderBzr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CylinderBzr</span></code></a></p></td>
+<td><p>Cylinder function (Bezier version)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.DimLinear_2D" title="qugar.cpp.DimLinear_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DimLinear_2D</span></code></a></p></td>
+<td><p>Dim-linear function</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.DimLinear_3D" title="qugar.cpp.DimLinear_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DimLinear_3D</span></code></a></p></td>
+<td><p>Dim-linear function</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.Disk" title="qugar.cpp.Disk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Disk</span></code></a></p></td>
+<td><p>Disk function (non-Bezier version)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.DiskBzr" title="qugar.cpp.DiskBzr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiskBzr</span></code></a></p></td>
+<td><p>Disk function (Bezier version)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.Ellipse" title="qugar.cpp.Ellipse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Ellipse</span></code></a></p></td>
+<td><p>Ellipse function (non-Bezier version)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.EllipseBzr" title="qugar.cpp.EllipseBzr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EllipseBzr</span></code></a></p></td>
+<td><p>Ellipse function (Bezier version)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.Ellipsoid" title="qugar.cpp.Ellipsoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Ellipsoid</span></code></a></p></td>
+<td><p>Ellipsoid function (non-Bezier version)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.EllipsoidBzr" title="qugar.cpp.EllipsoidBzr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EllipsoidBzr</span></code></a></p></td>
+<td><p>Ellipsoid function (Bezier version)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.FischerKochS_2D" title="qugar.cpp.FischerKochS_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FischerKochS_2D</span></code></a></p></td>
+<td><p>Fischer-Koch S TPMS</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.FischerKochS_3D" title="qugar.cpp.FischerKochS_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FischerKochS_3D</span></code></a></p></td>
+<td><p>Fischer-Koch S TPMS</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.ImmersedStatus" title="qugar.cpp.ImmersedStatus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ImmersedStatus</span></code></a>(*values)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p></td>
+<td><p>Implicit function</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p></td>
+<td><p>Implicit function</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.Line" title="qugar.cpp.Line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Line</span></code></a></p></td>
+<td><p>Line function (non-Bezier version)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.LineBzr" title="qugar.cpp.LineBzr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LineBzr</span></code></a></p></td>
+<td><p>Line function (Bezier version)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.Negative_2D" title="qugar.cpp.Negative_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Negative_2D</span></code></a></p></td>
+<td><p>Negative function</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.Negative_3D" title="qugar.cpp.Negative_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Negative_3D</span></code></a></p></td>
+<td><p>Negative function</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.Plane" title="qugar.cpp.Plane"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plane</span></code></a></p></td>
+<td><p>Plane function (non-Bezier version)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.PlaneBzr" title="qugar.cpp.PlaneBzr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlaneBzr</span></code></a></p></td>
+<td><p>Plane function (Bezier version)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.Quad_1D" title="qugar.cpp.Quad_1D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Quad_1D</span></code></a></p></td>
+<td><p>Quadrature object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.Quad_2D" title="qugar.cpp.Quad_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Quad_2D</span></code></a></p></td>
+<td><p>Quadrature object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.Quad_3D" title="qugar.cpp.Quad_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Quad_3D</span></code></a></p></td>
+<td><p>Quadrature object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.RefSystem_2D" title="qugar.cpp.RefSystem_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RefSystem_2D</span></code></a></p></td>
+<td><p>Affine transformation</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.RefSystem_3D" title="qugar.cpp.RefSystem_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RefSystem_3D</span></code></a></p></td>
+<td><p>Affine transformation</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.ReparamMesh_1_2" title="qugar.cpp.ReparamMesh_1_2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReparamMesh_1_2</span></code></a></p></td>
+<td><p>ReparamMesh object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.ReparamMesh_2_2" title="qugar.cpp.ReparamMesh_2_2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReparamMesh_2_2</span></code></a></p></td>
+<td><p>ReparamMesh object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.ReparamMesh_2_3" title="qugar.cpp.ReparamMesh_2_3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReparamMesh_2_3</span></code></a></p></td>
+<td><p>ReparamMesh object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.ReparamMesh_3_3" title="qugar.cpp.ReparamMesh_3_3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReparamMesh_3_3</span></code></a></p></td>
+<td><p>ReparamMesh object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.SchoenFRD_2D" title="qugar.cpp.SchoenFRD_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SchoenFRD_2D</span></code></a></p></td>
+<td><p>Schoen F-RD TPMS</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.SchoenFRD_3D" title="qugar.cpp.SchoenFRD_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SchoenFRD_3D</span></code></a></p></td>
+<td><p>Schoen F-RD TPMS</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.SchoenIWP_2D" title="qugar.cpp.SchoenIWP_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SchoenIWP_2D</span></code></a></p></td>
+<td><p>Schoen I-WP TPMS</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.SchoenIWP_3D" title="qugar.cpp.SchoenIWP_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SchoenIWP_3D</span></code></a></p></td>
+<td><p>Schoen I-WP TPMS</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.Schoen_2D" title="qugar.cpp.Schoen_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Schoen_2D</span></code></a></p></td>
+<td><p>Schoen gyroid TPMS</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.Schoen_3D" title="qugar.cpp.Schoen_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Schoen_3D</span></code></a></p></td>
+<td><p>Schoen gyroid TPMS</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.SchwarzDiamond_2D" title="qugar.cpp.SchwarzDiamond_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SchwarzDiamond_2D</span></code></a></p></td>
+<td><p>Schwarz diamond TPMS</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.SchwarzDiamond_3D" title="qugar.cpp.SchwarzDiamond_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SchwarzDiamond_3D</span></code></a></p></td>
+<td><p>Schwarz diamond TPMS</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.SchwarzPrimitive_2D" title="qugar.cpp.SchwarzPrimitive_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SchwarzPrimitive_2D</span></code></a></p></td>
+<td><p>Schwarz primitive TPMS</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.SchwarzPrimitive_3D" title="qugar.cpp.SchwarzPrimitive_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SchwarzPrimitive_3D</span></code></a></p></td>
+<td><p>Schwarz primitive TPMS</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.Sphere" title="qugar.cpp.Sphere"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sphere</span></code></a></p></td>
+<td><p>Sphere function (non Bezier version)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.SphereBzr" title="qugar.cpp.SphereBzr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SphereBzr</span></code></a></p></td>
+<td><p>Sphere function (Bezier version)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.Square_2D" title="qugar.cpp.Square_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Square_2D</span></code></a></p></td>
+<td><p>Square function</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.Square_3D" title="qugar.cpp.Square_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Square_3D</span></code></a></p></td>
+<td><p>Square function</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.SubtractFunctions_2D" title="qugar.cpp.SubtractFunctions_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SubtractFunctions_2D</span></code></a></p></td>
+<td><p>Subtract functions</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.SubtractFunctions_3D" title="qugar.cpp.SubtractFunctions_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SubtractFunctions_3D</span></code></a></p></td>
+<td><p>Subtract functions</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.Torus" title="qugar.cpp.Torus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Torus</span></code></a></p></td>
+<td><p>Torus class (non-Bezier version)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.TorusBzr" title="qugar.cpp.TorusBzr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TorusBzr</span></code></a></p></td>
+<td><p>Torus class (Bezier version)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.TransformedFunction_2D" title="qugar.cpp.TransformedFunction_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransformedFunction_2D</span></code></a></p></td>
+<td><p>Affinely transformed function</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.TransformedFunction_3D" title="qugar.cpp.TransformedFunction_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransformedFunction_3D</span></code></a></p></td>
+<td><p>Affinely transformed function</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.UnfittedDomain_2D" title="qugar.cpp.UnfittedDomain_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnfittedDomain_2D</span></code></a></p></td>
+<td><p>UnfittedDomain object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.UnfittedDomain_3D" title="qugar.cpp.UnfittedDomain_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnfittedDomain_3D</span></code></a></p></td>
+<td><p>UnfittedDomain object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.cpp.UnfittedImplDomain_2D" title="qugar.cpp.UnfittedImplDomain_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnfittedImplDomain_2D</span></code></a></p></td>
+<td><p>UnfittedImplDomain object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.cpp.UnfittedImplDomain_3D" title="qugar.cpp.UnfittedImplDomain_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnfittedImplDomain_3D</span></code></a></p></td>
+<td><p>UnfittedImplDomain object</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.AddFunctions_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">AddFunctions_2D</span></span><a class="headerlink" href="#qugar.cpp.AddFunctions_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Add functions</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.AddFunctions_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">AddFunctions_3D</span></span><a class="headerlink" href="#qugar.cpp.AddFunctions_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Add functions</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.AffineTransf_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">AffineTransf_2D</span></span><a class="headerlink" href="#qugar.cpp.AffineTransf_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Affine transformation</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.AffineTransf_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">AffineTransf_3D</span></span><a class="headerlink" href="#qugar.cpp.AffineTransf_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Affine transformation</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Annulus">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Annulus</span></span><a class="headerlink" href="#qugar.cpp.Annulus" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Annulus class (non-Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Annulus.center">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">center</span></span><a class="headerlink" href="#qugar.cpp.Annulus.center" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Annulus.inner_radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">inner_radius</span></span><a class="headerlink" href="#qugar.cpp.Annulus.inner_radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Annulus.outer_radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">outer_radius</span></span><a class="headerlink" href="#qugar.cpp.Annulus.outer_radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.AnnulusBzr">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">AnnulusBzr</span></span><a class="headerlink" href="#qugar.cpp.AnnulusBzr" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Annulus class (Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.AnnulusBzr.center">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">center</span></span><a class="headerlink" href="#qugar.cpp.AnnulusBzr.center" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.AnnulusBzr.inner_radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">inner_radius</span></span><a class="headerlink" href="#qugar.cpp.AnnulusBzr.inner_radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.AnnulusBzr.outer_radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">outer_radius</span></span><a class="headerlink" href="#qugar.cpp.AnnulusBzr.outer_radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">BoundBox_2D</span></span><a class="headerlink" href="#qugar.cpp.BoundBox_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>BoundBox object</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_2D.as_array">
+<span class="sig-name descname"><span class="pre">as_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=float64,</span> <span class="pre">shape=(2,</span> <span class="pre">2),</span> <span class="pre">order='C',</span> <span class="pre">writable=False]</span></span></span><a class="headerlink" href="#qugar.cpp.BoundBox_2D.as_array" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_2D.length">
+<span class="sig-name descname"><span class="pre">length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#qugar.cpp.BoundBox_2D.length" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_2D.max_corner">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">max_corner</span></span><a class="headerlink" href="#qugar.cpp.BoundBox_2D.max_corner" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_2D.mid_point">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">mid_point</span></span><a class="headerlink" href="#qugar.cpp.BoundBox_2D.mid_point" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_2D.min_corner">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">min_corner</span></span><a class="headerlink" href="#qugar.cpp.BoundBox_2D.min_corner" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_2D.volume">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">volume</span></span><a class="headerlink" href="#qugar.cpp.BoundBox_2D.volume" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">BoundBox_3D</span></span><a class="headerlink" href="#qugar.cpp.BoundBox_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>BoundBox object</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_3D.as_array">
+<span class="sig-name descname"><span class="pre">as_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=float64,</span> <span class="pre">shape=(3,</span> <span class="pre">2),</span> <span class="pre">order='C',</span> <span class="pre">writable=False]</span></span></span><a class="headerlink" href="#qugar.cpp.BoundBox_3D.as_array" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_3D.length">
+<span class="sig-name descname"><span class="pre">length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#qugar.cpp.BoundBox_3D.length" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_3D.max_corner">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">max_corner</span></span><a class="headerlink" href="#qugar.cpp.BoundBox_3D.max_corner" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_3D.mid_point">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">mid_point</span></span><a class="headerlink" href="#qugar.cpp.BoundBox_3D.mid_point" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_3D.min_corner">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">min_corner</span></span><a class="headerlink" href="#qugar.cpp.BoundBox_3D.min_corner" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.BoundBox_3D.volume">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">volume</span></span><a class="headerlink" href="#qugar.cpp.BoundBox_3D.volume" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">CartGridTP_2D</span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>CartGridTP object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_2D.cell_breaks">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cell_breaks</span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_2D.cell_breaks" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; list[numpy.ndarray[dtype=float64, shape=(*), order=’C’, writable=False]]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_2D.dim">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dim</span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_2D.dim" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; int</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_2D.domain">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">domain</span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_2D.domain" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; qugar.cpp.BoundBox_2D</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_2D.get_boundary_cells">
+<span class="sig-name descname"><span class="pre">get_boundary_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=int64,</span> <span class="pre">shape=(*),</span> <span class="pre">order='C',</span> <span class="pre">writable=False]</span></span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_2D.get_boundary_cells" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_2D.get_cell_domain">
+<span class="sig-name descname"><span class="pre">get_cell_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.cpp.BoundBox_2D" title="qugar.cpp.BoundBox_2D"><span class="pre">qugar.cpp.BoundBox_2D</span></a></span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_2D.get_cell_domain" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_2D.num_cells_dir">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">num_cells_dir</span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_2D.num_cells_dir" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=int32, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">CartGridTP_3D</span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>CartGridTP object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_3D.cell_breaks">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cell_breaks</span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_3D.cell_breaks" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; list[numpy.ndarray[dtype=float64, shape=(*), order=’C’, writable=False]]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_3D.dim">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dim</span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_3D.dim" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; int</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_3D.domain">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">domain</span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_3D.domain" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; qugar.cpp.BoundBox_3D</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_3D.get_boundary_cells">
+<span class="sig-name descname"><span class="pre">get_boundary_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=int64,</span> <span class="pre">shape=(*),</span> <span class="pre">order='C',</span> <span class="pre">writable=False]</span></span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_3D.get_boundary_cells" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_3D.get_cell_domain">
+<span class="sig-name descname"><span class="pre">get_cell_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.cpp.BoundBox_3D" title="qugar.cpp.BoundBox_3D"><span class="pre">qugar.cpp.BoundBox_3D</span></a></span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_3D.get_cell_domain" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CartGridTP_3D.num_cells_dir">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">num_cells_dir</span></span><a class="headerlink" href="#qugar.cpp.CartGridTP_3D.num_cells_dir" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=int32, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.ConstantBzr_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">ConstantBzr_2D</span></span><a class="headerlink" href="#qugar.cpp.ConstantBzr_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Constant function (Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ConstantBzr_2D.value">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#qugar.cpp.ConstantBzr_2D.value" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.ConstantBzr_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">ConstantBzr_3D</span></span><a class="headerlink" href="#qugar.cpp.ConstantBzr_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Constant function (Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ConstantBzr_3D.value">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#qugar.cpp.ConstantBzr_3D.value" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Constant_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Constant_2D</span></span><a class="headerlink" href="#qugar.cpp.Constant_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Constant function (non-Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Constant_2D.value">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#qugar.cpp.Constant_2D.value" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Constant_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Constant_3D</span></span><a class="headerlink" href="#qugar.cpp.Constant_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Constant function (non-Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Constant_3D.value">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#qugar.cpp.Constant_3D.value" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.CutCellsQuad_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">CutCellsQuad_2D</span></span><a class="headerlink" href="#qugar.cpp.CutCellsQuad_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>CutCellsQuad object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutCellsQuad_2D.cells">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cells</span></span><a class="headerlink" href="#qugar.cpp.CutCellsQuad_2D.cells" title="Link to this definition"></a></dt>
+<dd><p>Cell ids.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutCellsQuad_2D.n_pts_per_entity">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">n_pts_per_entity</span></span><a class="headerlink" href="#qugar.cpp.CutCellsQuad_2D.n_pts_per_entity" title="Link to this definition"></a></dt>
+<dd><p>Number of quadratures points per cell.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutCellsQuad_2D.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#qugar.cpp.CutCellsQuad_2D.points" title="Link to this definition"></a></dt>
+<dd><p>Quadrature point coordinates.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutCellsQuad_2D.weights">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">weights</span></span><a class="headerlink" href="#qugar.cpp.CutCellsQuad_2D.weights" title="Link to this definition"></a></dt>
+<dd><p>Quadrature weights.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.CutCellsQuad_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">CutCellsQuad_3D</span></span><a class="headerlink" href="#qugar.cpp.CutCellsQuad_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>CutCellsQuad object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutCellsQuad_3D.cells">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cells</span></span><a class="headerlink" href="#qugar.cpp.CutCellsQuad_3D.cells" title="Link to this definition"></a></dt>
+<dd><p>Cell ids.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutCellsQuad_3D.n_pts_per_entity">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">n_pts_per_entity</span></span><a class="headerlink" href="#qugar.cpp.CutCellsQuad_3D.n_pts_per_entity" title="Link to this definition"></a></dt>
+<dd><p>Number of quadratures points per cell.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutCellsQuad_3D.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#qugar.cpp.CutCellsQuad_3D.points" title="Link to this definition"></a></dt>
+<dd><p>Quadrature point coordinates.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutCellsQuad_3D.weights">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">weights</span></span><a class="headerlink" href="#qugar.cpp.CutCellsQuad_3D.weights" title="Link to this definition"></a></dt>
+<dd><p>Quadrature weights.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.CutIsoBoundsQuad_1D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">CutIsoBoundsQuad_1D</span></span><a class="headerlink" href="#qugar.cpp.CutIsoBoundsQuad_1D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>CutIsoBoundsQuad object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutIsoBoundsQuad_1D.cells">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cells</span></span><a class="headerlink" href="#qugar.cpp.CutIsoBoundsQuad_1D.cells" title="Link to this definition"></a></dt>
+<dd><p>Cell ids.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutIsoBoundsQuad_1D.facets">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">facets</span></span><a class="headerlink" href="#qugar.cpp.CutIsoBoundsQuad_1D.facets" title="Link to this definition"></a></dt>
+<dd><p>Local facet ids (referred to the cells).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutIsoBoundsQuad_1D.n_pts_per_entity">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">n_pts_per_entity</span></span><a class="headerlink" href="#qugar.cpp.CutIsoBoundsQuad_1D.n_pts_per_entity" title="Link to this definition"></a></dt>
+<dd><p>Number of quadratures points per facet.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutIsoBoundsQuad_1D.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#qugar.cpp.CutIsoBoundsQuad_1D.points" title="Link to this definition"></a></dt>
+<dd><p>Quadrature point coordinates.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutIsoBoundsQuad_1D.weights">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">weights</span></span><a class="headerlink" href="#qugar.cpp.CutIsoBoundsQuad_1D.weights" title="Link to this definition"></a></dt>
+<dd><p>Quadrature weights.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.CutIsoBoundsQuad_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">CutIsoBoundsQuad_2D</span></span><a class="headerlink" href="#qugar.cpp.CutIsoBoundsQuad_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>CutIsoBoundsQuad object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutIsoBoundsQuad_2D.cells">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cells</span></span><a class="headerlink" href="#qugar.cpp.CutIsoBoundsQuad_2D.cells" title="Link to this definition"></a></dt>
+<dd><p>Cell ids.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutIsoBoundsQuad_2D.facets">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">facets</span></span><a class="headerlink" href="#qugar.cpp.CutIsoBoundsQuad_2D.facets" title="Link to this definition"></a></dt>
+<dd><p>Local facet ids (referred to the cells).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutIsoBoundsQuad_2D.n_pts_per_entity">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">n_pts_per_entity</span></span><a class="headerlink" href="#qugar.cpp.CutIsoBoundsQuad_2D.n_pts_per_entity" title="Link to this definition"></a></dt>
+<dd><p>Number of quadratures points per facet.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutIsoBoundsQuad_2D.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#qugar.cpp.CutIsoBoundsQuad_2D.points" title="Link to this definition"></a></dt>
+<dd><p>Quadrature point coordinates.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutIsoBoundsQuad_2D.weights">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">weights</span></span><a class="headerlink" href="#qugar.cpp.CutIsoBoundsQuad_2D.weights" title="Link to this definition"></a></dt>
+<dd><p>Quadrature weights.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.CutUnfBoundsQuad_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">CutUnfBoundsQuad_2D</span></span><a class="headerlink" href="#qugar.cpp.CutUnfBoundsQuad_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>CutUnfBoundsQuad object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutUnfBoundsQuad_2D.cells">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cells</span></span><a class="headerlink" href="#qugar.cpp.CutUnfBoundsQuad_2D.cells" title="Link to this definition"></a></dt>
+<dd><p>Cell ids.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutUnfBoundsQuad_2D.n_pts_per_entity">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">n_pts_per_entity</span></span><a class="headerlink" href="#qugar.cpp.CutUnfBoundsQuad_2D.n_pts_per_entity" title="Link to this definition"></a></dt>
+<dd><p>Number of quadratures points per cell.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutUnfBoundsQuad_2D.normals">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">normals</span></span><a class="headerlink" href="#qugar.cpp.CutUnfBoundsQuad_2D.normals" title="Link to this definition"></a></dt>
+<dd><p>Unit normal vectors at the quadrature points.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutUnfBoundsQuad_2D.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#qugar.cpp.CutUnfBoundsQuad_2D.points" title="Link to this definition"></a></dt>
+<dd><p>Quadrature point coordinates.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutUnfBoundsQuad_2D.weights">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">weights</span></span><a class="headerlink" href="#qugar.cpp.CutUnfBoundsQuad_2D.weights" title="Link to this definition"></a></dt>
+<dd><p>Quadrature weights.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.CutUnfBoundsQuad_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">CutUnfBoundsQuad_3D</span></span><a class="headerlink" href="#qugar.cpp.CutUnfBoundsQuad_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>CutUnfBoundsQuad object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutUnfBoundsQuad_3D.cells">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cells</span></span><a class="headerlink" href="#qugar.cpp.CutUnfBoundsQuad_3D.cells" title="Link to this definition"></a></dt>
+<dd><p>Cell ids.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutUnfBoundsQuad_3D.n_pts_per_entity">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">n_pts_per_entity</span></span><a class="headerlink" href="#qugar.cpp.CutUnfBoundsQuad_3D.n_pts_per_entity" title="Link to this definition"></a></dt>
+<dd><p>Number of quadratures points per cell.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutUnfBoundsQuad_3D.normals">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">normals</span></span><a class="headerlink" href="#qugar.cpp.CutUnfBoundsQuad_3D.normals" title="Link to this definition"></a></dt>
+<dd><p>Unit normal vectors at the quadrature points.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutUnfBoundsQuad_3D.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#qugar.cpp.CutUnfBoundsQuad_3D.points" title="Link to this definition"></a></dt>
+<dd><p>Quadrature point coordinates.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CutUnfBoundsQuad_3D.weights">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">weights</span></span><a class="headerlink" href="#qugar.cpp.CutUnfBoundsQuad_3D.weights" title="Link to this definition"></a></dt>
+<dd><p>Quadrature weights.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Cylinder">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Cylinder</span></span><a class="headerlink" href="#qugar.cpp.Cylinder" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Cylinder function (non-Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Cylinder.axis">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">axis</span></span><a class="headerlink" href="#qugar.cpp.Cylinder.axis" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Cylinder.origin">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">origin</span></span><a class="headerlink" href="#qugar.cpp.Cylinder.origin" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Cylinder.radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">radius</span></span><a class="headerlink" href="#qugar.cpp.Cylinder.radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.CylinderBzr">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">CylinderBzr</span></span><a class="headerlink" href="#qugar.cpp.CylinderBzr" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Cylinder function (Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CylinderBzr.axis">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">axis</span></span><a class="headerlink" href="#qugar.cpp.CylinderBzr.axis" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CylinderBzr.origin">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">origin</span></span><a class="headerlink" href="#qugar.cpp.CylinderBzr.origin" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.CylinderBzr.radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">radius</span></span><a class="headerlink" href="#qugar.cpp.CylinderBzr.radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.DimLinear_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">DimLinear_2D</span></span><a class="headerlink" href="#qugar.cpp.DimLinear_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Dim-linear function</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.DimLinear_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">DimLinear_3D</span></span><a class="headerlink" href="#qugar.cpp.DimLinear_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Dim-linear function</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Disk">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Disk</span></span><a class="headerlink" href="#qugar.cpp.Disk" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Disk function (non-Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Disk.center">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">center</span></span><a class="headerlink" href="#qugar.cpp.Disk.center" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Disk.radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">radius</span></span><a class="headerlink" href="#qugar.cpp.Disk.radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.DiskBzr">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">DiskBzr</span></span><a class="headerlink" href="#qugar.cpp.DiskBzr" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Disk function (Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.DiskBzr.center">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">center</span></span><a class="headerlink" href="#qugar.cpp.DiskBzr.center" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.DiskBzr.radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">radius</span></span><a class="headerlink" href="#qugar.cpp.DiskBzr.radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Ellipse">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Ellipse</span></span><a class="headerlink" href="#qugar.cpp.Ellipse" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Ellipse function (non-Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Ellipse.ref_system">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ref_system</span></span><a class="headerlink" href="#qugar.cpp.Ellipse.ref_system" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; qugar.cpp.RefSystem_2D</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Ellipse.semi_axes">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">semi_axes</span></span><a class="headerlink" href="#qugar.cpp.Ellipse.semi_axes" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.EllipseBzr">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">EllipseBzr</span></span><a class="headerlink" href="#qugar.cpp.EllipseBzr" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Ellipse function (Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.EllipseBzr.ref_system">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ref_system</span></span><a class="headerlink" href="#qugar.cpp.EllipseBzr.ref_system" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; qugar.cpp.RefSystem_2D</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.EllipseBzr.semi_axes">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">semi_axes</span></span><a class="headerlink" href="#qugar.cpp.EllipseBzr.semi_axes" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Ellipsoid">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Ellipsoid</span></span><a class="headerlink" href="#qugar.cpp.Ellipsoid" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Ellipsoid function (non-Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Ellipsoid.ref_system">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ref_system</span></span><a class="headerlink" href="#qugar.cpp.Ellipsoid.ref_system" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; qugar.cpp.RefSystem_3D</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Ellipsoid.semi_axes">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">semi_axes</span></span><a class="headerlink" href="#qugar.cpp.Ellipsoid.semi_axes" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.EllipsoidBzr">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">EllipsoidBzr</span></span><a class="headerlink" href="#qugar.cpp.EllipsoidBzr" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Ellipsoid function (Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.EllipsoidBzr.ref_system">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ref_system</span></span><a class="headerlink" href="#qugar.cpp.EllipsoidBzr.ref_system" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; qugar.cpp.RefSystem_3D</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.EllipsoidBzr.semi_axes">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">semi_axes</span></span><a class="headerlink" href="#qugar.cpp.EllipsoidBzr.semi_axes" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.FischerKochS_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">FischerKochS_2D</span></span><a class="headerlink" href="#qugar.cpp.FischerKochS_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Fischer-Koch S TPMS</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.FischerKochS_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">FischerKochS_3D</span></span><a class="headerlink" href="#qugar.cpp.FischerKochS_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Fischer-Koch S TPMS</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.ImmersedStatus">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">ImmersedStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qugar.cpp.ImmersedStatus" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.cpp.ImmersedStatus.cut">
+<span class="sig-name descname"><span class="pre">cut</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#qugar.cpp.ImmersedStatus.cut" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.cpp.ImmersedStatus.empty">
+<span class="sig-name descname"><span class="pre">empty</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#qugar.cpp.ImmersedStatus.empty" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.cpp.ImmersedStatus.full">
+<span class="sig-name descname"><span class="pre">full</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#qugar.cpp.ImmersedStatus.full" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.ImplicitFunc_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">ImplicitFunc_2D</span></span><a class="headerlink" href="#qugar.cpp.ImplicitFunc_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implicit function</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ImplicitFunc_2D.dim">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dim</span></span><a class="headerlink" href="#qugar.cpp.ImplicitFunc_2D.dim" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; int</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.ImplicitFunc_2D.eval">
+<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">points:</span> <span class="pre">numpy.ndarray[dtype=float64,</span> <span class="pre">shape=(*,</span> <span class="pre">2),</span> <span class="pre">order='C',</span> <span class="pre">writable=False]</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=float64]</span></span></span><a class="headerlink" href="#qugar.cpp.ImplicitFunc_2D.eval" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.ImplicitFunc_2D.grad">
+<span class="sig-name descname"><span class="pre">grad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">points:</span> <span class="pre">numpy.ndarray[dtype=float64,</span> <span class="pre">shape=(*,</span> <span class="pre">2),</span> <span class="pre">order='C',</span> <span class="pre">writable=False]</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=float64]</span></span></span><a class="headerlink" href="#qugar.cpp.ImplicitFunc_2D.grad" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.ImplicitFunc_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">ImplicitFunc_3D</span></span><a class="headerlink" href="#qugar.cpp.ImplicitFunc_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implicit function</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ImplicitFunc_3D.dim">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dim</span></span><a class="headerlink" href="#qugar.cpp.ImplicitFunc_3D.dim" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; int</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.ImplicitFunc_3D.eval">
+<span class="sig-name descname"><span class="pre">eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">points:</span> <span class="pre">numpy.ndarray[dtype=float64,</span> <span class="pre">shape=(*,</span> <span class="pre">3),</span> <span class="pre">order='C',</span> <span class="pre">writable=False]</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=float64]</span></span></span><a class="headerlink" href="#qugar.cpp.ImplicitFunc_3D.eval" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.ImplicitFunc_3D.grad">
+<span class="sig-name descname"><span class="pre">grad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">points:</span> <span class="pre">numpy.ndarray[dtype=float64,</span> <span class="pre">shape=(*,</span> <span class="pre">3),</span> <span class="pre">order='C',</span> <span class="pre">writable=False]</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=float64]</span></span></span><a class="headerlink" href="#qugar.cpp.ImplicitFunc_3D.grad" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Line">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Line</span></span><a class="headerlink" href="#qugar.cpp.Line" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Line function (non-Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Line.normal">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">normal</span></span><a class="headerlink" href="#qugar.cpp.Line.normal" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Line.origin">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">origin</span></span><a class="headerlink" href="#qugar.cpp.Line.origin" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.LineBzr">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">LineBzr</span></span><a class="headerlink" href="#qugar.cpp.LineBzr" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Line function (Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.LineBzr.normal">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">normal</span></span><a class="headerlink" href="#qugar.cpp.LineBzr.normal" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.LineBzr.origin">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">origin</span></span><a class="headerlink" href="#qugar.cpp.LineBzr.origin" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(2), order=’C’, writable=False]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Negative_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Negative_2D</span></span><a class="headerlink" href="#qugar.cpp.Negative_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Negative function</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Negative_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Negative_3D</span></span><a class="headerlink" href="#qugar.cpp.Negative_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Negative function</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Plane">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Plane</span></span><a class="headerlink" href="#qugar.cpp.Plane" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Plane function (non-Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Plane.normal">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">normal</span></span><a class="headerlink" href="#qugar.cpp.Plane.normal" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Plane.origin">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">origin</span></span><a class="headerlink" href="#qugar.cpp.Plane.origin" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.PlaneBzr">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">PlaneBzr</span></span><a class="headerlink" href="#qugar.cpp.PlaneBzr" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Plane function (Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.PlaneBzr.normal">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">normal</span></span><a class="headerlink" href="#qugar.cpp.PlaneBzr.normal" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.PlaneBzr.origin">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">origin</span></span><a class="headerlink" href="#qugar.cpp.PlaneBzr.origin" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Quad_1D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Quad_1D</span></span><a class="headerlink" href="#qugar.cpp.Quad_1D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Quadrature object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Quad_1D.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#qugar.cpp.Quad_1D.points" title="Link to this definition"></a></dt>
+<dd><p>Quadrature point coordinates.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Quad_1D.weights">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">weights</span></span><a class="headerlink" href="#qugar.cpp.Quad_1D.weights" title="Link to this definition"></a></dt>
+<dd><p>Quadrature weights.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Quad_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Quad_2D</span></span><a class="headerlink" href="#qugar.cpp.Quad_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Quadrature object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Quad_2D.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#qugar.cpp.Quad_2D.points" title="Link to this definition"></a></dt>
+<dd><p>Quadrature point coordinates.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Quad_2D.weights">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">weights</span></span><a class="headerlink" href="#qugar.cpp.Quad_2D.weights" title="Link to this definition"></a></dt>
+<dd><p>Quadrature weights.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Quad_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Quad_3D</span></span><a class="headerlink" href="#qugar.cpp.Quad_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Quadrature object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Quad_3D.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#qugar.cpp.Quad_3D.points" title="Link to this definition"></a></dt>
+<dd><p>Quadrature point coordinates.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Quad_3D.weights">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">weights</span></span><a class="headerlink" href="#qugar.cpp.Quad_3D.weights" title="Link to this definition"></a></dt>
+<dd><p>Quadrature weights.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.RefSystem_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">RefSystem_2D</span></span><a class="headerlink" href="#qugar.cpp.RefSystem_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Affine transformation</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.RefSystem_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">RefSystem_3D</span></span><a class="headerlink" href="#qugar.cpp.RefSystem_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Affine transformation</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_1_2">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">ReparamMesh_1_2</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_1_2" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>ReparamMesh object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_1_2.cells_conn">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cells_conn</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_1_2.cells_conn" title="Link to this definition"></a></dt>
+<dd><p>Mesh cells connectivity.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_1_2.chebyshev">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">chebyshev</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_1_2.chebyshev" title="Link to this definition"></a></dt>
+<dd><p>Whether Chebyshev nodes are used.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_1_2.dim">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dim</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_1_2.dim" title="Link to this definition"></a></dt>
+<dd><p>Mesh parametric dimension.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_1_2.order">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">order</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_1_2.order" title="Link to this definition"></a></dt>
+<dd><p>Mesh order.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_1_2.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_1_2.points" title="Link to this definition"></a></dt>
+<dd><p>Mesh points.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_1_2.range">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">range</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_1_2.range" title="Link to this definition"></a></dt>
+<dd><p>Mesh geometric dimension.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_1_2.wirebasket_conn">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">wirebasket_conn</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_1_2.wirebasket_conn" title="Link to this definition"></a></dt>
+<dd><p>Wirebasket connectivity.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_2">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">ReparamMesh_2_2</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_2" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>ReparamMesh object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_2.cells_conn">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cells_conn</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_2.cells_conn" title="Link to this definition"></a></dt>
+<dd><p>Mesh cells connectivity.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_2.chebyshev">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">chebyshev</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_2.chebyshev" title="Link to this definition"></a></dt>
+<dd><p>Whether Chebyshev nodes are used.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_2.dim">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dim</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_2.dim" title="Link to this definition"></a></dt>
+<dd><p>Mesh parametric dimension.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_2.order">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">order</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_2.order" title="Link to this definition"></a></dt>
+<dd><p>Mesh order.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_2.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_2.points" title="Link to this definition"></a></dt>
+<dd><p>Mesh points.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_2.range">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">range</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_2.range" title="Link to this definition"></a></dt>
+<dd><p>Mesh geometric dimension.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_2.wirebasket_conn">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">wirebasket_conn</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_2.wirebasket_conn" title="Link to this definition"></a></dt>
+<dd><p>Wirebasket connectivity.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_3">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">ReparamMesh_2_3</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_3" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>ReparamMesh object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_3.cells_conn">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cells_conn</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_3.cells_conn" title="Link to this definition"></a></dt>
+<dd><p>Mesh cells connectivity.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_3.chebyshev">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">chebyshev</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_3.chebyshev" title="Link to this definition"></a></dt>
+<dd><p>Whether Chebyshev nodes are used.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_3.dim">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dim</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_3.dim" title="Link to this definition"></a></dt>
+<dd><p>Mesh parametric dimension.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_3.order">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">order</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_3.order" title="Link to this definition"></a></dt>
+<dd><p>Mesh order.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_3.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_3.points" title="Link to this definition"></a></dt>
+<dd><p>Mesh points.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_3.range">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">range</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_3.range" title="Link to this definition"></a></dt>
+<dd><p>Mesh geometric dimension.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_2_3.wirebasket_conn">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">wirebasket_conn</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_2_3.wirebasket_conn" title="Link to this definition"></a></dt>
+<dd><p>Wirebasket connectivity.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_3_3">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">ReparamMesh_3_3</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_3_3" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>ReparamMesh object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_3_3.cells_conn">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cells_conn</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_3_3.cells_conn" title="Link to this definition"></a></dt>
+<dd><p>Mesh cells connectivity.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_3_3.chebyshev">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">chebyshev</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_3_3.chebyshev" title="Link to this definition"></a></dt>
+<dd><p>Whether Chebyshev nodes are used.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_3_3.dim">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dim</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_3_3.dim" title="Link to this definition"></a></dt>
+<dd><p>Mesh parametric dimension.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_3_3.order">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">order</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_3_3.order" title="Link to this definition"></a></dt>
+<dd><p>Mesh order.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_3_3.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_3_3.points" title="Link to this definition"></a></dt>
+<dd><p>Mesh points.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_3_3.range">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">range</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_3_3.range" title="Link to this definition"></a></dt>
+<dd><p>Mesh geometric dimension.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.ReparamMesh_3_3.wirebasket_conn">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">wirebasket_conn</span></span><a class="headerlink" href="#qugar.cpp.ReparamMesh_3_3.wirebasket_conn" title="Link to this definition"></a></dt>
+<dd><p>Wirebasket connectivity.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.SchoenFRD_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">SchoenFRD_2D</span></span><a class="headerlink" href="#qugar.cpp.SchoenFRD_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Schoen F-RD TPMS</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.SchoenFRD_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">SchoenFRD_3D</span></span><a class="headerlink" href="#qugar.cpp.SchoenFRD_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Schoen F-RD TPMS</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.SchoenIWP_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">SchoenIWP_2D</span></span><a class="headerlink" href="#qugar.cpp.SchoenIWP_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Schoen I-WP TPMS</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.SchoenIWP_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">SchoenIWP_3D</span></span><a class="headerlink" href="#qugar.cpp.SchoenIWP_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Schoen I-WP TPMS</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Schoen_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Schoen_2D</span></span><a class="headerlink" href="#qugar.cpp.Schoen_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Schoen gyroid TPMS</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Schoen_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Schoen_3D</span></span><a class="headerlink" href="#qugar.cpp.Schoen_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Schoen gyroid TPMS</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.SchwarzDiamond_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">SchwarzDiamond_2D</span></span><a class="headerlink" href="#qugar.cpp.SchwarzDiamond_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Schwarz diamond TPMS</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.SchwarzDiamond_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">SchwarzDiamond_3D</span></span><a class="headerlink" href="#qugar.cpp.SchwarzDiamond_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Schwarz diamond TPMS</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.SchwarzPrimitive_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">SchwarzPrimitive_2D</span></span><a class="headerlink" href="#qugar.cpp.SchwarzPrimitive_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Schwarz primitive TPMS</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.SchwarzPrimitive_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">SchwarzPrimitive_3D</span></span><a class="headerlink" href="#qugar.cpp.SchwarzPrimitive_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Schwarz primitive TPMS</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Sphere">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Sphere</span></span><a class="headerlink" href="#qugar.cpp.Sphere" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Sphere function (non Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Sphere.center">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">center</span></span><a class="headerlink" href="#qugar.cpp.Sphere.center" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Sphere.radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">radius</span></span><a class="headerlink" href="#qugar.cpp.Sphere.radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.SphereBzr">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">SphereBzr</span></span><a class="headerlink" href="#qugar.cpp.SphereBzr" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Sphere function (Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.SphereBzr.center">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">center</span></span><a class="headerlink" href="#qugar.cpp.SphereBzr.center" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.SphereBzr.radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">radius</span></span><a class="headerlink" href="#qugar.cpp.SphereBzr.radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Square_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Square_2D</span></span><a class="headerlink" href="#qugar.cpp.Square_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Square function</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Square_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Square_3D</span></span><a class="headerlink" href="#qugar.cpp.Square_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Square function</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.SubtractFunctions_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">SubtractFunctions_2D</span></span><a class="headerlink" href="#qugar.cpp.SubtractFunctions_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Subtract functions</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.SubtractFunctions_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">SubtractFunctions_3D</span></span><a class="headerlink" href="#qugar.cpp.SubtractFunctions_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Subtract functions</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.Torus">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">Torus</span></span><a class="headerlink" href="#qugar.cpp.Torus" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Torus class (non-Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Torus.axis">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">axis</span></span><a class="headerlink" href="#qugar.cpp.Torus.axis" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Torus.center">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">center</span></span><a class="headerlink" href="#qugar.cpp.Torus.center" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Torus.major_radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">major_radius</span></span><a class="headerlink" href="#qugar.cpp.Torus.major_radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.Torus.minor_radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">minor_radius</span></span><a class="headerlink" href="#qugar.cpp.Torus.minor_radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.TorusBzr">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">TorusBzr</span></span><a class="headerlink" href="#qugar.cpp.TorusBzr" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Torus class (Bezier version)</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.TorusBzr.axis">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">axis</span></span><a class="headerlink" href="#qugar.cpp.TorusBzr.axis" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.TorusBzr.center">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">center</span></span><a class="headerlink" href="#qugar.cpp.TorusBzr.center" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; numpy.ndarray[dtype=float64, shape=(3), order=’C’, writable=False]</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.TorusBzr.major_radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">major_radius</span></span><a class="headerlink" href="#qugar.cpp.TorusBzr.major_radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.TorusBzr.minor_radius">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">minor_radius</span></span><a class="headerlink" href="#qugar.cpp.TorusBzr.minor_radius" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; float</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.TransformedFunction_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">TransformedFunction_2D</span></span><a class="headerlink" href="#qugar.cpp.TransformedFunction_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_2D" title="qugar.cpp.ImplicitFunc_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_2D</span></code></a></p>
+<p>Affinely transformed function</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.TransformedFunction_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">TransformedFunction_3D</span></span><a class="headerlink" href="#qugar.cpp.TransformedFunction_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.ImplicitFunc_3D" title="qugar.cpp.ImplicitFunc_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImplicitFunc_3D</span></code></a></p>
+<p>Affinely transformed function</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">UnfittedDomain_2D</span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>UnfittedDomain object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_2D.dim">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dim</span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_2D.dim" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; int</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_2D.get_cut_cells">
+<span class="sig-name descname"><span class="pre">get_cut_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=int64]</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_2D.get_cut_cells" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_2D.get_cut_facets">
+<span class="sig-name descname"><span class="pre">get_cut_facets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_local_facet_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_2D.get_cut_facets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_2D.get_empty_cells">
+<span class="sig-name descname"><span class="pre">get_empty_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=int64]</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_2D.get_empty_cells" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_2D.get_empty_facets">
+<span class="sig-name descname"><span class="pre">get_empty_facets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_local_facet_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_2D.get_empty_facets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_2D.get_full_cells">
+<span class="sig-name descname"><span class="pre">get_full_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=int64]</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_2D.get_full_cells" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_2D.get_full_facets">
+<span class="sig-name descname"><span class="pre">get_full_facets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_local_facet_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_2D.get_full_facets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_2D.get_full_unf_bdry_facets">
+<span class="sig-name descname"><span class="pre">get_full_unf_bdry_facets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_local_facet_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_2D.get_full_unf_bdry_facets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_2D.get_unf_bdry_facets">
+<span class="sig-name descname"><span class="pre">get_unf_bdry_facets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_local_facet_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_2D.get_unf_bdry_facets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_2D.grid">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">grid</span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_2D.grid" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; qugar.cpp.CartGridTP_2D</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_2D.has_facets_with_unf_bdry">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">has_facets_with_unf_bdry</span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_2D.has_facets_with_unf_bdry" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; bool</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_2D.num_total_cells">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">num_total_cells</span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_2D.num_total_cells" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; int</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">UnfittedDomain_3D</span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>UnfittedDomain object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_3D.dim">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dim</span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_3D.dim" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; int</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_3D.get_cut_cells">
+<span class="sig-name descname"><span class="pre">get_cut_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=int64]</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_3D.get_cut_cells" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_3D.get_cut_facets">
+<span class="sig-name descname"><span class="pre">get_cut_facets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_local_facet_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_3D.get_cut_facets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_3D.get_empty_cells">
+<span class="sig-name descname"><span class="pre">get_empty_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=int64]</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_3D.get_empty_cells" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_3D.get_empty_facets">
+<span class="sig-name descname"><span class="pre">get_empty_facets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_local_facet_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_3D.get_empty_facets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_3D.get_full_cells">
+<span class="sig-name descname"><span class="pre">get_full_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray[dtype=int64]</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_3D.get_full_cells" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_3D.get_full_facets">
+<span class="sig-name descname"><span class="pre">get_full_facets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_local_facet_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_3D.get_full_facets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_3D.get_full_unf_bdry_facets">
+<span class="sig-name descname"><span class="pre">get_full_unf_bdry_facets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_local_facet_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_3D.get_full_unf_bdry_facets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_3D.get_unf_bdry_facets">
+<span class="sig-name descname"><span class="pre">get_unf_bdry_facets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_cell_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_local_facet_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray[dtype</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">int32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(*)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_3D.get_unf_bdry_facets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_3D.grid">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">grid</span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_3D.grid" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; qugar.cpp.CartGridTP_3D</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_3D.has_facets_with_unf_bdry">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">has_facets_with_unf_bdry</span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_3D.has_facets_with_unf_bdry" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; bool</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedDomain_3D.num_total_cells">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">num_total_cells</span></span><a class="headerlink" href="#qugar.cpp.UnfittedDomain_3D.num_total_cells" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; int</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedImplDomain_2D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">UnfittedImplDomain_2D</span></span><a class="headerlink" href="#qugar.cpp.UnfittedImplDomain_2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.UnfittedDomain_2D" title="qugar.cpp.UnfittedDomain_2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnfittedDomain_2D</span></code></a></p>
+<p>UnfittedImplDomain object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedImplDomain_2D.impl_func">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">impl_func</span></span><a class="headerlink" href="#qugar.cpp.UnfittedImplDomain_2D.impl_func" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; qugar::impl::DomainFunc&lt;2, 1&gt;</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedImplDomain_3D">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.cpp.</span></span><span class="sig-name descname"><span class="pre">UnfittedImplDomain_3D</span></span><a class="headerlink" href="#qugar.cpp.UnfittedImplDomain_3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#qugar.cpp.UnfittedDomain_3D" title="qugar.cpp.UnfittedDomain_3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnfittedDomain_3D</span></code></a></p>
+<p>UnfittedImplDomain object</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="qugar.cpp.UnfittedImplDomain_3D.impl_func">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">impl_func</span></span><a class="headerlink" href="#qugar.cpp.UnfittedImplDomain_3D.impl_func" title="Link to this definition"></a></dt>
+<dd><p>(self) -&gt; qugar::impl::DomainFunc&lt;3, 1&gt;</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="qugar.dolfinx.html" class="btn btn-neutral float-left" title="qugar.dolfinx" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api_cpp.html" class="btn btn-neutral float-right" title="C++" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

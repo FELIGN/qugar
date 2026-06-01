@@ -1,0 +1,294 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qugar.plot &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="qugar.dolfinx" href="qugar.dolfinx.html" />
+    <link rel="prev" title="qugar.reparam" href="qugar.reparam.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../demos.html">Demos</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api_python.html">Python</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../api_python.html#public-user-interface">Public user interface</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="qugar.html">qugar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.mesh.html">qugar.mesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.impl.html">qugar.impl</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.quad.html">qugar.quad</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.reparam.html">qugar.reparam</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">qugar.plot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.dolfinx.html">qugar.dolfinx</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_python.html#nanobind-c-interface">nanobind/C++interface</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_cpp.html">C++</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API reference</a></li>
+          <li class="breadcrumb-item"><a href="../api_python.html">Python</a></li>
+      <li class="breadcrumb-item active">qugar.plot</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/qugar.plot.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-qugar.plot">
+<span id="qugar-plot"></span><h1>qugar.plot<a class="headerlink" href="#module-qugar.plot" title="Link to this heading"></a></h1>
+<p>Plot functionalities (using PyVista) for QUGaR</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.plot.quadrature_to_PyVista" title="qugar.plot.quadrature_to_PyVista"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quadrature_to_PyVista</span></code></a>(domain[, n_pts_dir])</p></td>
+<td><p>Generates quadrature data for an unfitted domain and exports it to a PyVista data structure.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.plot.cart_grid_tp_to_PyVista" title="qugar.plot.cart_grid_tp_to_PyVista"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cart_grid_tp_to_PyVista</span></code></a>(grid)</p></td>
+<td><p>Converts a Cartesian grid to a PyVista <cite>RectilinearGrid</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.plot.unfitted_domain_to_PyVista" title="qugar.plot.unfitted_domain_to_PyVista"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unfitted_domain_to_PyVista</span></code></a>(domain[, cut, ...])</p></td>
+<td><p>Converts the grid of an unfitted domain to a PyVista <cite>UnstructuredGrid</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.plot.unfitted_domain_facets_to_PyVista" title="qugar.plot.unfitted_domain_facets_to_PyVista"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unfitted_domain_facets_to_PyVista</span></code></a>(domain[, ...])</p></td>
+<td><p>Converts the facets of the unfitted domain to a PyVista UnstructuredGrid.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.plot.reparam_mesh_to_PyVista" title="qugar.plot.reparam_mesh_to_PyVista"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reparam_mesh_to_PyVista</span></code></a>(reparam)</p></td>
+<td><p>Converts a reparameterization mesh object to a PyVista <cite>MultiBlock</cite>.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.plot.cart_grid_tp_to_PyVista">
+<span class="sig-prename descclassname"><span class="pre">qugar.plot.</span></span><span class="sig-name descname"><span class="pre">cart_grid_tp_to_PyVista</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">RectilinearGrid</span></span></span><a class="reference internal" href="../_modules/qugar/plot/pyvista_tools.html#cart_grid_tp_to_PyVista"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.plot.cart_grid_tp_to_PyVista" title="Link to this definition"></a></dt>
+<dd><p>Converts a Cartesian grid to a PyVista <cite>RectilinearGrid</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>grid</strong> (<a class="reference internal" href="qugar.cpp.html#qugar.cpp.CartGridTP_2D" title="qugar.cpp.CartGridTP_2D"><em>CartGridTP_2D</em></a><em> | </em><a class="reference internal" href="qugar.cpp.html#qugar.cpp.CartGridTP_3D" title="qugar.cpp.CartGridTP_3D"><em>CartGridTP_3D</em></a><em> | </em><a class="reference internal" href="qugar.mesh.html#qugar.mesh.CartesianMesh" title="qugar.mesh.CartesianMesh"><em>CartesianMesh</em></a>) – The input grid, which can
+be either a CartGridTP_2D, CartGridTP_3D, or CartesianMesh (if FEniCSx is available).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The converted PyVista <cite>RectilinearGrid</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pv.RectilinearGrid</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If a TensorProductMesh is passed as input and the number of global cells
+    does not match the number of local cells in the grid. This is not implemented yet.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.plot.quadrature_to_PyVista">
+<span class="sig-prename descclassname"><span class="pre">qugar.plot.</span></span><span class="sig-name descname"><span class="pre">quadrature_to_PyVista</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pts_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MultiBlock</span></span></span><a class="reference internal" href="../_modules/qugar/plot/pyvista_tools.html#quadrature_to_PyVista"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.plot.quadrature_to_PyVista" title="Link to this definition"></a></dt>
+<dd><p>Generates quadrature data for an unfitted domain and exports it to a
+PyVista data structure. It generates, and export, quadrature points
+for the interior of the cells, the unfitted boundaries, and the facets.</p>
+<p>In addition to the lexicographical indices of cells and facets,
+this function also appends the DOLFINx associated indices.</p>
+<p>&#64;note: This function is only available when FEniCSx is installed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>domain</strong> (<a class="reference internal" href="qugar.mesh.html#qugar.mesh.UnfittedDomain" title="qugar.mesh.UnfittedDomain"><em>UnfittedDomain</em></a>) – The unfitted domain for which the quadratures
+are generated.</p></li>
+<li><p><strong>n_pts_dir</strong> (<em>int</em>) – Number of points per direction for quadrature.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A PyVista multiblock dataset containing the quadratures</dt><dd><p>of the cut cells, cut facets, and unfitted boundaries.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pv.MultiBlock</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.plot.reparam_mesh_to_PyVista">
+<span class="sig-prename descclassname"><span class="pre">qugar.plot.</span></span><span class="sig-name descname"><span class="pre">reparam_mesh_to_PyVista</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reparam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MultiBlock</span></span></span><a class="reference internal" href="../_modules/qugar/plot/pyvista_tools.html#reparam_mesh_to_PyVista"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.plot.reparam_mesh_to_PyVista" title="Link to this definition"></a></dt>
+<dd><p>Converts a reparameterization mesh object to a PyVista <cite>MultiBlock</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reparam</strong> (<a class="reference internal" href="qugar.reparam.html#qugar.reparam.UnfDomainReparamMesh.ReparamMesh" title="qugar.reparam.UnfDomainReparamMesh.ReparamMesh"><em>ReparamMesh</em></a><em> | </em><a class="reference internal" href="qugar.reparam.html#qugar.reparam.UnfDomainReparamMesh" title="qugar.reparam.UnfDomainReparamMesh"><em>UnfDomainReparamMesh</em></a>) – The reparametrized mesh object
+to be converted.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Reparameterization translated to PyVista data structures.</dt><dd><p>It is a multiblock containing two unstructured grids: one for the
+reparameterization itselt and one for the reparmeterization’s wirebasket.
+They can be accessed using <code class="docutils literal notranslate"><span class="pre">.get(&quot;reparam&quot;)</span></code> and <code class="docutils literal notranslate"><span class="pre">.get(&quot;wirebasket&quot;)</span></code>,
+respectively.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pv.MultiBlock</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.plot.unfitted_domain_facets_to_PyVista">
+<span class="sig-prename descclassname"><span class="pre">qugar.plot.</span></span><span class="sig-name descname"><span class="pre">unfitted_domain_facets_to_PyVista</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cut</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">UnstructuredGrid</span></span></span><a class="reference internal" href="../_modules/qugar/plot/pyvista_tools.html#unfitted_domain_facets_to_PyVista"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.plot.unfitted_domain_facets_to_PyVista" title="Link to this definition"></a></dt>
+<dd><p>Converts the facets of the unfitted domain to a PyVista UnstructuredGrid.
+Extra information regarding the status of the facets and parent cells is added as cell data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>domain</strong> (<em>Any</em>) – The unfitted domain object whose facets are transformed.
+It can be an instance of UnfittedDomain_2D, UnfittedDomain_3D, or UnfittedDomain
+(if FEniCSx is available).</p></li>
+<li><p><strong>cut</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to include cut facets. Defaults to True.</p></li>
+<li><p><strong>full</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to include full facets. Defaults to True.</p></li>
+<li><p><strong>empty</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to include empty facets. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A PyVista UnstructuredGrid containing the facets of the domain.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pv.UnstructuredGrid</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the domain is an instance of UnfittedDomain and
+    FEniCSx installation is not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="qugar.plot.unfitted_domain_to_PyVista">
+<span class="sig-prename descclassname"><span class="pre">qugar.plot.</span></span><span class="sig-name descname"><span class="pre">unfitted_domain_to_PyVista</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cut</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">UnstructuredGrid</span></span></span><a class="reference internal" href="../_modules/qugar/plot/pyvista_tools.html#unfitted_domain_to_PyVista"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.plot.unfitted_domain_to_PyVista" title="Link to this definition"></a></dt>
+<dd><p>Converts the grid of an unfitted domain to a PyVista <cite>UnstructuredGrid</cite>.
+Extra information regarding the status of the cells is added as cell data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>domain</strong> (<em>Any</em>) – The domain to be converted. It can be an instance of
+UnfittedDomain_2D, UnfittedDomain_3D, or UnfittedDomain (if FEniCSx is available).</p></li>
+<li><p><strong>cut</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to include cut cells. Defaults to True.</p></li>
+<li><p><strong>full</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to include full cells. Defaults to True.</p></li>
+<li><p><strong>empty</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to include empty cells. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The resulting PyVista UnstructuredGrid with cell data</dt><dd><p>indicating the status of each cell (full, cut, or empty).</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pv.UnstructuredGrid</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – If the domain is an instance of UnfittedDomain and
+    FEniCSx installation is not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="qugar.reparam.html" class="btn btn-neutral float-left" title="qugar.reparam" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="qugar.dolfinx.html" class="btn btn-neutral float-right" title="qugar.dolfinx" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

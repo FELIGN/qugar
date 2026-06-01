@@ -1,0 +1,906 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qugar.plot.pyvista_tools &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos.html">Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">qugar.plot.pyvista_tools</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for qugar.plot.pyvista_tools</h1><div class="highlight"><pre>
+<span></span><span class="c1">#&#39; --------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2025-present by Pablo Antolin</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of the QUGaR library.</span>
+<span class="c1">#</span>
+<span class="c1"># SPDX-License-Identifier:    MIT</span>
+<span class="c1">#</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Functionalities for generating PyVista data structures of grids, unfitted domains,</span>
+<span class="sd">quadratures and reparameterizations.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeAlias</span><span class="p">,</span> <span class="n">cast</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_FEniCSx</span><span class="p">,</span> <span class="n">has_PyVista</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">has_PyVista</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;PyVista installation not found is required.&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.cpp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.cpp</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CartGridTP_2D</span><span class="p">,</span>
+    <span class="n">CartGridTP_3D</span><span class="p">,</span>
+    <span class="n">CutCellsQuad_2D</span><span class="p">,</span>
+    <span class="n">CutCellsQuad_3D</span><span class="p">,</span>
+    <span class="n">CutIsoBoundsQuad_1D</span><span class="p">,</span>
+    <span class="n">CutIsoBoundsQuad_2D</span><span class="p">,</span>
+    <span class="n">CutUnfBoundsQuad_2D</span><span class="p">,</span>
+    <span class="n">CutUnfBoundsQuad_3D</span><span class="p">,</span>
+    <span class="n">ReparamMesh_1_2</span><span class="p">,</span>
+    <span class="n">ReparamMesh_2_2</span><span class="p">,</span>
+    <span class="n">ReparamMesh_2_3</span><span class="p">,</span>
+    <span class="n">ReparamMesh_3_3</span><span class="p">,</span>
+    <span class="n">UnfittedDomain_2D</span><span class="p">,</span>
+    <span class="n">UnfittedDomain_3D</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DOLFINx_to_lexicg_faces</span><span class="p">,</span>
+    <span class="n">VTK_to_lexicg_faces</span><span class="p">,</span>
+    <span class="n">VTK_to_lexicg_nodes</span><span class="p">,</span>
+    <span class="n">lexicg_to_VTK_faces</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_scale_points</span><span class="p">(</span>
+    <span class="n">bbox</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">points_0_1</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Scales points from a normalized range [0, 1] to a specified bounding box.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        bbox (npt.NDArray[np.float32 | np.float64]): A 2-element array containing</span>
+<span class="sd">            the minimum (first row) and maximum (second row) values of the bounding box.</span>
+<span class="sd">        points_0_1 (npt.NDArray[np.float32 | np.float64]): An array of points in</span>
+<span class="sd">            the normalized range [0, 1].</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.float32 | np.float64]: An array of points scaled to the</span>
+<span class="sd">        specified bounding box.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">bbox</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">points_0_1</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="s2">&quot;Incompatible data types.&quot;</span>
+    <span class="k">assert</span> <span class="n">bbox</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">points_0_1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="s2">&quot;Incompatible shapes.&quot;</span>
+
+    <span class="n">xmin</span> <span class="o">=</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">xmax</span> <span class="o">=</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">points_0_1</span> <span class="o">*</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">+</span> <span class="n">xmin</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_facets_const_dirs</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates an array of the constant directions of the facets of a reference cell.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): The dimension of the reference cell. Must be either 2 or 3.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: An array of integers representing the constant directions</span>
+<span class="sd">            of every facet.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The indices of the facets correspond to the lexicographical ordering.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the dimension is not 2 or 3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid dimension.&quot;</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_facets_const_sides</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates an array representing the constant sides of the facets for a reference cell.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): The dimension of the reference cell. Must be either 2 or 3.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: An array of integers representing the constant sides of the</span>
+<span class="sd">            facets of a cell.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The indices of the facets correspond to the lexicographical ordering.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the dimension is not 2 or 3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid dimension.&quot;</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_facets_active_dirs</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the active directions for the facets of a 2D or 3D reference cell.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): The dimension of the reference cell. Must be either 2 or 3.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: A numpy array containing the active directions for each</span>
+<span class="sd">            facet of the reference cell.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The indices of the facets correspond to the lexicographical ordering.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the dimension is not 2 or 3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid dimension.&quot;</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_PyVista_cell_type</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">CellType</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the PyVista cell type based on the given dimension.</span>
+
+<span class="sd">    For degree 1, the `LINE`, `QUAD`, and `HEXAHEDRON` cell types are returned.</span>
+<span class="sd">    For higher-degrees, the lagrange versions are returned, namely</span>
+<span class="sd">    `LAGRANGE_CURVE`, `LAGRANGE_QUADRILATERAL`, and `LAGRANGE_HEXAHEDRON`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): The dimension of the cell (1 for curve, 2 for quadrilateral, 3 for hexahedron).</span>
+<span class="sd">        degree (int): The degree of the cell.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pv.CellType: The PyVista cell type corresponding to the given dimension.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        IndexError: If the dimension is not in the range [1, 3].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid dimension.&quot;</span>
+
+    <span class="k">if</span> <span class="n">degree</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">cell_types</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">pv</span><span class="o">.</span><span class="n">CellType</span><span class="o">.</span><span class="n">LINE</span><span class="p">,</span>
+            <span class="n">pv</span><span class="o">.</span><span class="n">CellType</span><span class="o">.</span><span class="n">QUAD</span><span class="p">,</span>
+            <span class="n">pv</span><span class="o">.</span><span class="n">CellType</span><span class="o">.</span><span class="n">HEXAHEDRON</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># High-order</span>
+        <span class="n">cell_types</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">pv</span><span class="o">.</span><span class="n">CellType</span><span class="o">.</span><span class="n">LAGRANGE_CURVE</span><span class="p">,</span>
+            <span class="n">pv</span><span class="o">.</span><span class="n">CellType</span><span class="o">.</span><span class="n">LAGRANGE_QUADRILATERAL</span><span class="p">,</span>
+            <span class="n">pv</span><span class="o">.</span><span class="n">CellType</span><span class="o">.</span><span class="n">LAGRANGE_HEXAHEDRON</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">CellType</span><span class="p">,</span> <span class="n">cell_types</span><span class="p">[</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_unstructured_grid_from_points</span><span class="p">(</span><span class="n">points</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a PyVista unstructured grid from a set of points.</span>
+
+<span class="sd">    This function generates an unstructured grid where each point is treated as a vertex.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        points (npt.NDArray[np.float64]): A 2D numpy array of shape (n_points, 3) containing</span>
+<span class="sd">            the coordinates of the points.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pv.UnstructuredGrid: An unstructured grid object with the given points as vertices.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Points must be 3D.&quot;</span>
+
+    <span class="n">n_points</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_points</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+    <span class="n">conn</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_points</span><span class="p">)</span>
+
+    <span class="n">cell_type</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CellType</span><span class="o">.</span><span class="n">VERTEX</span>
+    <span class="n">cell_types</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_points</span><span class="p">,</span> <span class="n">cell_type</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">cell_types</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_quad_points_grid</span><span class="p">(</span>
+    <span class="n">grid</span><span class="p">:</span> <span class="n">CartGridTP_2D</span> <span class="o">|</span> <span class="n">CartGridTP_3D</span><span class="p">,</span>
+    <span class="n">points</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">n_pts_per_entity</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span>
+    <span class="n">cells_ids</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span>
+    <span class="n">weights</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">normals</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a PyVista unstructured grid containing the given set of points.</span>
+
+<span class="sd">    This function scales the points from the unit domain to the bounding box of the cell,</span>
+<span class="sd">    creates an unstructured grid from the points, and appends cell data such as</span>
+<span class="sd">    lexicographical cell ids, weights, and optionally normals.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        grid (CartGridTP_2D | CartGridTP_3D): The grid object containing cell domain information.</span>
+<span class="sd">        points (npt.NDArray[np.float64]): Array of points in the unit domain that will be added</span>
+<span class="sd">            to the grid.</span>
+<span class="sd">        n_pts_per_entity (npt.NDArray[np.int32]): Number of points per entity (cell or facet).</span>
+<span class="sd">        cells_ids (npt.NDArray[np.int32]): Array of cell ids associated to the points.</span>
+<span class="sd">        weights (npt.NDArray[np.float64]): Array of weights for each point.</span>
+<span class="sd">        normals (Optional[npt.NDArray[np.float64]], optional): Array of normals for each point.</span>
+<span class="sd">            Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pv.UnstructuredGrid: The resulting unstructured grid with appended cell data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">cells_ids</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="n">n_pts_per_entity</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="n">n_pts</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">dim</span>
+
+    <span class="k">assert</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">n_pts</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+
+    <span class="c1"># First we scale the points from the unit domain to the bounding box of the cell.</span>
+    <span class="c1"># If 2D, we add a zero component to the points.</span>
+    <span class="n">new_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_pts</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">points</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">ofs</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">cell_id</span><span class="p">,</span> <span class="n">n_pts_cell</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cells_ids</span><span class="p">,</span> <span class="n">n_pts_per_entity</span><span class="p">):</span>
+        <span class="n">domain</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">get_cell_domain</span><span class="p">(</span><span class="n">cell_id</span><span class="p">)</span>
+        <span class="n">bbox</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">domain</span><span class="o">.</span><span class="n">min_corner</span><span class="p">,</span> <span class="n">domain</span><span class="o">.</span><span class="n">max_corner</span><span class="p">])</span>
+        <span class="n">points_0_1</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">ofs</span> <span class="p">:</span> <span class="n">ofs</span> <span class="o">+</span> <span class="n">n_pts_cell</span><span class="p">]</span>
+        <span class="n">new_points</span><span class="p">[</span><span class="n">ofs</span> <span class="p">:</span> <span class="n">ofs</span> <span class="o">+</span> <span class="n">n_pts_cell</span><span class="p">,</span> <span class="p">:</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">_scale_points</span><span class="p">(</span><span class="n">bbox</span><span class="p">,</span> <span class="n">points_0_1</span><span class="p">)</span>
+        <span class="n">ofs</span> <span class="o">+=</span> <span class="n">n_pts_cell</span>
+
+    <span class="n">points_grid</span> <span class="o">=</span> <span class="n">_create_unstructured_grid_from_points</span><span class="p">(</span><span class="n">new_points</span><span class="p">)</span>
+
+    <span class="c1"># Append cell data.</span>
+
+    <span class="n">lex_cell_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">cells_ids</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">n_pts_per_entity</span><span class="p">)</span>
+    <span class="n">points_grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;Lexicographical cell ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lex_cell_ids</span>
+
+    <span class="n">points_grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;Weights&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights</span>
+
+    <span class="k">if</span> <span class="n">normals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">normals</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">n_pts</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+        <span class="n">new_normals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_pts</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">points</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_pts</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">new_normals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">points</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_normals</span><span class="p">[:,</span> <span class="p">:</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">normals</span>
+        <span class="n">points_grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;Normals&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_normals</span>
+
+    <span class="k">return</span> <span class="n">points_grid</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_cut_quad_to_PyVista</span><span class="p">(</span>
+    <span class="n">grid</span><span class="p">:</span> <span class="n">CartGridTP_2D</span> <span class="o">|</span> <span class="n">CartGridTP_3D</span><span class="p">,</span>
+    <span class="n">quad</span><span class="p">:</span> <span class="n">CutCellsQuad_2D</span> <span class="o">|</span> <span class="n">CutCellsQuad_3D</span> <span class="o">|</span> <span class="n">CutUnfBoundsQuad_2D</span> <span class="o">|</span> <span class="n">CutUnfBoundsQuad_3D</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a PyVista unstructured grid containing quadrature points and weights.</span>
+
+<span class="sd">    For the case of quadrature of unfitted boundaries, it also includes normals.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        grid (CartGridTP_2D | CartGridTP_3D): The Cartesian grid associated</span>
+<span class="sd">            to the quadrature `quad`.</span>
+<span class="sd">        quad (CutCellsQuad_2D | CutCellsQuad_3D | CutUnfBoundsQuad_2D | CutUnfBoundsQuad_3D): The</span>
+<span class="sd">            quadrature containing the points to be included in the PyVista grid.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pv.UnstructuredGrid: The resulting PyVista unstructured grid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">_create_quad_points_grid</span><span class="p">(</span>
+        <span class="n">grid</span><span class="p">,</span>
+        <span class="n">quad</span><span class="o">.</span><span class="n">points</span><span class="p">,</span>
+        <span class="n">quad</span><span class="o">.</span><span class="n">n_pts_per_entity</span><span class="p">,</span>
+        <span class="n">quad</span><span class="o">.</span><span class="n">cells</span><span class="p">,</span>
+        <span class="n">quad</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span>
+        <span class="n">quad</span><span class="o">.</span><span class="n">normals</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">quad</span><span class="p">,</span> <span class="s2">&quot;normals&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_quad_facet_points_grid</span><span class="p">(</span>
+    <span class="n">grid</span><span class="p">:</span> <span class="n">CartGridTP_2D</span> <span class="o">|</span> <span class="n">CartGridTP_3D</span><span class="p">,</span>
+    <span class="n">quads</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">CutIsoBoundsQuad_1D</span> <span class="o">|</span> <span class="n">CutIsoBoundsQuad_2D</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a PyVista unstructured grid containing quadrature points contained</span>
+<span class="sd">    in `quad` and associated to the facets of `grid`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        grid (CartGridTP_2D | CartGridTP_3D): The Cartesian grid for</span>
+<span class="sd">            whose facets quadrature points are associated to.</span>
+<span class="sd">        quads (list[CutIsoBoundsQuad_2D | CutIsoBoundsQuad_3D]): The</span>
+<span class="sd">            list of quadratures containing the facet quadrature points.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pv.UnstructuredGrid: The generated PyVista unstructured grid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">quads</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Empty list of quadratures.&quot;</span>
+
+    <span class="c1"># First we transform point from the reference facet (with one dimension less)</span>
+    <span class="c1"># to facets on the reference cell (with the same dimension as the cell).</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">quads</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">quads</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">dtype</span>
+
+    <span class="n">n_pts</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">quad</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">quad</span> <span class="ow">in</span> <span class="n">quads</span><span class="p">)</span>
+    <span class="n">n_facets</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">quad</span><span class="o">.</span><span class="n">cells</span><span class="o">.</span><span class="n">size</span> <span class="k">for</span> <span class="n">quad</span> <span class="ow">in</span> <span class="n">quads</span><span class="p">)</span>
+
+    <span class="n">facets_const_dirs</span> <span class="o">=</span> <span class="n">_facets_const_dirs</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+    <span class="n">facets_const_sides</span> <span class="o">=</span> <span class="n">_facets_const_sides</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+    <span class="n">facets_active_dirs</span> <span class="o">=</span> <span class="n">_facets_active_dirs</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+
+    <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_pts</span><span class="p">,</span> <span class="n">dim</span><span class="p">),</span> <span class="n">dtype</span><span class="p">)</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_pts</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+    <span class="n">cells</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_facets</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">n_pts_per_entity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_facets</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">facets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_facets</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+    <span class="n">ofs_pts</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ofs_cell</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">quad</span> <span class="ow">in</span> <span class="n">quads</span><span class="p">:</span>
+        <span class="n">ofs_pts_quad</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">cell_id</span><span class="p">,</span> <span class="n">facet_id</span><span class="p">,</span> <span class="n">n_pts_facet</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">quad</span><span class="o">.</span><span class="n">cells</span><span class="p">,</span> <span class="n">quad</span><span class="o">.</span><span class="n">facets</span><span class="p">,</span> <span class="n">quad</span><span class="o">.</span><span class="n">n_pts_per_entity</span><span class="p">):</span>
+            <span class="n">const_dir</span> <span class="o">=</span> <span class="n">facets_const_dirs</span><span class="p">[</span><span class="n">facet_id</span><span class="p">]</span>
+            <span class="n">const_side</span> <span class="o">=</span> <span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">facets_const_sides</span><span class="p">[</span><span class="n">facet_id</span><span class="p">])</span>
+            <span class="n">active_dirs</span> <span class="o">=</span> <span class="n">facets_active_dirs</span><span class="p">[</span><span class="n">facet_id</span><span class="p">]</span>
+
+            <span class="n">points_facet</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">ofs_pts</span> <span class="p">:</span> <span class="n">ofs_pts</span> <span class="o">+</span> <span class="n">n_pts_facet</span><span class="p">,</span> <span class="p">:</span><span class="n">dim</span><span class="p">]</span>
+            <span class="n">points_facet</span><span class="p">[:,</span> <span class="n">const_dir</span><span class="p">]</span> <span class="o">=</span> <span class="n">const_side</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">active_dirs</span><span class="p">):</span>
+                <span class="n">points_facet</span><span class="p">[:,</span> <span class="nb">dir</span><span class="p">]</span> <span class="o">=</span> <span class="n">quad</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">ofs_pts_quad</span> <span class="p">:</span> <span class="n">ofs_pts_quad</span> <span class="o">+</span> <span class="n">n_pts_facet</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+            <span class="n">weights</span><span class="p">[</span><span class="n">ofs_pts</span> <span class="p">:</span> <span class="n">ofs_pts</span> <span class="o">+</span> <span class="n">n_pts_facet</span><span class="p">]</span> <span class="o">=</span> <span class="n">quad</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span>
+                <span class="n">ofs_pts_quad</span> <span class="p">:</span> <span class="n">ofs_pts_quad</span> <span class="o">+</span> <span class="n">n_pts_facet</span>
+            <span class="p">]</span>
+            <span class="n">cells</span><span class="p">[</span><span class="n">ofs_cell</span><span class="p">]</span> <span class="o">=</span> <span class="n">cell_id</span>
+            <span class="n">facets</span><span class="p">[</span><span class="n">ofs_cell</span><span class="p">]</span> <span class="o">=</span> <span class="n">facet_id</span>
+            <span class="n">n_pts_per_entity</span><span class="p">[</span><span class="n">ofs_cell</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_pts_facet</span>
+
+            <span class="n">ofs_pts</span> <span class="o">+=</span> <span class="n">n_pts_facet</span>
+            <span class="n">ofs_pts_quad</span> <span class="o">+=</span> <span class="n">n_pts_facet</span>
+            <span class="n">ofs_cell</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># Then, we create the grid.</span>
+    <span class="n">points_grid</span> <span class="o">=</span> <span class="n">_create_quad_points_grid</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">n_pts_per_entity</span><span class="p">,</span> <span class="n">cells</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Finally we append the lexicographical local facet ids as cell data.</span>
+    <span class="n">lex_local_facets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">facets</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">n_pts_per_entity</span><span class="p">)</span>
+    <span class="n">points_grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;Lexicographical local facets ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lex_local_facets</span>
+
+    <span class="k">return</span> <span class="n">points_grid</span>
+
+
+<span class="k">if</span> <span class="n">has_FEniCSx</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_append_DOLFINx_cell_ids</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">Mesh</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Appends DOLFINx local and global cell IDs to the given PyVista UnstructuredGrid.</span>
+
+<span class="sd">        This function adds two new cell data arrays to the provided `grid`:</span>
+<span class="sd">        &quot;DOLFINx local cell ids&quot; and &quot;DOLFINx global cell ids&quot;. These arrays are</span>
+<span class="sd">        derived from the lexicographical cell IDs present in the grid and the</span>
+<span class="sd">        corresponding DOLFINx cell IDs from the provided `mesh`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            grid (pv.UnstructuredGrid): The PyVista UnstructuredGrid to which the</span>
+<span class="sd">                DOLFINx cell IDs will be appended.</span>
+<span class="sd">            mesh (Mesh): The QUGaR Mesh object containing the DOLFINx</span>
+<span class="sd">                cell ID information.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AssertionError: If the number of global cells in the mesh does not match</span>
+<span class="sd">            the number of local cells. This is not implemented yet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">lex_cell_ids</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;Lexicographical cell ids&quot;</span><span class="p">]</span>
+
+        <span class="n">grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;DOLFINx local cell ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">get_DOLFINx_local_cell_ids</span><span class="p">(</span><span class="n">lex_cell_ids</span><span class="p">)</span>
+        <span class="n">grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;DOLFINx global cell ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">get_DOLFINx_global_cell_ids</span><span class="p">(</span><span class="n">lex_cell_ids</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_append_DOLFINx_facets_ids</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Appends DOLFINx local facet IDs to the given PyVista UnstructuredGrid.</span>
+
+<span class="sd">        This function maps the lexicographical local facet IDs to DOLFINx local facet IDs</span>
+<span class="sd">        and appends them to the cell data of the provided grid.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            grid (pv.UnstructuredGrid): The PyVista UnstructuredGrid to which the DOLFINx</span>
+<span class="sd">                local facet IDs will be appended.</span>
+<span class="sd">            dim (int): The dimension of the grid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dlf_lex_mask</span> <span class="o">=</span> <span class="n">DOLFINx_to_lexicg_faces</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+
+        <span class="n">lex_facets</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;Lexicographical local facets ids&quot;</span><span class="p">]</span>
+        <span class="n">dlf_facets</span> <span class="o">=</span> <span class="n">dlf_lex_mask</span><span class="p">[</span><span class="n">lex_facets</span><span class="p">]</span>
+        <span class="n">grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;DOLFINx local facets ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dlf_facets</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="quadrature_to_PyVista">
+<a class="viewcode-back" href="../../../generated/qugar.plot.html#qugar.plot.quadrature_to_PyVista">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">quadrature_to_PyVista</span><span class="p">(</span>
+    <span class="n">domain</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="n">n_pts_dir</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">MultiBlock</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates quadrature data for an unfitted domain and exports it to a</span>
+<span class="sd">    PyVista data structure. It generates, and export, quadrature points</span>
+<span class="sd">    for the interior of the cells, the unfitted boundaries, and the facets.</span>
+
+<span class="sd">    In addition to the lexicographical indices of cells and facets,</span>
+<span class="sd">    this function also appends the DOLFINx associated indices.</span>
+
+<span class="sd">    @note: This function is only available when FEniCSx is installed.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        domain (UnfittedDomain): The unfitted domain for which the quadratures</span>
+<span class="sd">            are generated.</span>
+<span class="sd">        n_pts_dir (int): Number of points per direction for quadrature.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pv.MultiBlock: A PyVista multiblock dataset containing the quadratures</span>
+<span class="sd">            of the cut cells, cut facets, and unfitted boundaries.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">is_cpp</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="p">(</span><span class="n">UnfittedDomain_2D</span><span class="p">,</span> <span class="n">UnfittedDomain_3D</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">is_cpp</span><span class="p">:</span>
+        <span class="n">domain_</span> <span class="o">=</span> <span class="n">domain</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">has_FEniCSx</span><span class="p">,</span> <span class="s2">&quot;FEniCSx is required to convert a TensorProductMesh to PyVista.&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnfittedDomain</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">UnfittedDomain</span><span class="p">),</span> <span class="s2">&quot;Invalid type.&quot;</span>
+        <span class="n">domain_</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">cpp_unf_domain_object</span>
+
+    <span class="n">cells_quad</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_quadrature</span><span class="p">(</span><span class="n">domain_</span><span class="p">,</span> <span class="n">domain_</span><span class="o">.</span><span class="n">get_cut_cells</span><span class="p">(),</span> <span class="n">n_pts_dir</span><span class="p">)</span>
+
+    <span class="n">cells_points_set</span> <span class="o">=</span> <span class="n">_cut_quad_to_PyVista</span><span class="p">(</span><span class="n">domain_</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">cells_quad</span><span class="p">)</span>
+
+    <span class="n">include_facet_unf_bry</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">exclude_ext_bdry</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">unf_bdry_quad</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_unfitted_bound_quadrature</span><span class="p">(</span>
+        <span class="n">domain_</span><span class="p">,</span> <span class="n">domain_</span><span class="o">.</span><span class="n">get_cut_cells</span><span class="p">(),</span> <span class="n">n_pts_dir</span><span class="p">,</span> <span class="n">include_facet_unf_bry</span><span class="p">,</span> <span class="n">exclude_ext_bdry</span>
+    <span class="p">)</span>
+    <span class="n">unf_bdry_points_set</span> <span class="o">=</span> <span class="n">_cut_quad_to_PyVista</span><span class="p">(</span><span class="n">domain_</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">unf_bdry_quad</span><span class="p">)</span>
+
+    <span class="n">cut_facets_cells</span><span class="p">,</span> <span class="n">cut_facets_local_facets</span> <span class="o">=</span> <span class="n">domain_</span><span class="o">.</span><span class="n">get_cut_facets</span><span class="p">()</span>
+    <span class="n">cut_facets_quad</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_facets_quadrature_exterior_integral</span><span class="p">(</span>
+        <span class="n">domain_</span><span class="p">,</span>
+        <span class="n">cut_facets_cells</span><span class="p">,</span>
+        <span class="n">cut_facets_local_facets</span><span class="p">,</span>
+        <span class="n">n_pts_dir</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">unf_bdry_facets_cells</span><span class="p">,</span> <span class="n">unf_bdry_facets_local_facets</span> <span class="o">=</span> <span class="n">domain_</span><span class="o">.</span><span class="n">get_unf_bdry_facets</span><span class="p">()</span>
+    <span class="n">unf_bdry_facets_quad</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_facets_quadrature_exterior_integral</span><span class="p">(</span>
+        <span class="n">domain_</span><span class="p">,</span>
+        <span class="n">unf_bdry_facets_cells</span><span class="p">,</span>
+        <span class="n">unf_bdry_facets_local_facets</span><span class="p">,</span>
+        <span class="n">n_pts_dir</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">facets_points_set</span> <span class="o">=</span> <span class="n">_create_quad_facet_points_grid</span><span class="p">(</span>
+        <span class="n">domain_</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="p">[</span><span class="n">cut_facets_quad</span><span class="p">,</span> <span class="n">unf_bdry_facets_quad</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_cpp</span><span class="p">:</span>
+        <span class="n">_append_DOLFINx_cell_ids</span><span class="p">(</span><span class="n">cells_points_set</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">_append_DOLFINx_cell_ids</span><span class="p">(</span><span class="n">unf_bdry_points_set</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">_append_DOLFINx_cell_ids</span><span class="p">(</span><span class="n">facets_points_set</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">_append_DOLFINx_facets_ids</span><span class="p">(</span><span class="n">facets_points_set</span><span class="p">,</span> <span class="n">domain</span><span class="o">.</span><span class="n">tdim</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+    <span class="k">return</span> <span class="n">pv</span><span class="o">.</span><span class="n">MultiBlock</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Cut cells quadrature&quot;</span><span class="p">:</span> <span class="n">cells_points_set</span><span class="p">,</span>
+            <span class="s2">&quot;Unfitted boundary quadrature&quot;</span><span class="p">:</span> <span class="n">unf_bdry_points_set</span><span class="p">,</span>
+            <span class="s2">&quot;Cut/unfitted facets quadrature&quot;</span><span class="p">:</span> <span class="n">facets_points_set</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="unfitted_domain_facets_to_PyVista">
+<a class="viewcode-back" href="../../../generated/qugar.plot.html#qugar.plot.unfitted_domain_facets_to_PyVista">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">unfitted_domain_facets_to_PyVista</span><span class="p">(</span>
+    <span class="n">domain</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cut</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">full</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">empty</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the facets of the unfitted domain to a PyVista UnstructuredGrid.</span>
+<span class="sd">    Extra information regarding the status of the facets and parent cells is added as cell data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        domain (Any): The unfitted domain object whose facets are transformed.</span>
+<span class="sd">            It can be an instance of UnfittedDomain_2D, UnfittedDomain_3D, or UnfittedDomain</span>
+<span class="sd">            (if FEniCSx is available).</span>
+<span class="sd">        cut (bool, optional): Whether to include cut facets. Defaults to True.</span>
+<span class="sd">        full (bool, optional): Whether to include full facets. Defaults to True.</span>
+<span class="sd">        empty (bool, optional): Whether to include empty facets. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pv.UnstructuredGrid: A PyVista UnstructuredGrid containing the facets of the domain.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the domain is an instance of UnfittedDomain and</span>
+<span class="sd">            FEniCSx installation is not found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">unfitted_domain_to_PyVista</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">cut</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">full</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">empty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">n_cells</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">n_cells</span>
+
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">tdim</span>
+    <span class="k">assert</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid dimension.&quot;</span>
+
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DataSet</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="n">factor</span><span class="o">=</span><span class="mf">0.0</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DataSet</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">extract_all_edges</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DataSet</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">extract_surface</span><span class="p">())</span>
+
+    <span class="n">n_facets_per_cell</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">dim</span>
+    <span class="n">grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;VTK local facets ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_facets_per_cell</span><span class="p">),</span> <span class="n">n_cells</span><span class="p">)</span>
+    <span class="n">grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;Facet status (0: full, 1: cut, 2: empty)&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
+        <span class="n">grid</span><span class="o">.</span><span class="n">n_cells</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span>
+    <span class="p">)</span>
+
+    <span class="n">vtk_lex_mask</span> <span class="o">=</span> <span class="n">VTK_to_lexicg_faces</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+
+    <span class="n">active_facets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+    <span class="n">facets</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">full</span><span class="p">:</span>
+        <span class="n">facets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">get_full_facets</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">cut</span><span class="p">:</span>
+        <span class="n">facets</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">get_cut_facets</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">empty</span><span class="p">:</span>
+        <span class="n">facets</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">get_empty_facets</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">status</span><span class="p">,</span> <span class="n">lex_cells_facets</span> <span class="ow">in</span> <span class="n">facets</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">vtk_facets</span> <span class="o">=</span> <span class="n">vtk_lex_mask</span><span class="p">[</span><span class="n">lex_cells_facets</span><span class="o">.</span><span class="n">local_facet_ids</span><span class="p">]</span>
+        <span class="n">vtk_cells</span> <span class="o">=</span> <span class="n">lex_cells_facets</span><span class="o">.</span><span class="n">cell_ids</span> <span class="o">*</span> <span class="n">n_facets_per_cell</span> <span class="o">+</span> <span class="n">vtk_facets</span>
+        <span class="n">grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;Facet status (0: full, 1: cut, 2: empty)&quot;</span><span class="p">][</span><span class="n">vtk_cells</span><span class="p">]</span> <span class="o">=</span> <span class="n">status</span>
+        <span class="n">active_facets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">active_facets</span><span class="p">,</span> <span class="n">vtk_cells</span><span class="p">)</span>
+
+    <span class="n">facets_grid</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">extract_cells</span><span class="p">(</span><span class="n">active_facets</span><span class="p">))</span>
+
+    <span class="n">lex_vtk_mask</span> <span class="o">=</span> <span class="n">lexicg_to_VTK_faces</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+
+    <span class="n">vtk_facets</span> <span class="o">=</span> <span class="n">facets_grid</span><span class="o">.</span><span class="n">cell_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;VTK local facets ids&quot;</span><span class="p">)</span>
+    <span class="n">lex_facets</span> <span class="o">=</span> <span class="n">lex_vtk_mask</span><span class="p">[</span><span class="n">vtk_facets</span><span class="p">]</span>
+    <span class="n">facets_grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;Lexicographical local facets ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lex_facets</span>
+
+    <span class="n">is_cpp</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="p">(</span><span class="n">UnfittedDomain_2D</span><span class="p">,</span> <span class="n">UnfittedDomain_3D</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_cpp</span><span class="p">:</span>
+        <span class="n">_append_DOLFINx_facets_ids</span><span class="p">(</span><span class="n">facets_grid</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">facets_grid</span></div>
+
+
+
+<div class="viewcode-block" id="unfitted_domain_to_PyVista">
+<a class="viewcode-back" href="../../../generated/qugar.plot.html#qugar.plot.unfitted_domain_to_PyVista">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">unfitted_domain_to_PyVista</span><span class="p">(</span>
+    <span class="n">domain</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cut</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">full</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">empty</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts the grid of an unfitted domain to a PyVista `UnstructuredGrid`.</span>
+<span class="sd">    Extra information regarding the status of the cells is added as cell data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        domain (Any): The domain to be converted. It can be an instance of</span>
+<span class="sd">            UnfittedDomain_2D, UnfittedDomain_3D, or UnfittedDomain (if FEniCSx is available).</span>
+<span class="sd">        cut (bool, optional): Whether to include cut cells. Defaults to True.</span>
+<span class="sd">        full (bool, optional): Whether to include full cells. Defaults to True.</span>
+<span class="sd">        empty (bool, optional): Whether to include empty cells. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pv.UnstructuredGrid: The resulting PyVista UnstructuredGrid with cell data</span>
+<span class="sd">            indicating the status of each cell (full, cut, or empty).</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the domain is an instance of UnfittedDomain and</span>
+<span class="sd">            FEniCSx installation is not found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">is_cpp</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="p">(</span><span class="n">UnfittedDomain_2D</span><span class="p">,</span> <span class="n">UnfittedDomain_3D</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">is_cpp</span><span class="p">:</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">cart_grid_tp_to_PyVista</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span>
+        <span class="n">n_cells</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">num_total_cells</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">has_FEniCSx</span><span class="p">,</span> <span class="s2">&quot;FEniCSx is required to convert a TensorProductMesh to PyVista.&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnfittedDomain</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">UnfittedDomain</span><span class="p">),</span> <span class="s2">&quot;Invalid type.&quot;</span>
+
+        <span class="n">n_cells</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">num_global_cells</span>
+
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">grid_tp_to_PyVista</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">mesh</span><span class="p">)</span>
+
+    <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">empty</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">cut_cells</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">get_cut_cells</span><span class="p">()</span>
+    <span class="n">full_cells</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">get_full_cells</span><span class="p">()</span>
+    <span class="n">value</span><span class="p">[</span><span class="n">cut_cells</span><span class="p">]</span> <span class="o">=</span> <span class="n">cut</span>
+    <span class="n">status</span><span class="p">[</span><span class="n">cut_cells</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">value</span><span class="p">[</span><span class="n">full_cells</span><span class="p">]</span> <span class="o">=</span> <span class="n">full</span>
+    <span class="n">status</span><span class="p">[</span><span class="n">full_cells</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="n">grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;Cell status (0: full, 1: cut, 2: empty)&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">status</span>
+
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">,</span> <span class="n">grid</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">scalars</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">))</span>
+    <span class="n">grid</span><span class="o">.</span><span class="n">cell_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">grid</span></div>
+
+
+
+<div class="viewcode-block" id="cart_grid_tp_to_PyVista">
+<a class="viewcode-back" href="../../../generated/qugar.plot.html#qugar.plot.cart_grid_tp_to_PyVista">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cart_grid_tp_to_PyVista</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectilinearGrid</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a Cartesian grid to a PyVista `RectilinearGrid`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        grid (CartGridTP_2D | CartGridTP_3D | CartesianMesh): The input grid, which can</span>
+<span class="sd">            be either a CartGridTP_2D, CartGridTP_3D, or CartesianMesh (if FEniCSx is available).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pv.RectilinearGrid: The converted PyVista `RectilinearGrid`.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If a TensorProductMesh is passed as input and the number of global cells</span>
+<span class="sd">            does not match the number of local cells in the grid. This is not implemented yet.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">is_cpp</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="p">(</span><span class="n">CartGridTP_2D</span><span class="p">,</span> <span class="n">CartGridTP_3D</span><span class="p">))</span>
+
+    <span class="n">cell_breaks</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">cell_breaks</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cell_breaks</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid dimension.&quot;</span>
+    <span class="n">n_cells</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">breaks</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">breaks</span> <span class="ow">in</span> <span class="n">cell_breaks</span><span class="p">])</span>
+
+    <span class="n">pv_grid</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectilinearGrid</span><span class="p">(</span><span class="o">*</span><span class="n">grid</span><span class="o">.</span><span class="n">cell_breaks</span><span class="p">)</span>
+    <span class="n">lex_cell_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">pv_grid</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="s2">&quot;Lexicographical cell ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lex_cell_ids</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_cpp</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">has_FEniCSx</span><span class="p">,</span> <span class="s2">&quot;FEniCSx is required to convert a TensorProductMesh to PyVista.&quot;</span>
+
+        <span class="k">if</span> <span class="n">grid</span><span class="o">.</span><span class="n">has_inactive_cells</span><span class="p">:</span>
+            <span class="n">pv_grid</span> <span class="o">=</span> <span class="n">pv_grid</span><span class="o">.</span><span class="n">extract_cells</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">original_active_cells</span><span class="p">)</span>
+
+        <span class="n">_append_DOLFINx_cell_ids</span><span class="p">(</span><span class="n">pv_grid</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pv_grid</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">grid_tp_to_PyVista</span><span class="p">(</span><span class="n">grid</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">Grid</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a tensor-product grid to a PyVista `Grid`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        grid (CartGridTP_2D | CartGridTP_3D | TensorProductMesh): The input grid, which can</span>
+<span class="sd">            be either a CartGridTP_2D, CartGridTP_3D, or TensorProductMesh</span>
+<span class="sd">            (if FEniCSx is available).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pv.Grid: The converted PyVista `Grid`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="p">(</span><span class="n">CartGridTP_2D</span><span class="p">,</span> <span class="n">CartGridTP_3D</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">cart_grid_tp_to_PyVista</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">has_FEniCSx</span><span class="p">,</span> <span class="s2">&quot;FEniCSx is required to convert a TensorProductMesh to PyVista.&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">CartesianMesh</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">CartesianMesh</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">cart_grid_tp_to_PyVista</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Not implemented yet.&quot;</span>
+
+
+<span class="n">ReparamMesh</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">ReparamMesh_1_2</span> <span class="o">|</span> <span class="n">ReparamMesh_2_2</span> <span class="o">|</span> <span class="n">ReparamMesh_2_3</span> <span class="o">|</span> <span class="n">ReparamMesh_3_3</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_reparam_mesh_to_PyVista</span><span class="p">(</span>
+    <span class="n">reparam</span><span class="p">:</span> <span class="n">ReparamMesh</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">MultiBlock</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a reparameterization mesh object to a PyVista `MultiBlock`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        reparam (ReparamMesh): The reparametrized mesh object to be converted.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pv.MultiBlock: Reparameterization translated to PyVista data structures.</span>
+<span class="sd">            It is a multiblock containing two unstructured grids: one for the</span>
+<span class="sd">            reparameterization itselt and one for the reparmeterization&#39;s wirebasket.</span>
+<span class="sd">            They can be accessed using ``.get(&quot;reparam&quot;)`` and ``.get(&quot;wirebasket&quot;)``,</span>
+<span class="sd">            respectively.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+        <span class="n">reparam</span><span class="p">,</span> <span class="p">(</span><span class="n">ReparamMesh_1_2</span><span class="p">,</span> <span class="n">ReparamMesh_2_2</span><span class="p">,</span> <span class="n">ReparamMesh_2_3</span><span class="p">,</span> <span class="n">ReparamMesh_3_3</span><span class="p">)</span>
+    <span class="p">),</span> <span class="s2">&quot;Invalid type.&quot;</span>
+
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">reparam</span><span class="o">.</span><span class="n">dim</span>
+    <span class="n">degree</span> <span class="o">=</span> <span class="n">reparam</span><span class="o">.</span><span class="n">order</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="n">points</span> <span class="o">=</span> <span class="n">reparam</span><span class="o">.</span><span class="n">points</span>
+    <span class="c1"># Enforcing points to be 3D.</span>
+    <span class="k">if</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">points</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">points</span><span class="p">,</span> <span class="n">zeros</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_unstructured_grid</span><span class="p">(</span><span class="n">conn</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">],</span> <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">:</span>
+        <span class="n">vtk_mask</span> <span class="o">=</span> <span class="n">VTK_to_lexicg_nodes</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">)</span>
+
+        <span class="n">n_cells</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">new_conn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">conn</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+        <span class="n">new_conn</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">conn</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+        <span class="n">new_conn</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)[:,</span> <span class="n">vtk_mask</span><span class="p">]</span>
+
+        <span class="n">cell_type</span> <span class="o">=</span> <span class="n">_get_PyVista_cell_type</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">)</span>
+        <span class="n">cell_types</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">cell_type</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">(</span><span class="n">new_conn</span><span class="p">,</span> <span class="n">cell_types</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
+
+    <span class="n">int_grid</span> <span class="o">=</span> <span class="n">_create_unstructured_grid</span><span class="p">(</span><span class="n">reparam</span><span class="o">.</span><span class="n">cells_conn</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+    <span class="n">wb_grid</span> <span class="o">=</span> <span class="n">_create_unstructured_grid</span><span class="p">(</span><span class="n">reparam</span><span class="o">.</span><span class="n">wirebasket_conn</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pv</span><span class="o">.</span><span class="n">MultiBlock</span><span class="p">({</span><span class="s2">&quot;reparam&quot;</span><span class="p">:</span> <span class="n">int_grid</span><span class="p">,</span> <span class="s2">&quot;wirebasket&quot;</span><span class="p">:</span> <span class="n">wb_grid</span><span class="p">})</span>
+
+
+<div class="viewcode-block" id="reparam_mesh_to_PyVista">
+<a class="viewcode-back" href="../../../generated/qugar.plot.html#qugar.plot.reparam_mesh_to_PyVista">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">reparam_mesh_to_PyVista</span><span class="p">(</span><span class="n">reparam</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">MultiBlock</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a reparameterization mesh object to a PyVista `MultiBlock`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        reparam (ReparamMesh | UnfDomainReparamMesh): The reparametrized mesh object</span>
+<span class="sd">            to be converted.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pv.MultiBlock: Reparameterization translated to PyVista data structures.</span>
+<span class="sd">            It is a multiblock containing two unstructured grids: one for the</span>
+<span class="sd">            reparameterization itselt and one for the reparmeterization&#39;s wirebasket.</span>
+<span class="sd">            They can be accessed using ``.get(&quot;reparam&quot;)`` and ``.get(&quot;wirebasket&quot;)``,</span>
+<span class="sd">            respectively.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reparam</span><span class="p">,</span> <span class="p">(</span><span class="n">ReparamMesh_1_2</span> <span class="o">|</span> <span class="n">ReparamMesh_2_2</span> <span class="o">|</span> <span class="n">ReparamMesh_2_3</span> <span class="o">|</span> <span class="n">ReparamMesh_3_3</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">_reparam_mesh_to_PyVista</span><span class="p">(</span><span class="n">reparam</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">has_FEniCSx</span><span class="p">,</span> <span class="s2">&quot;FEniCSx is required to convert a TensorProductMesh to PyVista.&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.plot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plot_dlf</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">qugar.reparam</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnfDomainReparamMesh</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reparam</span><span class="p">,</span> <span class="n">UnfDomainReparamMesh</span><span class="p">),</span> <span class="s2">&quot;Invalid type.&quot;</span>
+
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">reparam</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">()</span>
+        <span class="n">pv_mesh</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">(</span><span class="o">*</span><span class="n">plot_dlf</span><span class="o">.</span><span class="n">vtk_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">))</span>
+
+        <span class="n">mesh_wb</span> <span class="o">=</span> <span class="n">reparam</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">(</span><span class="n">wirebasket</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">pv_mesh_wb</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">(</span><span class="o">*</span><span class="n">plot_dlf</span><span class="o">.</span><span class="n">vtk_mesh</span><span class="p">(</span><span class="n">mesh_wb</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">pv</span><span class="o">.</span><span class="n">MultiBlock</span><span class="p">({</span><span class="s2">&quot;reparam&quot;</span><span class="p">:</span> <span class="n">pv_mesh</span><span class="p">,</span> <span class="s2">&quot;wirebasket&quot;</span><span class="p">:</span> <span class="n">pv_mesh_wb</span><span class="p">})</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

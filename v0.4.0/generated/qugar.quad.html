@@ -1,0 +1,499 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qugar.quad &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="qugar.reparam" href="qugar.reparam.html" />
+    <link rel="prev" title="qugar.impl" href="qugar.impl.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../demos.html">Demos</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api_python.html">Python</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../api_python.html#public-user-interface">Public user interface</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="qugar.html">qugar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.mesh.html">qugar.mesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.impl.html">qugar.impl</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">qugar.quad</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.reparam.html">qugar.reparam</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.plot.html">qugar.plot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qugar.dolfinx.html">qugar.dolfinx</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api_python.html#nanobind-c-interface">nanobind/C++interface</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api_cpp.html">C++</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API reference</a></li>
+          <li class="breadcrumb-item"><a href="../api_python.html">Python</a></li>
+      <li class="breadcrumb-item active">qugar.quad</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/qugar.quad.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-qugar.quad">
+<span id="qugar-quad"></span><h1>qugar.quad<a class="headerlink" href="#module-qugar.quad" title="Link to this heading"></a></h1>
+<p>Quadrature module for QUGaR</p>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.quad.CellState" title="qugar.quad.CellState"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CellState</span></code></a>(*values)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.quad.CustomQuad" title="qugar.quad.CustomQuad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomQuad</span></code></a>(cells, n_pts_per_entity, points, ...)</p></td>
+<td><p>Data class for storing custom quadratures for a collection of cells.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.quad.CustomQuadFacet" title="qugar.quad.CustomQuadFacet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomQuadFacet</span></code></a>(facets, n_pts_per_entity, ...)</p></td>
+<td><p>Data class for storing custom quadratures for a collection of facets.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#qugar.quad.CustomQuadUnfBoundary" title="qugar.quad.CustomQuadUnfBoundary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CustomQuadUnfBoundary</span></code></a>(cells, ...)</p></td>
+<td><p>Data class for storing custom quadratures for unfitted custom boundaries.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#qugar.quad.QuadGenerator" title="qugar.quad.QuadGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QuadGenerator</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Protocol class for generating quadratures for unfitted domains.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.quad.CellState">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.quad.</span></span><span class="sig-name descname"><span class="pre">CellState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qugar/quad/custom_quad.html#CellState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.quad.CellState" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CellState.cut">
+<span class="sig-name descname"><span class="pre">cut</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#qugar.quad.CellState.cut" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CellState.empty">
+<span class="sig-name descname"><span class="pre">empty</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></span><a class="headerlink" href="#qugar.quad.CellState.empty" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CellState.full">
+<span class="sig-name descname"><span class="pre">full</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#qugar.quad.CellState.full" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuad">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.quad.</span></span><span class="sig-name descname"><span class="pre">CustomQuad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pts_per_entity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qugar/quad/custom_quad.html#CustomQuad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.quad.CustomQuad" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>Data class for storing custom quadratures for a collection of
+cells.</p>
+<p>The quadratures are defined by custom points and weights referred to
+the [0,1]^tdim unit domain of every cell, where tdim is the cell’s
+topological dimension.</p>
+<p>All the points (and weights) are stored contiguously for all the
+cells involved. Thus, the way of differentiating which points
+belong to which cells is through <cite>n_pts_per_entity</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cells</strong> (<em>npt.NDArray</em><em>[</em><em>np.int32</em><em>]</em>) – Array of cell ids to which the
+quadrature points and weights are associated to.
+This is a unique array. The ids are local to the MPI rank.</p></li>
+<li><p><strong>n_pts_per_entity</strong> (<em>npt.NDArray</em><em>[</em><em>np.int32</em><em>]</em>) – Array indicating the
+number of quadrature points and weights for every cell
+in <cite>cells</cite>.</p></li>
+<li><p><strong>points</strong> (<em>npt.NDArray</em><em>[</em><em>np.float64</em><em>]</em>) – Array of custom quadrature
+points for all the cells. This is a 2D array that has as
+many rows as points and as many columns as coordinates. It
+stores all the points contiguously according the ordering of
+<cite>cells</cite>.</p></li>
+<li><p><strong>weights</strong> (<em>npt.NDArray</em><em>[</em><em>np.float64</em><em>]</em>) – Array of custom quadrature
+weights for all the cells. This is a 1D array with one entry
+per point. It stores all the weights contiguously according
+the ordering of <cite>cells</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Create new instance of CustomQuad(cells, n_pts_per_entity, points, weights)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuad.cells">
+<span class="sig-name descname"><span class="pre">cells</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#qugar.quad.CustomQuad.cells" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuad.n_pts_per_entity">
+<span class="sig-name descname"><span class="pre">n_pts_per_entity</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#qugar.quad.CustomQuad.n_pts_per_entity" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuad.points">
+<span class="sig-name descname"><span class="pre">points</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#qugar.quad.CustomQuad.points" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuad.weights">
+<span class="sig-name descname"><span class="pre">weights</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#qugar.quad.CustomQuad.weights" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuadFacet">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.quad.</span></span><span class="sig-name descname"><span class="pre">CustomQuadFacet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">facets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MeshFacets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pts_per_entity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qugar/quad/custom_quad.html#CustomQuadFacet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.quad.CustomQuadFacet" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>Data class for storing custom quadratures for a collection of
+facets.</p>
+<p>It contains the same attributes as <code class="docutils literal notranslate"><span class="pre">CustomQuad</span></code> plus an additional
+array for identifying the local ids of the facets.</p>
+<p>The quadratures are defined by custom points and weights referred to
+the [0,1]^(tdim-1) unit domain of every facet, where tdim is the
+cell’s topological dimension, and therefore (tdim-1) is the facet’s
+topological dimension.</p>
+<p>Thus, the points have as many coordinates as the facets of a cell.
+E.g., for triangles or quadrilaterals, points will have 1
+coordinate, while for for tetrahedra or hexahedra they will have 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>facest</strong> (<em>MeshFacets</em>) – Mesh facets object that stores the
+information of the facets. The facets are local
+to the MPI rank.</p></li>
+<li><p><strong>n_pts_per_entity</strong> (<em>npt.NDArray</em><em>[</em><em>np.int32</em><em>]</em>) – Array indicating the
+number of quadrature points and weights for every facet.</p></li>
+<li><p><strong>points</strong> (<em>npt.NDArray</em><em>[</em><em>np.float64</em><em>]</em>) – Array of custom quadrature
+points for all the cells. This is a 2D array that has as
+many rows as points and as many columns as coordinates in
+the facet. It stores all the points contiguously according
+the ordering of <cite>cells</cite> and <cite>facets</cite>.</p></li>
+<li><p><strong>weights</strong> (<em>npt.NDArray</em><em>[</em><em>np.float64</em><em>]</em>) – Array of custom quadrature
+weights for all the facets. This is a 1D array with one
+entry per point. It stores all the weights contiguously
+according the ordering of <cite>cells</cite> and <cite>facets</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Create new instance of CustomQuadFacet(facets, n_pts_per_entity, points, weights)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuadFacet.facets">
+<span class="sig-name descname"><span class="pre">facets</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">MeshFacets</span></span><a class="headerlink" href="#qugar.quad.CustomQuadFacet.facets" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuadFacet.n_pts_per_entity">
+<span class="sig-name descname"><span class="pre">n_pts_per_entity</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#qugar.quad.CustomQuadFacet.n_pts_per_entity" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuadFacet.points">
+<span class="sig-name descname"><span class="pre">points</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#qugar.quad.CustomQuadFacet.points" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuadFacet.weights">
+<span class="sig-name descname"><span class="pre">weights</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#qugar.quad.CustomQuadFacet.weights" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuadUnfBoundary">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.quad.</span></span><span class="sig-name descname"><span class="pre">CustomQuadUnfBoundary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pts_per_entity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qugar/quad/custom_quad.html#CustomQuadUnfBoundary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.quad.CustomQuadUnfBoundary" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>Data class for storing custom quadratures for unfitted custom
+boundaries. I.e., boundaries that are not on the exterior boundary
+of a domain, but inside, as those derived from trimming operations.</p>
+<p>It contains the same attributes as <code class="docutils literal notranslate"><span class="pre">CustomQuad</span></code> plus an additional
+array for storing the unit outer normals on the boundary.</p>
+<p>The normal vectors (and points) have as many coordinates as the
+cell. E.g., for triangles or quadrilaterals, points and normals will
+have 2 coordinates, while for tetrahedra or hexahedra they will have
+3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cells</strong> (<em>npt.NDArray</em><em>[</em><em>np.int32</em><em>]</em>) – Array of cell ids to which the
+quadrature points and weights are associated to.
+This is a unique array. The ids are local to the MPI rank.</p></li>
+<li><p><strong>n_pts_per_entity</strong> (<em>npt.NDArray</em><em>[</em><em>np.int32</em><em>]</em>) – Array indicating the
+number of quadrature points and weights for every cell
+in <cite>cells</cite>.</p></li>
+<li><p><strong>points</strong> (<em>npt.NDArray</em><em>[</em><em>np.float64</em><em>]</em>) – Array of custom quadrature
+points for all the cells. This is a 2D array that has as
+many rows as points and as many columns as coordinates. It
+stores all the points contiguously according the ordering of
+<cite>cells</cite>.</p></li>
+<li><p><strong>weights</strong> (<em>npt.NDArray</em><em>[</em><em>np.float64</em><em>]</em>) – Array of custom quadrature
+weights for all the cells. This is a 1D array with one entry
+per point. It stores all the weights contiguously according
+the ordering of <cite>cells</cite>.</p></li>
+<li><p><strong>normals</strong> (<em>npt.NDArray</em><em>[</em><em>np.float64</em><em>]</em>) – Array of custom quadrature
+unit outer normals for all the cells. The normals are
+referred to the [0,1]^tdim unit domain of every cell. This
+is a 2D array that has as many rows as quadrature points
+and as many columns as coordinates. Therefore, the shape of
+the array must be the same as <cite>points</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Create new instance of CustomQuadUnfBoundary(cells, n_pts_per_entity, points, weights, normals)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuadUnfBoundary.cells">
+<span class="sig-name descname"><span class="pre">cells</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#qugar.quad.CustomQuadUnfBoundary.cells" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuadUnfBoundary.n_pts_per_entity">
+<span class="sig-name descname"><span class="pre">n_pts_per_entity</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#qugar.quad.CustomQuadUnfBoundary.n_pts_per_entity" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuadUnfBoundary.normals">
+<span class="sig-name descname"><span class="pre">normals</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#qugar.quad.CustomQuadUnfBoundary.normals" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 4</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuadUnfBoundary.points">
+<span class="sig-name descname"><span class="pre">points</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#qugar.quad.CustomQuadUnfBoundary.points" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="qugar.quad.CustomQuadUnfBoundary.weights">
+<span class="sig-name descname"><span class="pre">weights</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#qugar.quad.CustomQuadUnfBoundary.weights" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="qugar.quad.QuadGenerator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qugar.quad.</span></span><span class="sig-name descname"><span class="pre">QuadGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/qugar/quad/custom_quad.html#QuadGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.quad.QuadGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol class for generating quadratures for unfitted domains.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.quad.QuadGenerator.create_quad_custom_cells">
+<span class="sig-name descname"><span class="pre">create_quad_custom_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.quad.CustomQuad" title="qugar.quad.custom_quad.CustomQuad"><span class="pre">CustomQuad</span></a></span></span><a class="reference internal" href="../_modules/qugar/quad/custom_quad.html#QuadGenerator.create_quad_custom_cells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.quad.QuadGenerator.create_quad_custom_cells" title="Link to this definition"></a></dt>
+<dd><p>Returns the custom quadratures for the given <cite>cells</cite>.</p>
+<p>Among the given <cite>cells</cite>, it only creates quadratures for a
+subset of those (the custom cells), while no points or
+weights are generated for the others. Thus, the cells without
+custom quadratures will be listed in the returned
+<cite>CustomQuadInterface</cite>, but will have 0 points associated to
+them.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This call may require the generation of the quadratures on
+the fly, what can be potentially expensive.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>degree</strong> (<em>int</em>) – Expected degree of exactness of the quadrature
+to be generated.</p></li>
+<li><p><strong>cells</strong> (<em>npt.NDArray</em><em>[</em><em>np.int32</em><em>]</em>) – Array of DOLFINx cell ids
+(local to current MPI process) for which quadratures
+will be generated.</p></li>
+<li><p><strong>tag</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Mesh tag of the subdomain associated to
+the given cells. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generated custom quadrature.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CustomQuadInterface</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.quad.QuadGenerator.create_quad_custom_facets">
+<span class="sig-name descname"><span class="pre">create_quad_custom_facets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MeshFacets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integral_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.quad.CustomQuadFacet" title="qugar.quad.custom_quad.CustomQuadFacet"><span class="pre">CustomQuadFacet</span></a></span></span><a class="reference internal" href="../_modules/qugar/quad/custom_quad.html#QuadGenerator.create_quad_custom_facets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.quad.QuadGenerator.create_quad_custom_facets" title="Link to this definition"></a></dt>
+<dd><p>Returns the custom quadratures for the given facets.</p>
+<p>Among the facets associated to <cite>tag</cite>, it only creates
+quadratures for a subset of those (the custom facets), while no
+points or weights are generated for the others. Thus, the facets
+without custom quadratures will be listed in the returned
+<cite>CustomQuadFacetInterface</cite>, but will have 0 points associated to</p>
+<p>Among the given facets, it only creates quadratures for a
+subset of those (the custom facets), while no points or
+weights are generated for the others. Thus, the facets without
+custom quadratures will be listed in the returned
+<cite>CustomQuadFacetInterface</cite>, but will have 0 points associated to
+them.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This call may require the generation of the quadratures on
+the fly, what can be potentially expensive.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>degree</strong> (<em>int</em>) – Expected degree of exactness of the quadrature
+to be generated.</p></li>
+<li><p><strong>facets</strong> (<em>MeshFacets</em>) – Mesh facets object that stores the
+information of the facets. The facets are local
+to the MPI rank.</p></li>
+<li><p><strong>integral_type</strong> (<em>str</em>) – Type of integral to be computed. It can
+be either ‘interior_facet’ or ‘exterior_facet’.</p></li>
+<li><p><strong>tag</strong> (<em>int</em>) – Mesh tag of the subdomain associated to the given
+cells.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generated custom facet
+quadratures.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CustomQuadFacetInterface</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qugar.quad.QuadGenerator.create_quad_unf_boundaries">
+<span class="sig-name descname"><span class="pre">create_quad_unf_boundaries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degree</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">int32</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#qugar.quad.CustomQuadUnfBoundary" title="qugar.quad.custom_quad.CustomQuadUnfBoundary"><span class="pre">CustomQuadUnfBoundary</span></a></span></span><a class="reference internal" href="../_modules/qugar/quad/custom_quad.html#QuadGenerator.create_quad_unf_boundaries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#qugar.quad.QuadGenerator.create_quad_unf_boundaries" title="Link to this definition"></a></dt>
+<dd><p>Returns the custom quadrature for unfitted boundaries for the
+given <cite>cells</cite>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>All the given cells associated should contain unfitted
+boundaries. I.e., they must be cut cells. If not, the
+custom coefficients generator will raise an
+exception.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This call may require the generation of the quadratures on
+the fly, what can be potentially expensive.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>degree</strong> (<em>int</em>) – Expected degree of exactness of the quadrature
+to be generated.</p></li>
+<li><p><strong>cells</strong> (<em>npt.NDArray</em><em>[</em><em>np.int32</em><em>]</em>) – Array of DOLFINx cell ids
+(local to current MPI process) for which quadratures
+will be generated. It must only contain cells with
+unfitted boundaries.</p></li>
+<li><p><strong>tag</strong> (<em>int</em>) – Mesh tag of the subdomain associated to the given
+cells.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generated custom quadrature
+for unfitted boundaries.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>CustomQuadUnfBoundaryInterface</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="qugar.impl.html" class="btn btn-neutral float-left" title="qugar.impl" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="qugar.reparam.html" class="btn btn-neutral float-right" title="qugar.reparam" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

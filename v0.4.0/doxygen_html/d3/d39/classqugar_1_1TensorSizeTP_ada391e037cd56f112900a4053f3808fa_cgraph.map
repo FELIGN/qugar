@@ -1,0 +1,5 @@
+<map id="qugar::TensorSizeTP::operator==" name="qugar::TensorSizeTP::operator==">
+<area shape="rect" id="Node000001" title="Checks if two tensor sizes are equal by comparing all its components. They are equal if all the compo..." alt="" coords="5,5,157,45"/>
+<area shape="rect" id="Node000002" href="$d3/d39/classqugar_1_1TensorSizeTP.html#ad7e73a37eff7357cbeeedd25633ec912" title="Default constructor. Initializes indices to zero." alt="" coords="205,5,357,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,23,191,23,191,28,158,28"/>
+</map>

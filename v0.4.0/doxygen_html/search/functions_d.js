@@ -1,0 +1,12 @@
+var searchData=
+[
+  ['permute_5fcell_5fdirections_0',['permute_cell_directions',['../d8/d99/classqugar_1_1ReparamMesh.html#a0270e9e57cbc114ace14a1f8ec74ee3f',1,'qugar::ReparamMesh']]],
+  ['permute_5fvector_5fdirections_1',['permute_vector_directions',['../d0/d6b/namespacequgar.html#afbc3820a68736121e489396e0b6d0d5d',1,'qugar']]],
+  ['plane_2',['Plane',['../d2/d3b/classqugar_1_1impl_1_1funcs_1_1Plane.html#abb2ecaaf940768db335dfbe88c95da8b',1,'qugar::impl::funcs::Plane::Plane()'],['../d2/d3b/classqugar_1_1impl_1_1funcs_1_1Plane.html#a124bb6ae566a4c602e901c496678a165',1,'qugar::impl::funcs::Plane::Plane(const Point&lt; dim &gt; &amp;origin, const Point&lt; dim &gt; &amp;normal)']]],
+  ['planebase_3',['PlaneBase',['../db/d5b/classqugar_1_1impl_1_1funcs_1_1PlaneBase.html#ad8ba855b20c34ea03310770c58073a3c',1,'qugar::impl::funcs::PlaneBase']]],
+  ['planebzr_4',['PlaneBzr',['../dd/d35/classqugar_1_1impl_1_1funcs_1_1PlaneBzr.html#a3a540b09e485528e0892d1292b270788',1,'qugar::impl::funcs::PlaneBzr::PlaneBzr()'],['../dd/d35/classqugar_1_1impl_1_1funcs_1_1PlaneBzr.html#a686b5ed2c9a4a12441722641d8ef15fd',1,'qugar::impl::funcs::PlaneBzr::PlaneBzr(const Point&lt; dim &gt; &amp;origin, const Point&lt; dim &gt; &amp;normal)']]],
+  ['points_5',['points',['../d8/d30/classqugar_1_1Quadrature.html#a5daeb11d8eec086a8616a08f98242074',1,'qugar::Quadrature::points() const'],['../d8/d30/classqugar_1_1Quadrature.html#ae20335a8f25c670c23b9dde0ee2de8a5',1,'qugar::Quadrature::points()']]],
+  ['polynomialtp_6',['PolynomialTP',['../d2/d05/classqugar_1_1impl_1_1PolynomialTP.html#a464583a07592744bc22039e918cb1f1a',1,'qugar::impl::PolynomialTP::PolynomialTP(const TensorSizeTP&lt; dim &gt; &amp;order)'],['../d2/d05/classqugar_1_1impl_1_1PolynomialTP.html#a213390bf643509bb80a827f31740118b',1,'qugar::impl::PolynomialTP::PolynomialTP(const TensorSizeTP&lt; dim &gt; &amp;order, const CoefsType &amp;value)'],['../d2/d05/classqugar_1_1impl_1_1PolynomialTP.html#a03dd8452310c7f58b966af101dce6575',1,'qugar::impl::PolynomialTP::PolynomialTP(const TensorSizeTP&lt; dim &gt; &amp;order, const std::vector&lt; CoefsType &gt; &amp;coefs)']]],
+  ['pow_7',['pow',['../d1/d03/namespacequgar_1_1impl_1_1funcs_1_1__impl.html#a21a5a848ca38b8876f22beeb9613ec8a',1,'qugar::impl::funcs::_impl']]],
+  ['purge_5fduplicate_5fwirebasket_5fedges_8',['purge_duplicate_wirebasket_edges',['../d8/d99/classqugar_1_1ReparamMesh.html#a474040fdbb663a9113e989dcd03a6dd8',1,'qugar::ReparamMesh']]]
+];

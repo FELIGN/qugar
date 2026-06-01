@@ -1,0 +1,7 @@
+<map id="qugar::Tolerance::update" name="qugar::Tolerance::update">
+<area shape="rect" id="Node000001" title="Resets the tolerance value as the maximum between the current tolerance_ and tol." alt="" coords="5,5,188,31"/>
+<area shape="rect" id="Node000002" href="$db/d28/classqugar_1_1Tolerance.html#afcf43fc9baeb86b9fb3f353a9abfe121" title="Constructor." alt="" coords="236,5,435,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,15,223,15,223,21,188,21"/>
+<area shape="rect" id="Node000003" href="$db/d28/classqugar_1_1Tolerance.html#ae20f63cbe47d964e1f748deaf30ef21f" title="Returns the real tolerance value." alt="" coords="483,5,656,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="435,15,469,15,469,21,435,21"/>
+</map>

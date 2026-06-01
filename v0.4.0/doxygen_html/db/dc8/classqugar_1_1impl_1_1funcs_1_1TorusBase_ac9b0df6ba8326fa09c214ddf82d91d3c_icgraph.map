@@ -1,0 +1,11 @@
+<map id="qugar::impl::funcs::TorusBase::axis" name="qugar::impl::funcs::TorusBase::axis">
+<area shape="rect" id="Node000001" title="Gets the axis of the plane." alt="" coords="268,101,407,141"/>
+<area shape="rect" id="Node000002" href="$d0/dc9/classqugar_1_1impl_1_1funcs_1_1TorusBzr.html#a7df0c67d420a5c1a12adae9bbaf4071c" title="Creates a polynomial representation based on monomials for the given radii, center,..." alt="" coords="5,5,220,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="291,97,219,60,187,48,189,43,221,55,293,92"/>
+<area shape="rect" id="Node000003" href="$db/d99/classqugar_1_1impl_1_1funcs_1_1Torus.html#a07b3d75e8236880e28c722af245dee54" title="Constructor." alt="" coords="43,69,182,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="254,112,182,102,183,97,254,107"/>
+<area shape="rect" id="Node000004" href="$db/dc8/classqugar_1_1impl_1_1funcs_1_1TorusBase.html#a2c4cc38a701bfb4ee5404be84e102ece" title="Constructor." alt="" coords="27,133,198,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="254,136,199,144,198,139,254,131"/>
+<area shape="rect" id="Node000005" href="$d0/dc9/classqugar_1_1impl_1_1funcs_1_1TorusBzr.html#a84feae4b3db326df5ba7a9ee64df6080" title="Constructor." alt="" coords="39,197,187,237"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="293,151,221,188,188,200,186,195,219,183,291,146"/>
+</map>

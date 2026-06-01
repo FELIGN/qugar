@@ -1,0 +1,15 @@
+<map id="qugar::impl::funcs::EllipsoidBase::semi_axes" name="qugar::impl::funcs::EllipsoidBase::semi_axes">
+<area shape="rect" id="Node000001" title="Gets the semi&#45;axes of the ellipsoid." alt="" coords="265,181,460,221"/>
+<area shape="rect" id="Node000002" href="$d6/d06/classqugar_1_1impl_1_1funcs_1_1EllipsoidBzr.html#ac2c842587c44af00704cd5eb9613fe9a" title="Creates a polynomial representation based on monomials for the given semi&#45;axes and reference system." alt="" coords="34,5,189,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="332,173,281,123,216,75,188,61,190,56,219,70,284,119,336,169"/>
+<area shape="rect" id="Node000003" href="$d7/d1f/classqugar_1_1impl_1_1funcs_1_1Ellipsoid.html#a0803a99391417e24eff7795ba40931c8" title="Constructor." alt="" coords="37,85,185,125"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="306,177,216,139,182,127,184,122,218,134,309,172"/>
+<area shape="rect" id="Node000004" href="$d7/d1f/classqugar_1_1impl_1_1funcs_1_1Ellipsoid.html#a7df41baa51c04585f2d5c9d1830e2b69" title="Constructs an Ellipsoid object with specified semi&#45;axes and reference system." alt="" coords="37,149,185,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="251,189,185,181,186,175,252,184"/>
+<area shape="rect" id="Node000005" href="$d9/d7e/classqugar_1_1impl_1_1funcs_1_1EllipsoidBase.html#a93267509ea04675f5e783d275ae1d8a2" title="Constructs an Ellipsoid object with specified semi&#45;axes and reference system." alt="" coords="5,213,217,253"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="252,217,218,222,217,217,252,212"/>
+<area shape="rect" id="Node000006" href="$d6/d06/classqugar_1_1impl_1_1funcs_1_1EllipsoidBzr.html#a8ad40bde8781dd290bc9c534f08c2abe" title="Constructor." alt="" coords="16,277,207,317"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="309,229,218,267,184,279,182,274,216,262,306,224"/>
+<area shape="rect" id="Node000007" href="$d6/d06/classqugar_1_1impl_1_1funcs_1_1EllipsoidBzr.html#a0dfbbde14d58a237d9954e03688c8950" title="Constructs an Ellipsoid object with specified semi&#45;axes and reference system." alt="" coords="16,341,207,381"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="337,233,285,283,253,309,219,331,193,343,191,338,216,326,250,304,281,279,333,229"/>
+</map>

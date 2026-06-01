@@ -1,0 +1,15 @@
+<map id="qugar::impl::funcs::CylinderBase::origin" name="qugar::impl::funcs::CylinderBase::origin">
+<area shape="rect" id="Node000001" title="Gets the origin of the cylinder." alt="" coords="264,181,425,221"/>
+<area shape="rect" id="Node000002" href="$dc/de2/classqugar_1_1impl_1_1funcs_1_1CylinderBzr.html#a9dbdd1c588c7fbdf76c349373bd2a8c1" title="Creates a polynomial representation based on monomials for the given center, radius,..." alt="" coords="33,5,188,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="317,171,272,122,244,97,215,75,187,60,190,55,217,70,248,93,276,119,321,168"/>
+<area shape="rect" id="Node000003" href="$d6/dcd/classqugar_1_1impl_1_1funcs_1_1Cylinder.html#aec3e4b9468f75664cc7b98b28bc66f47" title="Constructor." alt="" coords="37,85,184,125"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="294,176,215,139,182,127,184,122,217,134,296,172"/>
+<area shape="rect" id="Node000004" href="$d6/dcd/classqugar_1_1impl_1_1funcs_1_1Cylinder.html#a51acf0eb4c48793fdff0f87c0eee6d50" title="Constructor." alt="" coords="37,149,184,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="250,190,184,181,184,176,251,185"/>
+<area shape="rect" id="Node000005" href="$d5/d65/classqugar_1_1impl_1_1funcs_1_1CylinderBase.html#a78c44e6c623e1568fb2359e052a16176" title="Constructor." alt="" coords="5,213,216,253"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="251,216,217,221,216,216,250,211"/>
+<area shape="rect" id="Node000006" href="$dc/de2/classqugar_1_1impl_1_1funcs_1_1CylinderBzr.html#a71aaf72c25271a7949a4a2abcb75ab74" title="Constructor." alt="" coords="17,277,205,317"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="296,230,217,267,184,279,182,274,215,262,294,225"/>
+<area shape="rect" id="Node000007" href="$dc/de2/classqugar_1_1impl_1_1funcs_1_1CylinderBzr.html#aafb226e16a8edf2c5ec3bcd3f664510a" title="Constructor." alt="" coords="17,341,205,381"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="322,234,277,283,248,309,217,331,193,343,191,338,215,326,245,305,273,280,318,230"/>
+</map>

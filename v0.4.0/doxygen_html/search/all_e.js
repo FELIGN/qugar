@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['parent_0',['Parent',['../de/dca/classqugar_1_1impl_1_1BezierTP.html#a102a7f7560bcd79c9affc17e284e92a3',1,'qugar::impl::BezierTP::Parent'],['../d2/d87/classqugar_1_1impl_1_1MonomialsTP.html#ae90f8cac917bba3b5a70344095fc5453',1,'qugar::impl::MonomialsTP::Parent']]],
+  ['permute_5fcell_5fdirections_1',['permute_cell_directions',['../d8/d99/classqugar_1_1ReparamMesh.html#a0270e9e57cbc114ace14a1f8ec74ee3f',1,'qugar::ReparamMesh']]],
+  ['permute_5fvector_5fdirections_2',['permute_vector_directions',['../d0/d6b/namespacequgar.html#afbc3820a68736121e489396e0b6d0d5d',1,'qugar']]],
+  ['phi_5f_3',['phi_',['../da/de2/classqugar_1_1impl_1_1UnfittedImplDomain.html#ac6242e68f32795f6bd428e507b855292',1,'qugar::impl::UnfittedImplDomain']]],
+  ['pi_4',['pi',['../dd/dcc/namespacequgar_1_1numbers.html#a704feeefa5ed5e7333145160d69d6417',1,'qugar::numbers']]],
+  ['plane_5',['Plane',['../d2/d3b/classqugar_1_1impl_1_1funcs_1_1Plane.html',1,'qugar::impl::funcs::Plane&lt; dim &gt;'],['../d2/d3b/classqugar_1_1impl_1_1funcs_1_1Plane.html#abb2ecaaf940768db335dfbe88c95da8b',1,'qugar::impl::funcs::Plane::Plane()'],['../d2/d3b/classqugar_1_1impl_1_1funcs_1_1Plane.html#a124bb6ae566a4c602e901c496678a165',1,'qugar::impl::funcs::Plane::Plane(const Point&lt; dim &gt; &amp;origin, const Point&lt; dim &gt; &amp;normal)']]],
+  ['planebase_6',['PlaneBase',['../db/d5b/classqugar_1_1impl_1_1funcs_1_1PlaneBase.html',1,'qugar::impl::funcs::PlaneBase&lt; dim &gt;'],['../db/d5b/classqugar_1_1impl_1_1funcs_1_1PlaneBase.html#ad8ba855b20c34ea03310770c58073a3c',1,'qugar::impl::funcs::PlaneBase::PlaneBase()']]],
+  ['planebzr_7',['PlaneBzr',['../dd/d35/classqugar_1_1impl_1_1funcs_1_1PlaneBzr.html',1,'qugar::impl::funcs::PlaneBzr&lt; dim &gt;'],['../dd/d35/classqugar_1_1impl_1_1funcs_1_1PlaneBzr.html#a3a540b09e485528e0892d1292b270788',1,'qugar::impl::funcs::PlaneBzr::PlaneBzr()'],['../dd/d35/classqugar_1_1impl_1_1funcs_1_1PlaneBzr.html#a686b5ed2c9a4a12441722641d8ef15fd',1,'qugar::impl::funcs::PlaneBzr::PlaneBzr(const Point&lt; dim &gt; &amp;origin, const Point&lt; dim &gt; &amp;normal)']]],
+  ['point_8',['Point',['../d0/d6b/namespacequgar.html#acedd2a0f9db919d923f32babff4d7b1f',1,'qugar']]],
+  ['point_9',['point',['../d7/d46/structqugar_1_1impl_1_1RootsIntervals.html#a90b402e1b57765b97b4cf51c7f460649',1,'qugar::impl::RootsIntervals']]],
+  ['point_2ehpp_10',['point.hpp',['../d0/de4/point_8hpp.html',1,'']]],
+  ['points_11',['points',['../d8/dd5/structqugar_1_1CutCellsQuad.html#aaa2680212172ca092e14381ae540cce2',1,'qugar::CutCellsQuad::points'],['../df/d6d/structqugar_1_1CutIsoBoundsQuad.html#aa671f821a34403e2f9ec664ac00208d3',1,'qugar::CutIsoBoundsQuad::points'],['../d2/d41/structqugar_1_1CutUnfBoundsQuad.html#a06453be6975ef6a0c9a6c7eb2986d110',1,'qugar::CutUnfBoundsQuad::points'],['../d8/d30/classqugar_1_1Quadrature.html#a5daeb11d8eec086a8616a08f98242074',1,'qugar::Quadrature::points() const'],['../d8/d30/classqugar_1_1Quadrature.html#ae20335a8f25c670c23b9dde0ee2de8a5',1,'qugar::Quadrature::points()']]],
+  ['points_5f_12',['points_',['../d8/d30/classqugar_1_1Quadrature.html#a573a42c03223ca2ba6e1a9f8cb514fa6',1,'qugar::Quadrature::points_'],['../d8/d99/classqugar_1_1ReparamMesh.html#aebec1820e1bfcf88f58e6a82d5127784',1,'qugar::ReparamMesh::points_']]],
+  ['pointtype_13',['PointType',['../d1/d84/classqugar_1_1CartGridTP.html#ad2145ee34a2052fc25e12019ef88e2b7',1,'qugar::CartGridTP']]],
+  ['polynomial_5ftp_2ehpp_14',['polynomial_tp.hpp',['../d2/dee/polynomial__tp_8hpp.html',1,'']]],
+  ['polynomialtp_15',['PolynomialTP',['../d2/d05/classqugar_1_1impl_1_1PolynomialTP.html',1,'qugar::impl::PolynomialTP&lt; dim, range &gt;'],['../d2/d05/classqugar_1_1impl_1_1PolynomialTP.html#a464583a07592744bc22039e918cb1f1a',1,'qugar::impl::PolynomialTP::PolynomialTP(const TensorSizeTP&lt; dim &gt; &amp;order)'],['../d2/d05/classqugar_1_1impl_1_1PolynomialTP.html#a213390bf643509bb80a827f31740118b',1,'qugar::impl::PolynomialTP::PolynomialTP(const TensorSizeTP&lt; dim &gt; &amp;order, const CoefsType &amp;value)'],['../d2/d05/classqugar_1_1impl_1_1PolynomialTP.html#a03dd8452310c7f58b966af101dce6575',1,'qugar::impl::PolynomialTP::PolynomialTP(const TensorSizeTP&lt; dim &gt; &amp;order, const std::vector&lt; CoefsType &gt; &amp;coefs)']]],
+  ['polynomialtp_3c_20dim_2c_201_20_3e_16',['PolynomialTP&lt; dim, 1 &gt;',['../d2/d05/classqugar_1_1impl_1_1PolynomialTP.html',1,'qugar::impl']]],
+  ['positive_17',['positive',['../d2/d5e/namespacequgar_1_1impl.html#a1958862994b81ad16e70737c86ca8f00aca03114f3fbc8358aebf5f7f84f09e93',1,'qugar::impl']]],
+  ['pow_18',['pow',['../d1/d03/namespacequgar_1_1impl_1_1funcs_1_1__impl.html#a21a5a848ca38b8876f22beeb9613ec8a',1,'qugar::impl::funcs::_impl']]],
+  ['primitive_5ffuncs_5flib_2ehpp_19',['primitive_funcs_lib.hpp',['../d7/d6f/primitive__funcs__lib_8hpp.html',1,'']]],
+  ['pt_20',['Pt',['../d8/d30/classqugar_1_1Quadrature.html#a793624ee956c539641819d1829e5fb4b',1,'qugar::Quadrature']]],
+  ['purge_5fduplicate_5fwirebasket_5fedges_21',['purge_duplicate_wirebasket_edges',['../d8/d99/classqugar_1_1ReparamMesh.html#a474040fdbb663a9113e989dcd03a6dd8',1,'qugar::ReparamMesh']]]
+];

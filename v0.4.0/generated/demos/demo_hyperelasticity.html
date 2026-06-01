@@ -1,0 +1,514 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hyperelasticity problem &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+      <script src="../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="API reference" href="../../api.html" />
+    <link rel="prev" title="Linear Elasticity Convergence Study: Unit Square with Circular Hole" href="demo_elasticity_convergence.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../demos.html">Demos</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../demos.html#list-of-all-demos">List of all demos</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="demo_div_thm.html">Divergence theorem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_div_thm_no_fenicsx.html">Divergence theorem (without FEniCSx)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_impl_funcs.html">Creation of unfitted implicit domains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_plot.html">PyVista visualization capabilities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_L2_projection.html"><span class="math notranslate nohighlight">\(L^2\)</span> projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_poisson.html">Poisson problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_poisson_convergence.html">Poisson Convergence Study: Unit Square with Circular Hole</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_elasticity.html">Linear elasticity problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_elasticity_convergence.html">Linear Elasticity Convergence Study: Unit Square with Circular Hole</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Hyperelasticity problem</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#problem-definition">Problem definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../demos.html">Demos</a></li>
+      <li class="breadcrumb-item active">Hyperelasticity problem</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/generated/demos/demo_hyperelasticity.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="hyperelasticity-problem">
+<h1>Hyperelasticity problem<a class="headerlink" href="#hyperelasticity-problem" title="Link to this heading"></a></h1>
+<p>This demo is implemented in <a class="reference download internal" download="" href="../../_downloads/b9fa75f3def14c09f4ca0c22363b5ae7/demo_hyperelasticity.py"><code class="xref download docutils literal notranslate"><span class="pre">demo_hyperelasticity.py</span></code></a>. It
+illustrates:</p>
+<ul class="simple">
+<li><p>How to solve a nonlinear hyperelasticity problem using QUGaR and FEniCSx.</p></li>
+<li><p>How to define and apply time-dependent Dirichlet boundary conditions.</p></li>
+<li><p>How to use a Newton solver for nonlinear problems.</p></li>
+<li><p>How to visualize the deformation of an unfitted domain over time.</p></li>
+</ul>
+<section id="problem-definition">
+<h2>Problem definition<a class="headerlink" href="#problem-definition" title="Link to this heading"></a></h2>
+<p>We consider large deformations of a hyperelastic material. The domain
+<span class="math notranslate nohighlight">\(\Omega\)</span> is a Fischer-Koch S surface embedded within a unit cube
+<span class="math notranslate nohighlight">\([0,1]^3\)</span>. The material behavior is described by a compressible
+neo-Hookean model.
+The goal is to find the displacement field <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> that satisfies
+the equilibrium equations under applied boundary conditions.</p>
+<p>The variational problem is derived from the principle of virtual work.
+We seek <span class="math notranslate nohighlight">\(\mathbf{u} \in V\)</span> such that:</p>
+<div class="math notranslate nohighlight">
+\[
+\int_{\Omega} \mathbf{P}(\mathbf{u}) : \nabla \mathbf{v} \, {\rm d} x = 0
+\quad \forall \ \mathbf{v} \in V_0,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{P}\)</span> is the first Piola-Kirchhoff stress tensor,
+<span class="math notranslate nohighlight">\(\mathbf{v}\)</span> is a test function from the space <span class="math notranslate nohighlight">\(V_0\)</span> (functions
+vanishing on the Dirichlet boundary), and <span class="math notranslate nohighlight">\(V\)</span> is the function space
+for the displacement.</p>
+<p>The first Piola-Kirchhoff stress tensor <span class="math notranslate nohighlight">\(\mathbf{P}\)</span> is related to the
+strain energy density function <span class="math notranslate nohighlight">\(\psi\)</span> by:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{P} = \frac{\partial \psi}{\partial \mathbf{F}}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{F} = \mathbf{I} + \nabla \mathbf{u}\)</span> is the deformation
+gradient.</p>
+<p>For a compressible neo-Hookean material, the strain energy density
+function <span class="math notranslate nohighlight">\(\psi\)</span> is given by:</p>
+<div class="math notranslate nohighlight">
+\[
+\psi(\mathbf{F}) = \frac{\mu}{2} (I_C - 3) - \mu \ln(J) + \frac{\lambda}{2} (\ln(J))^2
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\lambda\)</span> are the Lamé parameters,
+<span class="math notranslate nohighlight">\(I_C = \text{tr}(\mathbf{C})\)</span> is the first invariant of the right
+Cauchy-Green deformation tensor
+<span class="math notranslate nohighlight">\(\mathbf{C} = \mathbf{F}^T \mathbf{F}\)</span>, and <span class="math notranslate nohighlight">\(J = \det(\mathbf{F})\)</span> is
+the determinant of the deformation gradient.</p>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<section id="modules-import">
+<h3>Modules import<a class="headerlink" href="#modules-import" title="Link to this heading"></a></h3>
+<p>First, we import the necessary modules.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">petsc4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">PETSc</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.fem</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">fem</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.log</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">log</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.mesh</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mesh_dlf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.plot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plot_dlf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ufl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_scalar_type</span> <span class="k">as</span> <span class="n">dtype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.fem.petsc</span><span class="w"> </span><span class="kn">import</span> <span class="n">NonlinearProblem</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.dolfinx</span>  <span class="c1"># noqa: F401  (import patches DOLFINx for transparent unfitted assembly)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.impl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_unfitted_impl_Cartesian_mesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_FEniCSx</span><span class="p">,</span> <span class="n">has_PETSc</span>
+
+<span class="c1"># Check for required dependencies</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">has_FEniCSx</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;FEniCSx installation not found is required.&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">has_PETSc</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;petsc4py installation not found is required.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="geometry-and-mesh">
+<h3>Geometry and Mesh<a class="headerlink" href="#geometry-and-mesh" title="Link to this heading"></a></h3>
+<p>We define the Fischer-Koch S geometry using an implicit function and
+create an unfitted Cartesian mesh.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the implicit function for the Fischer-Koch S surface</span>
+<span class="n">impl_func</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_Fischer_Koch_S</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+
+<span class="c1"># Set mesh parameters</span>
+<span class="n">n_cells</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># Number of cells per direction in the background grid</span>
+<span class="n">degree</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Polynomial degree for the finite element space</span>
+
+<span class="c1"># Create the unfitted mesh embedding the implicit geometry</span>
+<span class="n">unf_mesh</span> <span class="o">=</span> <span class="n">create_unfitted_impl_Cartesian_mesh</span><span class="p">(</span>
+    <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">,</span> <span class="n">impl_func</span><span class="p">,</span> <span class="n">n_cells</span><span class="p">,</span> <span class="n">exclude_empty_cells</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span>
+<span class="p">)</span>
+
+<span class="c1"># Get mesh dimension and facet dimension</span>
+<span class="n">dim</span> <span class="o">=</span> <span class="n">unf_mesh</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">dim</span>
+<span class="n">fdim</span> <span class="o">=</span> <span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="c1"># Define the vector function space V using Lagrange elements</span>
+<span class="n">V</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Lagrange&quot;</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="p">(</span><span class="n">dim</span><span class="p">,)))</span>
+</pre></div>
+</div>
+</section>
+<section id="boundary-conditions">
+<h3>Boundary Conditions<a class="headerlink" href="#boundary-conditions" title="Link to this heading"></a></h3>
+<p>We define Dirichlet boundary conditions. The bottom face (z=0) is
+fixed, and the top face (z=1) has a time-dependent vertical
+displacement applied incrementally.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Locate facets on the bottom boundary (z=0)</span>
+<span class="n">bottom_facets</span> <span class="o">=</span> <span class="n">mesh_dlf</span><span class="o">.</span><span class="n">locate_entities_boundary</span><span class="p">(</span>
+    <span class="n">unf_mesh</span><span class="p">,</span> <span class="n">fdim</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="c1"># Locate facets on the top boundary (z=1)</span>
+<span class="n">top_facets</span> <span class="o">=</span> <span class="n">mesh_dlf</span><span class="o">.</span><span class="n">locate_entities_boundary</span><span class="p">(</span>
+    <span class="n">unf_mesh</span><span class="p">,</span> <span class="n">fdim</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Mark bottom facets with 1 and top facets with 2</span>
+<span class="n">marked_facets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">bottom_facets</span><span class="p">,</span> <span class="n">top_facets</span><span class="p">])</span>
+<span class="n">marked_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">bottom_facets</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">top_facets</span><span class="p">,</span> <span class="mi">2</span><span class="p">)])</span>
+<span class="c1"># Sort facets and create meshtags</span>
+<span class="n">sorted_facets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">marked_facets</span><span class="p">)</span>
+<span class="n">facet_tag</span> <span class="o">=</span> <span class="n">mesh_dlf</span><span class="o">.</span><span class="n">meshtags</span><span class="p">(</span>
+    <span class="n">unf_mesh</span><span class="p">,</span> <span class="n">fdim</span><span class="p">,</span> <span class="n">marked_facets</span><span class="p">[</span><span class="n">sorted_facets</span><span class="p">],</span> <span class="n">marked_values</span><span class="p">[</span><span class="n">sorted_facets</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Define the boundary condition value for the bottom face (fixed)</span>
+<span class="n">u_bc_bottom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">0</span><span class="p">,)</span> <span class="o">*</span> <span class="n">dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="c1"># Define a constant for the time-dependent boundary condition on the top face</span>
+<span class="n">u_bc_top</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mi">0</span><span class="p">,)</span> <span class="o">*</span> <span class="n">dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">))</span>
+
+<span class="c1"># Locate degrees of freedom (DOFs) corresponding to the bottom and top facets</span>
+<span class="n">bottom_dofs</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">locate_dofs_topological</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">facet_tag</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">facet_tag</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">top_dofs</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">locate_dofs_topological</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">facet_tag</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">facet_tag</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># Create Dirichlet boundary conditions</span>
+<span class="n">bc_bottom</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">dirichletbc</span><span class="p">(</span><span class="n">u_bc_bottom</span><span class="p">,</span> <span class="n">bottom_dofs</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+<span class="n">bc_top</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">dirichletbc</span><span class="p">(</span><span class="n">u_bc_top</span><span class="p">,</span> <span class="n">top_dofs</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+<span class="n">bcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">bc_bottom</span><span class="p">,</span> <span class="n">bc_top</span><span class="p">]</span>  <span class="c1"># List of boundary conditions</span>
+</pre></div>
+</div>
+</section>
+<section id="variational-formulation">
+<h3>Variational Formulation<a class="headerlink" href="#variational-formulation" title="Link to this heading"></a></h3>
+<p>We define the kinematic quantities, material parameters, strain energy density,
+and the variational form for the hyperelasticity problem.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define test and trial functions</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">TestFunction</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>  <span class="c1"># Test function</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>  <span class="c1"># Function for the displacement solution</span>
+
+<span class="c1"># Define kinematic quantities</span>
+<span class="c1"># Identity tensor</span>
+<span class="n">I</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">variable</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">Identity</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span>
+<span class="c1"># Deformation gradient: F = I + grad(u)</span>
+<span class="n">F</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">variable</span><span class="p">(</span><span class="n">I</span> <span class="o">+</span> <span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">u</span><span class="p">))</span>
+<span class="c1"># Right Cauchy-Green tensor: C = F^T * F</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">variable</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">F</span><span class="p">)</span>
+<span class="c1"># Invariants of deformation tensors</span>
+<span class="n">Ic</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">variable</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>  <span class="c1"># First invariant of C</span>
+<span class="n">J</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">variable</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">F</span><span class="p">))</span>  <span class="c1"># Determinant of F (volume ratio)</span>
+
+<span class="c1"># Define material parameters (Elasticity parameters)</span>
+<span class="n">E</span> <span class="o">=</span> <span class="n">dtype</span><span class="p">(</span><span class="mf">1.0e4</span><span class="p">)</span>  <span class="c1"># Young&#39;s modulus</span>
+<span class="n">nu</span> <span class="o">=</span> <span class="n">dtype</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>  <span class="c1"># Poisson&#39;s ratio</span>
+<span class="c1"># Lamé parameters derived from E and nu</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">E</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">nu</span><span class="p">)))</span>
+<span class="n">lmbda</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">E</span> <span class="o">*</span> <span class="n">nu</span> <span class="o">/</span> <span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">nu</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">nu</span><span class="p">)))</span>
+
+<span class="c1"># Define the stored strain energy density function (compressible neo-Hookean model)</span>
+<span class="n">psi</span> <span class="o">=</span> <span class="p">(</span><span class="n">mu</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">Ic</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">ln</span><span class="p">(</span><span class="n">J</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">lmbda</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">ln</span><span class="p">(</span><span class="n">J</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="c1"># Compute the first Piola-Kirchhoff stress tensor P = diff(psi, F)</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">F</span><span class="p">)</span>
+
+<span class="c1"># Define integration measures with appropriate quadrature degree</span>
+<span class="n">n_quad_pts</span> <span class="o">=</span> <span class="n">degree</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">quad_degree</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_quad_pts</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">ds</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">subdomain_data</span><span class="o">=</span><span class="n">facet_tag</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="n">quad_degree</span><span class="p">)</span>  <span class="c1"># Boundary integral</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dx</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="n">quad_degree</span><span class="p">)</span>  <span class="c1"># Domain integral</span>
+
+<span class="c1"># Define the variational form F (Residual of the equilibrium equation)</span>
+<span class="c1"># F = inner(grad(v), P) * dx = 0</span>
+<span class="n">F_form</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">P</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+</pre></div>
+</div>
+</section>
+<section id="nonlinear-solver-setup">
+<h3>Nonlinear Solver Setup<a class="headerlink" href="#nonlinear-solver-setup" title="Link to this heading"></a></h3>
+<p>We set up the stock DOLFINx <code class="docutils literal notranslate"><span class="pre">NonlinearProblem</span></code> (PETSc SNES); because
+<code class="docutils literal notranslate"><span class="pre">unf_mesh</span></code> is unfitted, qugar’s assembly patches make it assemble the
+residual and Jacobian with the runtime quadrature transparently.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Newton line-search via SNES with a direct (LU) linear solve.</span>
+<span class="n">petsc_options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;snes_type&quot;</span><span class="p">:</span> <span class="s2">&quot;newtonls&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;snes_atol&quot;</span><span class="p">:</span> <span class="mf">1e-8</span><span class="p">,</span>  <span class="c1"># Absolute tolerance</span>
+    <span class="s2">&quot;snes_rtol&quot;</span><span class="p">:</span> <span class="mf">1e-8</span><span class="p">,</span>  <span class="c1"># Relative tolerance</span>
+    <span class="s2">&quot;ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;preonly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pc_type&quot;</span><span class="p">:</span> <span class="s2">&quot;lu&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">sys</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">Sys</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
+<span class="c1"># Select preferred factorization package (MUMPS or SuperLU_DIST)</span>
+<span class="n">use_superlu</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">IntType</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span>  <span class="c1"># or PETSc.ScalarType == np.complex64</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">hasExternalPackage</span><span class="p">(</span><span class="s2">&quot;mumps&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">use_superlu</span><span class="p">:</span>
+    <span class="n">petsc_options</span><span class="p">[</span><span class="s2">&quot;pc_factor_mat_solver_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mumps&quot;</span>
+<span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">hasExternalPackage</span><span class="p">(</span><span class="s2">&quot;superlu_dist&quot;</span><span class="p">):</span>
+    <span class="n">petsc_options</span><span class="p">[</span><span class="s2">&quot;pc_factor_mat_solver_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;superlu_dist&quot;</span>
+
+<span class="c1"># Create the nonlinear problem</span>
+<span class="n">problem</span> <span class="o">=</span> <span class="n">NonlinearProblem</span><span class="p">(</span>
+    <span class="n">F_form</span><span class="p">,</span>
+    <span class="n">u</span><span class="p">,</span>
+    <span class="n">bcs</span><span class="o">=</span><span class="n">bcs</span><span class="p">,</span>
+    <span class="n">petsc_options</span><span class="o">=</span><span class="n">petsc_options</span><span class="p">,</span>
+    <span class="n">petsc_options_prefix</span><span class="o">=</span><span class="s2">&quot;demo_hyperelasticity_&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="visualization-setup">
+<h3>Visualization Setup<a class="headerlink" href="#visualization-setup" title="Link to this heading"></a></h3>
+<p>We set up PyVista for plotting and potentially creating a GIF of the deformation.
+Reparameterization meshes are created for smoother visualization.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize PyVista plotter, enabling off-screen rendering if needed.</span>
+<span class="c1"># ``pyvista.start_xvfb`` is only useful on Linux for headless rendering,</span>
+<span class="c1"># and recent pyvista releases drop it from the top-level namespace, so</span>
+<span class="c1"># call it only when present.</span>
+<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pyvista</span><span class="p">,</span> <span class="s2">&quot;start_xvfb&quot;</span><span class="p">):</span>
+    <span class="n">pyvista</span><span class="o">.</span><span class="n">start_xvfb</span><span class="p">()</span>
+<span class="n">plotter</span> <span class="o">=</span> <span class="n">pyvista</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
+
+<span class="c1"># Attempt to set up GIF creation</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">plotter</span><span class="o">.</span><span class="n">open_gif</span><span class="p">(</span><span class="s2">&quot;demo_hyperelasticity_deformation.gif&quot;</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">create_GIF</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;imageio not installed, cannot create GIF.&quot;</span><span class="p">)</span>
+    <span class="n">create_GIF</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># Create reparameterization meshes for visualization</span>
+<span class="n">rep_degree</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Degree for the reparameterized mesh function space</span>
+<span class="n">reparam</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_reparam_mesh</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="n">rep_degree</span><span class="p">,</span> <span class="n">levelset</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">rep_mesh</span> <span class="o">=</span> <span class="n">reparam</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">()</span>  <span class="c1"># Standard reparameterized mesh</span>
+<span class="n">rep_mesh_wb</span> <span class="o">=</span> <span class="n">reparam</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">(</span><span class="n">wirebasket</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Wirebasket mesh for edges</span>
+
+<span class="c1"># Create function spaces on the reparameterized meshes</span>
+<span class="n">Vr</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">rep_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;CG&quot;</span><span class="p">,</span> <span class="n">rep_degree</span><span class="p">,</span> <span class="p">(</span><span class="n">dim</span><span class="p">,)))</span>  <span class="c1"># Vector space on rep_mesh</span>
+<span class="n">Vr_wb</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">rep_mesh_wb</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;CG&quot;</span><span class="p">,</span> <span class="n">rep_degree</span><span class="p">,</span> <span class="p">(</span><span class="n">dim</span><span class="p">,)))</span>  <span class="c1"># Vector space on rep_mesh_wb</span>
+
+<span class="c1"># Create interpolation data for transferring solution from original mesh to reparameterized meshes</span>
+<span class="n">interp_data</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_interpolation_data</span><span class="p">(</span><span class="n">Vr</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+<span class="n">interp_data_wb</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_interpolation_data</span><span class="p">(</span><span class="n">Vr_wb</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+
+<span class="c1"># Create PyVista unstructured grids from the reparameterized function spaces</span>
+<span class="n">function_grid</span> <span class="o">=</span> <span class="n">pyvista</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">(</span><span class="o">*</span><span class="n">plot_dlf</span><span class="o">.</span><span class="n">vtk_mesh</span><span class="p">(</span><span class="n">Vr</span><span class="p">))</span>
+<span class="n">function_grid_wb</span> <span class="o">=</span> <span class="n">pyvista</span><span class="o">.</span><span class="n">UnstructuredGrid</span><span class="p">(</span><span class="o">*</span><span class="n">plot_dlf</span><span class="o">.</span><span class="n">vtk_mesh</span><span class="p">(</span><span class="n">Vr_wb</span><span class="p">))</span>
+
+<span class="c1"># Get number of points for array reshaping</span>
+<span class="n">n_points_rep</span> <span class="o">=</span> <span class="n">function_grid</span><span class="o">.</span><span class="n">n_points</span>
+<span class="n">n_points_rep_wb</span> <span class="o">=</span> <span class="n">function_grid_wb</span><span class="o">.</span><span class="n">n_points</span>
+
+<span class="c1"># Create functions on reparameterized spaces to hold interpolated displacement</span>
+<span class="n">u_rep</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">Vr</span><span class="p">)</span>
+<span class="n">u_rep</span><span class="o">.</span><span class="n">interpolate_nonmatching</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="o">*</span><span class="n">interp_data</span><span class="p">)</span>  <span class="c1"># Interpolate initial state (zero displacement)</span>
+
+<span class="n">u_rep_wb</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">Vr_wb</span><span class="p">)</span>
+<span class="n">u_rep_wb</span><span class="o">.</span><span class="n">interpolate_nonmatching</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="o">*</span><span class="n">interp_data_wb</span><span class="p">)</span>  <span class="c1"># Interpolate initial state</span>
+
+<span class="c1"># Add displacement vector data (&quot;u&quot;) to the PyVista grids</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_points_rep</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">values</span><span class="p">[:,</span> <span class="p">:</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">u_rep</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points_rep</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+<span class="n">function_grid</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span>
+<span class="n">function_grid</span><span class="o">.</span><span class="n">set_active_vectors</span><span class="p">(</span><span class="s2">&quot;u&quot;</span><span class="p">)</span>
+
+<span class="n">values_wb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_points_rep_wb</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">values_wb</span><span class="p">[:,</span> <span class="p">:</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">u_rep_wb</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points_rep_wb</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+<span class="n">function_grid_wb</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">values_wb</span>
+
+<span class="c1"># Warp the visualization mesh by the initial displacement vector (zero)</span>
+<span class="n">warped</span> <span class="o">=</span> <span class="n">function_grid</span><span class="o">.</span><span class="n">warp_by_vector</span><span class="p">(</span><span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">warped</span><span class="o">.</span><span class="n">set_active_vectors</span><span class="p">(</span><span class="s2">&quot;u&quot;</span><span class="p">)</span>
+
+<span class="n">warped_wb</span> <span class="o">=</span> <span class="n">function_grid_wb</span><span class="o">.</span><span class="n">warp_by_vector</span><span class="p">(</span><span class="s2">&quot;u&quot;</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Add the initial meshes to the plotter</span>
+<span class="n">plotter</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">warped_wb</span><span class="p">,</span> <span class="n">show_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lighting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>  <span class="c1"># Wirebasket mesh</span>
+<span class="n">plotter</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">warped</span><span class="p">,</span> <span class="n">show_edges</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lighting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>  <span class="c1"># Solid mesh</span>
+
+<span class="c1"># Compute magnitude of displacement for visualization coloring</span>
+<span class="n">Vs</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">rep_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Lagrange&quot;</span><span class="p">,</span> <span class="n">rep_degree</span><span class="p">))</span>  <span class="c1"># Scalar space for magnitude</span>
+<span class="n">magnitude</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">Vs</span><span class="p">)</span>
+<span class="c1"># Define expression for displacement magnitude: sqrt(u_x^2 + u_y^2 + u_z^2)</span>
+<span class="n">us_expr</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">sum</span><span class="p">([</span><span class="n">u_rep</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">)]))</span>
+<span class="n">us</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">us_expr</span><span class="p">,</span> <span class="n">Vs</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">interpolation_points</span><span class="p">)</span>
+<span class="n">magnitude</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">us</span><span class="p">)</span>  <span class="c1"># Interpolate initial magnitude (zero)</span>
+<span class="n">warped</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">magnitude</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">array</span>  <span class="c1"># Add magnitude data to warped grid</span>
+</pre></div>
+</div>
+</section>
+<section id="time-stepping-and-solving">
+<h3>Time Stepping and Solving<a class="headerlink" href="#time-stepping-and-solving" title="Link to this heading"></a></h3>
+<p>We apply the displacement incrementally over several steps, solving
+the nonlinear problem at each step. The visualization is updated at each step.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set log level to INFO to see solver progress</span>
+<span class="n">log</span><span class="o">.</span><span class="n">set_log_level</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">LogLevel</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="c1"># Define total displacement and number of steps</span>
+<span class="n">disp</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.25</span>  <span class="c1"># Total vertical displacement at the top</span>
+<span class="n">n_steps</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># Number of load steps</span>
+
+<span class="c1"># Loop through time steps</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="c1"># Update the boundary condition value for the current step</span>
+    <span class="n">u_bc_top</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">disp</span> <span class="o">/</span> <span class="n">n_steps</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Time step </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> ---&quot;</span><span class="p">)</span>
+    <span class="c1"># Solve the nonlinear problem for the current displacement increment.</span>
+    <span class="c1"># ``problem.solve()`` updates ``u`` in place and uses it as the initial</span>
+    <span class="c1"># guess for the next load step.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">problem</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">getConvergedReason</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">u</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">scatter_forward</span><span class="p">()</span>  <span class="c1"># Update the solution vector across processes</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Converged in </span><span class="si">{</span><span class="n">problem</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">getIterationNumber</span><span class="p">()</span><span class="si">}</span><span class="s2"> iterations.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SNES solver did not converge. Exception: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">break</span>  <span class="c1"># Stop simulation if solver fails</span>
+
+    <span class="c1"># Print current step information</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Displacement u_z = </span><span class="si">{</span><span class="n">u_bc_top</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">dim</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Update visualization data</span>
+    <span class="c1"># Interpolate solution to reparameterized mesh</span>
+    <span class="n">u_rep</span><span class="o">.</span><span class="n">interpolate_nonmatching</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="o">*</span><span class="n">interp_data</span><span class="p">)</span>
+    <span class="n">function_grid</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">][:,</span> <span class="p">:</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">u_rep</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points_rep</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+
+    <span class="c1"># Update displacement magnitude</span>
+    <span class="n">magnitude</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">us</span><span class="p">)</span>  <span class="c1"># Re-interpolate magnitude based on updated u_rep</span>
+    <span class="n">warped</span><span class="o">.</span><span class="n">point_data</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">magnitude</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">array</span>
+    <span class="n">warped</span><span class="o">.</span><span class="n">set_active_scalars</span><span class="p">(</span><span class="s2">&quot;mag&quot;</span><span class="p">)</span>  <span class="c1"># Set magnitude as the active scalar for coloring</span>
+
+    <span class="c1"># Warp the main visualization grid by the current displacement</span>
+    <span class="n">warped_n</span> <span class="o">=</span> <span class="n">function_grid</span><span class="o">.</span><span class="n">warp_by_vector</span><span class="p">(</span><span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">warped</span><span class="o">.</span><span class="n">points</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">warped_n</span><span class="o">.</span><span class="n">points</span>  <span class="c1"># Update point coordinates</span>
+
+    <span class="c1"># Update wirebasket mesh visualization</span>
+    <span class="n">u_rep_wb</span><span class="o">.</span><span class="n">interpolate_nonmatching</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="o">*</span><span class="n">interp_data_wb</span><span class="p">)</span>
+    <span class="n">function_grid_wb</span><span class="p">[</span><span class="s2">&quot;u&quot;</span><span class="p">][:,</span> <span class="p">:</span><span class="n">dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">u_rep_wb</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_points_rep_wb</span><span class="p">,</span> <span class="n">dim</span><span class="p">)</span>
+    <span class="n">warped_n_wb</span> <span class="o">=</span> <span class="n">function_grid_wb</span><span class="o">.</span><span class="n">warp_by_vector</span><span class="p">(</span><span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">warped_wb</span><span class="o">.</span><span class="n">points</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">warped_n_wb</span><span class="o">.</span><span class="n">points</span>  <span class="c1"># Update wirebasket point coordinates</span>
+
+    <span class="c1"># Update plotter scalar bar range and write frame to GIF if enabled</span>
+    <span class="n">plotter</span><span class="o">.</span><span class="n">update_scalar_bar_range</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">magnitude</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">array</span><span class="p">)])</span>
+    <span class="k">if</span> <span class="n">create_GIF</span><span class="p">:</span>
+        <span class="n">plotter</span><span class="o">.</span><span class="n">write_frame</span><span class="p">()</span>
+
+<span class="c1"># Save the final plot as an image</span>
+<span class="n">plotter</span><span class="o">.</span><span class="n">save_graphic</span><span class="p">(</span><span class="s2">&quot;demo_hyperelasticity_final.pdf&quot;</span><span class="p">)</span>
+
+<span class="c1"># Display the final plot window</span>
+<span class="n">plotter</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Close the plotter and GIF file</span>
+<span class="n">plotter</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default" id="fig-demo-hyperelasticity-deformation">
+<img alt="../../_images/demo_hyperelasticity_final.pdf" src="../../_images/demo_hyperelasticity_final.pdf" />
+<figcaption>
+<p><span class="caption-text">Final deformation</span><a class="headerlink" href="#fig-demo-hyperelasticity-deformation" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="demo_elasticity_convergence.html" class="btn btn-neutral float-left" title="Linear Elasticity Convergence Study: Unit Square with Circular Hole" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../api.html" class="btn btn-neutral float-right" title="API reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

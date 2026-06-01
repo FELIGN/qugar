@@ -1,0 +1,7 @@
+<map id="qugar::Tolerance::equal_rel" name="qugar::Tolerance::equal_rel">
+<area shape="rect" id="Node000001" title="Compares if two values are equal up to the different absolute and relative tolerances." alt="" coords="5,5,203,31"/>
+<area shape="rect" id="Node000002" href="$db/d28/classqugar_1_1Tolerance.html#afcf43fc9baeb86b9fb3f353a9abfe121" title="Constructor." alt="" coords="251,5,449,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,15,237,15,237,21,203,21"/>
+<area shape="rect" id="Node000003" href="$db/d28/classqugar_1_1Tolerance.html#ae20f63cbe47d964e1f748deaf30ef21f" title="Returns the real tolerance value." alt="" coords="497,5,671,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="449,15,484,15,484,21,449,21"/>
+</map>

@@ -1,0 +1,400 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qugar.quad.custom_quad &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos.html">Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">qugar.quad.custom_quad</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for qugar.quad.custom_quad</h1><div class="highlight"><pre>
+<span></span><span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2025-present by Pablo Antolin</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of the QUGaR library.</span>
+<span class="c1">#</span>
+<span class="c1"># SPDX-License-Identifier:    MIT</span>
+<span class="c1">#</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot;Classes for describing custom quadratures and classes interfaces for</span>
+<span class="sd">creating them.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh.mesh_facets</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeshFacets</span>
+
+
+<div class="viewcode-block" id="CellState">
+<a class="viewcode-back" href="../../../generated/qugar.quad.html#qugar.quad.CellState">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CellState</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="n">cut</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">empty</span> <span class="o">=</span> <span class="mi">3</span></div>
+
+
+
+<div class="viewcode-block" id="CustomQuad">
+<a class="viewcode-back" href="../../../generated/qugar.quad.html#qugar.quad.CustomQuad">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomQuad</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data class for storing custom quadratures for a collection of</span>
+<span class="sd">    cells.</span>
+
+<span class="sd">    The quadratures are defined by custom points and weights referred to</span>
+<span class="sd">    the [0,1]^tdim unit domain of every cell, where tdim is the cell&#39;s</span>
+<span class="sd">    topological dimension.</span>
+
+<span class="sd">    All the points (and weights) are stored contiguously for all the</span>
+<span class="sd">    cells involved. Thus, the way of differentiating which points</span>
+<span class="sd">    belong to which cells is through `n_pts_per_entity`.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        cells (npt.NDArray[np.int32]): Array of cell ids to which the</span>
+<span class="sd">            quadrature points and weights are associated to.</span>
+<span class="sd">            This is a unique array. The ids are local to the MPI rank.</span>
+<span class="sd">        n_pts_per_entity (npt.NDArray[np.int32]): Array indicating the</span>
+<span class="sd">            number of quadrature points and weights for every cell</span>
+<span class="sd">            in `cells`.</span>
+<span class="sd">        points (npt.NDArray[np.float64]): Array of custom quadrature</span>
+<span class="sd">            points for all the cells. This is a 2D array that has as</span>
+<span class="sd">            many rows as points and as many columns as coordinates. It</span>
+<span class="sd">            stores all the points contiguously according the ordering of</span>
+<span class="sd">            `cells`.</span>
+<span class="sd">        weights (npt.NDArray[np.float64]): Array of custom quadrature</span>
+<span class="sd">            weights for all the cells. This is a 1D array with one entry</span>
+<span class="sd">            per point. It stores all the weights contiguously according</span>
+<span class="sd">            the ordering of `cells`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">cells</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]</span>
+    <span class="n">n_pts_per_entity</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]</span>
+    <span class="n">points</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span>
+    <span class="n">weights</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="CustomQuadFacet">
+<a class="viewcode-back" href="../../../generated/qugar.quad.html#qugar.quad.CustomQuadFacet">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomQuadFacet</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data class for storing custom quadratures for a collection of</span>
+<span class="sd">    facets.</span>
+
+<span class="sd">    It contains the same attributes as ``CustomQuad`` plus an additional</span>
+<span class="sd">    array for identifying the local ids of the facets.</span>
+
+<span class="sd">    The quadratures are defined by custom points and weights referred to</span>
+<span class="sd">    the [0,1]^(tdim-1) unit domain of every facet, where tdim is the</span>
+<span class="sd">    cell&#39;s topological dimension, and therefore (tdim-1) is the facet&#39;s</span>
+<span class="sd">    topological dimension.</span>
+
+<span class="sd">    Thus, the points have as many coordinates as the facets of a cell.</span>
+<span class="sd">    E.g., for triangles or quadrilaterals, points will have 1</span>
+<span class="sd">    coordinate, while for for tetrahedra or hexahedra they will have 2.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        facest (MeshFacets): Mesh facets object that stores the</span>
+<span class="sd">            information of the facets. The facets are local</span>
+<span class="sd">            to the MPI rank.</span>
+<span class="sd">        n_pts_per_entity (npt.NDArray[np.int32]): Array indicating the</span>
+<span class="sd">            number of quadrature points and weights for every facet.</span>
+<span class="sd">        points (npt.NDArray[np.float64]): Array of custom quadrature</span>
+<span class="sd">            points for all the cells. This is a 2D array that has as</span>
+<span class="sd">            many rows as points and as many columns as coordinates in</span>
+<span class="sd">            the facet. It stores all the points contiguously according</span>
+<span class="sd">            the ordering of `cells` and `facets`.</span>
+<span class="sd">        weights (npt.NDArray[np.float64]): Array of custom quadrature</span>
+<span class="sd">            weights for all the facets. This is a 1D array with one</span>
+<span class="sd">            entry per point. It stores all the weights contiguously</span>
+<span class="sd">            according the ordering of `cells` and `facets`.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">facets</span><span class="p">:</span> <span class="n">MeshFacets</span>
+    <span class="n">n_pts_per_entity</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]</span>
+    <span class="n">points</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span>
+    <span class="n">weights</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="CustomQuadUnfBoundary">
+<a class="viewcode-back" href="../../../generated/qugar.quad.html#qugar.quad.CustomQuadUnfBoundary">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomQuadUnfBoundary</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data class for storing custom quadratures for unfitted custom</span>
+<span class="sd">    boundaries. I.e., boundaries that are not on the exterior boundary</span>
+<span class="sd">    of a domain, but inside, as those derived from trimming operations.</span>
+
+<span class="sd">    It contains the same attributes as ``CustomQuad`` plus an additional</span>
+<span class="sd">    array for storing the unit outer normals on the boundary.</span>
+
+<span class="sd">    The normal vectors (and points) have as many coordinates as the</span>
+<span class="sd">    cell. E.g., for triangles or quadrilaterals, points and normals will</span>
+<span class="sd">    have 2 coordinates, while for tetrahedra or hexahedra they will have</span>
+<span class="sd">    3.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">        cells (npt.NDArray[np.int32]): Array of cell ids to which the</span>
+<span class="sd">            quadrature points and weights are associated to.</span>
+<span class="sd">            This is a unique array. The ids are local to the MPI rank.</span>
+<span class="sd">        n_pts_per_entity (npt.NDArray[np.int32]): Array indicating the</span>
+<span class="sd">            number of quadrature points and weights for every cell</span>
+<span class="sd">            in `cells`.</span>
+<span class="sd">        points (npt.NDArray[np.float64]): Array of custom quadrature</span>
+<span class="sd">            points for all the cells. This is a 2D array that has as</span>
+<span class="sd">            many rows as points and as many columns as coordinates. It</span>
+<span class="sd">            stores all the points contiguously according the ordering of</span>
+<span class="sd">            `cells`.</span>
+<span class="sd">        weights (npt.NDArray[np.float64]): Array of custom quadrature</span>
+<span class="sd">            weights for all the cells. This is a 1D array with one entry</span>
+<span class="sd">            per point. It stores all the weights contiguously according</span>
+<span class="sd">            the ordering of `cells`.</span>
+<span class="sd">        normals (npt.NDArray[np.float64]): Array of custom quadrature</span>
+<span class="sd">            unit outer normals for all the cells. The normals are</span>
+<span class="sd">            referred to the [0,1]^tdim unit domain of every cell. This</span>
+<span class="sd">            is a 2D array that has as many rows as quadrature points</span>
+<span class="sd">            and as many columns as coordinates. Therefore, the shape of</span>
+<span class="sd">            the array must be the same as `points`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">cells</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]</span>
+    <span class="n">n_pts_per_entity</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]</span>
+    <span class="n">points</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span>
+    <span class="n">weights</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span>
+    <span class="n">normals</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="QuadGenerator">
+<a class="viewcode-back" href="../../../generated/qugar.quad.html#qugar.quad.QuadGenerator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">QuadGenerator</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Protocol class for generating quadratures for unfitted domains.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="QuadGenerator.create_quad_custom_cells">
+<a class="viewcode-back" href="../../../generated/qugar.quad.html#qugar.quad.QuadGenerator.create_quad_custom_cells">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_quad_custom_cells</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">cells</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomQuad</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the custom quadratures for the given `cells`.</span>
+
+<span class="sd">        Among the given `cells`, it only creates quadratures for a</span>
+<span class="sd">        subset of those (the custom cells), while no points or</span>
+<span class="sd">        weights are generated for the others. Thus, the cells without</span>
+<span class="sd">        custom quadratures will be listed in the returned</span>
+<span class="sd">        `CustomQuadInterface`, but will have 0 points associated to</span>
+<span class="sd">        them.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This call may require the generation of the quadratures on</span>
+<span class="sd">            the fly, what can be potentially expensive.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            degree (int): Expected degree of exactness of the quadrature</span>
+<span class="sd">                to be generated.</span>
+
+<span class="sd">            cells (npt.NDArray[np.int32]): Array of DOLFINx cell ids</span>
+<span class="sd">                (local to current MPI process) for which quadratures</span>
+<span class="sd">                will be generated.</span>
+
+<span class="sd">            tag (Optional[int]): Mesh tag of the subdomain associated to</span>
+<span class="sd">                the given cells. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            CustomQuadInterface: Generated custom quadrature.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="QuadGenerator.create_quad_unf_boundaries">
+<a class="viewcode-back" href="../../../generated/qugar.quad.html#qugar.quad.QuadGenerator.create_quad_unf_boundaries">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_quad_unf_boundaries</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">cells</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomQuadUnfBoundary</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the custom quadrature for unfitted boundaries for the</span>
+<span class="sd">        given `cells`.</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">            All the given cells associated should contain unfitted</span>
+<span class="sd">            boundaries. I.e., they must be cut cells. If not, the</span>
+<span class="sd">            custom coefficients generator will raise an</span>
+<span class="sd">            exception.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This call may require the generation of the quadratures on</span>
+<span class="sd">            the fly, what can be potentially expensive.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            degree (int): Expected degree of exactness of the quadrature</span>
+<span class="sd">                to be generated.</span>
+
+<span class="sd">            cells (npt.NDArray[np.int32]): Array of DOLFINx cell ids</span>
+<span class="sd">                (local to current MPI process) for which quadratures</span>
+<span class="sd">                will be generated. It must only contain cells with</span>
+<span class="sd">                unfitted boundaries.</span>
+
+<span class="sd">            tag (int): Mesh tag of the subdomain associated to the given</span>
+<span class="sd">                cells.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            CustomQuadUnfBoundaryInterface: Generated custom quadrature</span>
+<span class="sd">            for unfitted boundaries.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="QuadGenerator.create_quad_custom_facets">
+<a class="viewcode-back" href="../../../generated/qugar.quad.html#qugar.quad.QuadGenerator.create_quad_custom_facets">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_quad_custom_facets</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">facets</span><span class="p">:</span> <span class="n">MeshFacets</span><span class="p">,</span>
+        <span class="n">integral_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomQuadFacet</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the custom quadratures for the given facets.</span>
+
+<span class="sd">        Among the facets associated to `tag`, it only creates</span>
+<span class="sd">        quadratures for a subset of those (the custom facets), while no</span>
+<span class="sd">        points or weights are generated for the others. Thus, the facets</span>
+<span class="sd">        without custom quadratures will be listed in the returned</span>
+<span class="sd">        `CustomQuadFacetInterface`, but will have 0 points associated to</span>
+
+<span class="sd">        Among the given facets, it only creates quadratures for a</span>
+<span class="sd">        subset of those (the custom facets), while no points or</span>
+<span class="sd">        weights are generated for the others. Thus, the facets without</span>
+<span class="sd">        custom quadratures will be listed in the returned</span>
+<span class="sd">        `CustomQuadFacetInterface`, but will have 0 points associated to</span>
+<span class="sd">        them.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This call may require the generation of the quadratures on</span>
+<span class="sd">            the fly, what can be potentially expensive.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            degree (int): Expected degree of exactness of the quadrature</span>
+<span class="sd">                to be generated.</span>
+
+<span class="sd">            facets (MeshFacets): Mesh facets object that stores the</span>
+<span class="sd">                information of the facets. The facets are local</span>
+<span class="sd">                to the MPI rank.</span>
+
+<span class="sd">            integral_type (str): Type of integral to be computed. It can</span>
+<span class="sd">                be either &#39;interior_facet&#39; or &#39;exterior_facet&#39;.</span>
+
+<span class="sd">            tag (int): Mesh tag of the subdomain associated to the given</span>
+<span class="sd">                cells.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            CustomQuadFacetInterface: Generated custom facet</span>
+<span class="sd">            quadratures.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

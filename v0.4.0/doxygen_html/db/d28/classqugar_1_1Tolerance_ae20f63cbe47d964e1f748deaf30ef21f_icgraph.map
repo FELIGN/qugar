@@ -1,0 +1,11 @@
+<map id="qugar::Tolerance::value" name="qugar::Tolerance::value">
+<area shape="rect" id="Node000001" title="Returns the real tolerance value." alt="" coords="499,55,672,80"/>
+<area shape="rect" id="Node000002" href="$db/d28/classqugar_1_1Tolerance.html#afcf43fc9baeb86b9fb3f353a9abfe121" title="Constructor." alt="" coords="252,55,451,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="485,70,451,70,451,65,485,65"/>
+<area shape="rect" id="Node000003" href="$db/d28/classqugar_1_1Tolerance.html#ab67b601cb39a07228b3cbe10ef77e5f8" title="Compares if two values are equal up to the different absolute and relative tolerances." alt="" coords="6,5,203,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="274,55,169,33,170,28,275,49"/>
+<area shape="rect" id="Node000004" href="$db/d28/classqugar_1_1Tolerance.html#a79697dacd33fe7af509da59d796724e3" title="Constructor. Creates a new class instance using the largest of the two given tolerances." alt="" coords="5,55,204,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="238,70,204,70,204,65,238,65"/>
+<area shape="rect" id="Node000005" href="$db/d28/classqugar_1_1Tolerance.html#ab3923ad80c4e201919fd9937c4eba440" title="Resets the tolerance value as the maximum between the current tolerance_ and tol." alt="" coords="13,104,196,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="275,85,170,107,169,101,274,80"/>
+</map>

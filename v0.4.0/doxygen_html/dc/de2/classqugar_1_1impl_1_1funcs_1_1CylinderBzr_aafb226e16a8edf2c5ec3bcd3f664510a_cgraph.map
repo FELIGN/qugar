@@ -1,0 +1,9 @@
+<map id="qugar::impl::funcs::CylinderBzr::CylinderBzr" name="qugar::impl::funcs::CylinderBzr::CylinderBzr">
+<area shape="rect" id="Node000001" title="Constructor." alt="" coords="5,69,193,109"/>
+<area shape="rect" id="Node000002" href="$d5/d65/classqugar_1_1impl_1_1funcs_1_1CylinderBase.html#a1229c227a2e1c326d27d16446002c0cb" title="Gets the axis of the cylinder." alt="" coords="248,5,399,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,67,239,47,240,52,171,72"/>
+<area shape="rect" id="Node000003" href="$d5/d65/classqugar_1_1impl_1_1funcs_1_1CylinderBase.html#aa8f2f25af45beb10e9c6ca76c3ebaf09" title="Gets the origin of the cylinder." alt="" coords="243,69,404,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="194,87,229,87,229,92,194,92"/>
+<area shape="rect" id="Node000004" href="$d5/d65/classqugar_1_1impl_1_1funcs_1_1CylinderBase.html#a3c0c18a5a821c192c527d6188fec6eaa" title="Gets the radius of the cylinder." alt="" coords="241,133,405,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="171,107,240,127,239,132,169,112"/>
+</map>

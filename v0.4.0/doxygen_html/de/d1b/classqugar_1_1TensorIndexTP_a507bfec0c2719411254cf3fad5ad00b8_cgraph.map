@@ -1,0 +1,7 @@
+<map id="qugar::TensorIndexTP::TensorIndexTP" name="qugar::TensorIndexTP::TensorIndexTP">
+<area shape="rect" id="Node000001" title="Constructs a new TensorIndexTP object from a flat index and an associated tensor size following the l..." alt="" coords="5,37,167,77"/>
+<area shape="rect" id="Node000002" href="$de/d1b/classqugar_1_1TensorIndexTP.html#a38deb0916e5f09d6e45c3bb540684093" title="Returns the tensor index casted as a Vector." alt="" coords="215,5,376,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,42,201,37,202,42,168,48"/>
+<area shape="rect" id="Node000003" href="$de/d1b/classqugar_1_1TensorIndexTP.html#a3dec3f4cae1f63be847b998af4a87a56" title="Default constructor. Initializes indices to zero." alt="" coords="215,69,376,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,67,202,72,201,78,167,72"/>
+</map>

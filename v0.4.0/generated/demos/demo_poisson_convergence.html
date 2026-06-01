@@ -1,0 +1,686 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poisson Convergence Study: Unit Square with Circular Hole &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+      <script src="../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Linear elasticity problem" href="demo_elasticity.html" />
+    <link rel="prev" title="Poisson problem" href="demo_poisson.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../demos.html">Demos</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../demos.html#list-of-all-demos">List of all demos</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="demo_div_thm.html">Divergence theorem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_div_thm_no_fenicsx.html">Divergence theorem (without FEniCSx)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_impl_funcs.html">Creation of unfitted implicit domains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_plot.html">PyVista visualization capabilities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_L2_projection.html"><span class="math notranslate nohighlight">\(L^2\)</span> projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_poisson.html">Poisson problem</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Poisson Convergence Study: Unit Square with Circular Hole</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#problem-definition">Problem Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#boundary-conditions">Boundary Conditions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#manufactured-solutions">Manufactured Solutions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#convergence-analysis">Convergence Analysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="demo_elasticity.html">Linear elasticity problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_elasticity_convergence.html">Linear Elasticity Convergence Study: Unit Square with Circular Hole</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_hyperelasticity.html">Hyperelasticity problem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../demos.html">Demos</a></li>
+      <li class="breadcrumb-item active">Poisson Convergence Study: Unit Square with Circular Hole</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/generated/demos/demo_poisson_convergence.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="poisson-convergence-study-unit-square-with-circular-hole">
+<h1>Poisson Convergence Study: Unit Square with Circular Hole<a class="headerlink" href="#poisson-convergence-study-unit-square-with-circular-hole" title="Link to this heading"></a></h1>
+<p>This demo is implemented in <a class="reference download internal" download="" href="../../_downloads/d333912ca7743cb373715985ca764274/demo_poisson_convergence.py"><code class="xref download docutils literal notranslate"><span class="pre">demo_poisson_convergence.py</span></code></a>. It
+illustrates:</p>
+<ul class="simple">
+<li><p>How to perform a convergence study for the Poisson problem on an unfitted domain.</p></li>
+<li><p>How to use Nitsche’s method for imposing boundary conditions weakly.</p></li>
+<li><p>How to compute and analyze L² and H¹ error norms.</p></li>
+<li><p>How to visualize convergence rates for different mesh refinements.</p></li>
+</ul>
+<section id="problem-definition">
+<h2>Problem Definition<a class="headerlink" href="#problem-definition" title="Link to this heading"></a></h2>
+<p>We consider the Poisson problem on a domain <span class="math notranslate nohighlight">\(\Omega \subset \mathbb{R}^2\)</span>
+that is the unit square <span class="math notranslate nohighlight">\([0,1]^2\)</span> with a circular hole. The domain is
+defined implicitly as the complement of a disk:</p>
+<div class="math notranslate nohighlight">
+\[\Omega = [0,1]^2 \setminus D_R(\mathbf{c}),\]</div>
+<p>where <span class="math notranslate nohighlight">\(D_R(\mathbf{c})\)</span> is a disk of radius <span class="math notranslate nohighlight">\(R = 0.2\)</span> centered at
+<span class="math notranslate nohighlight">\(\mathbf{c} = (0.5, 0.5)\)</span>. The Poisson problem reads:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+  -\nabla^{2} u &amp;= f \quad \text{in } \Omega, \\
+  u &amp;= u_D \quad \text{on } \Gamma_{D}, \\
+  \nabla u \cdot \mathbf{n} &amp;= g \quad \text{on } \Gamma_{N}.
+\end{align}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Gamma_D\)</span> consists of the outer boundary (the four edges of the
+square) and <span class="math notranslate nohighlight">\(\Gamma_N\)</span> is the unfitted boundary (the circular hole).</p>
+</section>
+<section id="boundary-conditions">
+<h2>Boundary Conditions<a class="headerlink" href="#boundary-conditions" title="Link to this heading"></a></h2>
+<p>We have two options for imposing boundary conditions on the unfitted
+boundary <span class="math notranslate nohighlight">\(\Gamma_N\)</span>:</p>
+<ol class="arabic simple">
+<li><p><strong>Neumann boundary conditions</strong>: Impose <span class="math notranslate nohighlight">\(\nabla u \cdot \mathbf{n} = g\)</span>
+directly in the linear form.</p></li>
+<li><p><strong>Nitsche’s method</strong>: Weakly impose Dirichlet boundary conditions
+<span class="math notranslate nohighlight">\(u = u_D\)</span> on <span class="math notranslate nohighlight">\(\Gamma_N\)</span> using Nitsche’s method, which provides a
+consistent, symmetric, and stable formulation.</p></li>
+</ol>
+<section id="nitsche-s-method">
+<h3>Nitsche’s Method<a class="headerlink" href="#nitsche-s-method" title="Link to this heading"></a></h3>
+<p>When using Nitsche’s method, the bilinear form is modified to include
+boundary terms:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+  a(u, v) &amp;= \int_{\Omega} \nabla u \cdot \nabla v \, \mathrm{d}x
+           - \int_{\Gamma_N} (\nabla u \cdot \mathbf{n}) v \, \mathrm{d}s
+           - \int_{\Gamma_N} u (\nabla v \cdot \mathbf{n}) \, \mathrm{d}s
+           + \frac{\beta}{h} \int_{\Gamma_N} u v \, \mathrm{d}s, \\
+  L(v)    &amp;= \int_{\Omega} f v \, \mathrm{d}x
+           - \int_{\Gamma_N} u_D (\nabla v \cdot \mathbf{n}) \, \mathrm{d}s
+           + \frac{\beta}{h} \int_{\Gamma_N} u_D v \, \mathrm{d}s,
+\end{align}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\beta &gt; 0\)</span> is a stabilization parameter (chosen here as
+<span class="math notranslate nohighlight">\(\beta = 6k^2\)</span> for polynomials of degree <span class="math notranslate nohighlight">\(k\)</span>), and <span class="math notranslate nohighlight">\(h\)</span> is the mesh size.
+The first boundary term ensures consistency, the second, symmetry,
+and the third provides stability.</p>
+</section>
+</section>
+<section id="manufactured-solutions">
+<h2>Manufactured Solutions<a class="headerlink" href="#manufactured-solutions" title="Link to this heading"></a></h2>
+<p>The demo supports multiple manufactured solutions for different test cases.
+By default, we use:</p>
+<div class="math notranslate nohighlight">
+\[u(x,y) = \sin(\pi x) \sin(\pi y),\]</div>
+<p>which yields a non-zero right-hand side <span class="math notranslate nohighlight">\(f = -\Delta u = 2\pi^2\sin(\pi x)\sin(\pi y)\)</span>
+and non-zero Neumann boundary conditions on <span class="math notranslate nohighlight">\(\Gamma_N\)</span>.</p>
+<p>Other available solutions include:</p>
+<ul class="simple">
+<li><p>Trigonometric functions with different combinations</p></li>
+<li><p>Radial solutions that satisfy specific boundary conditions</p></li>
+<li><p>Solutions with zero forcing terms or zero Neumann data</p></li>
+</ul>
+</section>
+<section id="convergence-analysis">
+<h2>Convergence Analysis<a class="headerlink" href="#convergence-analysis" title="Link to this heading"></a></h2>
+<p>For a finite element solution <span class="math notranslate nohighlight">\(u_h\)</span> using polynomial basis functions of
+degree <span class="math notranslate nohighlight">\(k\)</span>, the expected convergence rates are:</p>
+<ul class="simple">
+<li><p><strong>L² error</strong>: <span class="math notranslate nohighlight">\(\|u - u_h\|_{L^2(\Omega)} = \mathcal{O}(h^{k+1})\)</span></p></li>
+<li><p><strong>H¹ error</strong>: <span class="math notranslate nohighlight">\(\|u - u_h\|_{H^1(\Omega)} = \mathcal{O}(h^k)\)</span></p></li>
+</ul>
+<p>where <span class="math notranslate nohighlight">\(h\)</span> is the characteristic mesh size. These rates hold for smooth
+solutions when the mesh is sufficiently refined.</p>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<section id="modules-import">
+<h3>Modules import<a class="headerlink" href="#modules-import" title="Link to this heading"></a></h3>
+<p>First we import the necessary modules:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.fem</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.fem.petsc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ufl</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.impl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">dsu</span><span class="p">,</span> <span class="n">UnfittedNormal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_unfitted_impl_Cartesian_mesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_FEniCSx</span><span class="p">,</span> <span class="n">has_PETSc</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+    <span class="n">has_matplotlib</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">has_matplotlib</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">has_FEniCSx</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;FEniCSx installation not found, required for this demo.&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">has_PETSc</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;petsc4py installation not found, required for this demo.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="domain-definition">
+<h3>Domain Definition<a class="headerlink" href="#domain-definition" title="Link to this heading"></a></h3>
+<p>We define the domain as the unit square with a circular hole:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="n">xmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">center</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmin</span> <span class="o">+</span> <span class="n">xmax</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+<span class="n">R</span> <span class="o">=</span> <span class="mf">0.2</span>
+
+<span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+<span class="n">impl_func</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_negative</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_disk</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="boundary-condition-method">
+<h3>Boundary Condition Method<a class="headerlink" href="#boundary-condition-method" title="Link to this heading"></a></h3>
+<p>Choose between Nitsche’s method (<code class="docutils literal notranslate"><span class="pre">True</span></code>) or Neumann boundary (<code class="docutils literal notranslate"><span class="pre">False</span></code>) conditions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">use_Nistche</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</section>
+<section id="analytical-solution">
+<h3>Analytical Solution<a class="headerlink" href="#analytical-solution" title="Link to this heading"></a></h3>
+<p>Define the exact solution and select which one to use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">solution_id</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># ufl.sin(ufl.pi * x[0]) * ufl.sin(ufl.pi * x[1]) # f!=0, Neumann!=0</span>
+<span class="c1"># solution_id = 1  # ufl.cos(ufl.pi * x[0]) * ufl.cos(ufl.pi * x[1]) # f!=0, Neumann!=0</span>
+<span class="c1"># solution_id = 2  # ufl.exp(x[0]) * ufl.sin(x[1]) # f=0, Neumann!=0</span>
+<span class="c1"># solution_id = 3  # (r - R) ** 2  # f!=0, Neumann=0.</span>
+<span class="c1"># solution_id = 4  # -R * ufl.ln(r)  # f=0, Neumann=1.</span>
+<span class="c1"># solution_id = 5  # (r - R) ** 2 - R * ufl.ln(r)  # f!=0, Neumann=1.</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">u_exact_expr</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exact displacement solution as a UFL expression.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">r</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">ufl</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">solution_id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ufl</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># f!=0, Neumann!=0</span>
+    <span class="k">elif</span> <span class="n">solution_id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ufl</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># f!=0, Neumann!=0</span>
+    <span class="k">elif</span> <span class="n">solution_id</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ufl</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># f=0, Neumann!=0</span>
+    <span class="k">elif</span> <span class="n">solution_id</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">r</span><span class="p">()</span> <span class="o">-</span> <span class="n">R</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># f!=0, Neumann=0.</span>
+    <span class="k">elif</span> <span class="n">solution_id</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">R</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">ln</span><span class="p">(</span><span class="n">r</span><span class="p">())</span>  <span class="c1"># f=0, Neumann=1.</span>
+    <span class="k">elif</span> <span class="n">solution_id</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">r</span><span class="p">()</span> <span class="o">-</span> <span class="n">R</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">R</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">ln</span><span class="p">(</span><span class="n">r</span><span class="p">())</span>  <span class="c1"># f!=0, Neumann=1.</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid solution id: </span><span class="si">{</span><span class="n">solution_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">u_exact_numpy</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exact displacement solution as a numpy function for error computation.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">r</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">solution_id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">solution_id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">solution_id</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">solution_id</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">r</span><span class="p">()</span> <span class="o">-</span> <span class="n">R</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># f != 0, Neumann=0.</span>
+    <span class="k">elif</span> <span class="n">solution_id</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">r</span><span class="p">())</span>  <span class="c1"># f = 0, Neumann=1.</span>
+    <span class="k">elif</span> <span class="n">solution_id</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">r</span><span class="p">()</span> <span class="o">-</span> <span class="n">R</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">r</span><span class="p">())</span>  <span class="c1"># f != 0, Neumann=1.</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid solution id: </span><span class="si">{</span><span class="n">solution_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="boundary-dof-location">
+<h3>Boundary DOF Location<a class="headerlink" href="#boundary-dof-location" title="Link to this heading"></a></h3>
+<p>Function to locate degrees of freedom on the outer boundary facets:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">locate_boundary_dofs</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">V</span><span class="p">):</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">unf_mesh</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">dim</span>
+
+    <span class="c1"># Left boundary (x=-0.5)</span>
+    <span class="n">left_facets</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">locate_entities_boundary</span><span class="p">(</span>
+        <span class="n">unf_mesh</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xmin</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="n">left_dofs</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">locate_dofs_topological</span><span class="p">(</span><span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">,</span> <span class="n">entity_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="n">left_facets</span><span class="p">)</span>
+
+    <span class="c1"># Bottom boundary (y=-0.5)</span>
+    <span class="n">bottom_facets</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">locate_entities_boundary</span><span class="p">(</span>
+        <span class="n">unf_mesh</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xmin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="n">bottom_dofs</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">locate_dofs_topological</span><span class="p">(</span><span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">,</span> <span class="n">entity_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="n">bottom_facets</span><span class="p">)</span>
+
+    <span class="c1"># Right boundary (x=0.5)</span>
+    <span class="n">right_facets</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">locate_entities_boundary</span><span class="p">(</span>
+        <span class="n">unf_mesh</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xmax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="n">right_dofs</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">locate_dofs_topological</span><span class="p">(</span><span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">,</span> <span class="n">entity_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="n">right_facets</span><span class="p">)</span>
+
+    <span class="c1"># Top boundary (y=0.5)</span>
+    <span class="n">top_facets</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">locate_entities_boundary</span><span class="p">(</span>
+        <span class="n">unf_mesh</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xmax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="n">top_dofs</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">locate_dofs_topological</span><span class="p">(</span><span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">,</span> <span class="n">entity_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="n">top_facets</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">left_dofs</span><span class="p">,</span> <span class="n">right_dofs</span><span class="p">,</span> <span class="n">bottom_dofs</span><span class="p">,</span> <span class="n">top_dofs</span>
+</pre></div>
+</div>
+</section>
+<section id="solve-function">
+<h3>Solve Function<a class="headerlink" href="#solve-function" title="Link to this heading"></a></h3>
+<p>Function to solve the Poisson problem for a given mesh resolution:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">solve_poisson</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">unf_mesh</span> <span class="o">=</span> <span class="n">create_unfitted_impl_Cartesian_mesh</span><span class="p">(</span>
+        <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">,</span>
+        <span class="n">impl_func</span><span class="p">,</span>
+        <span class="n">n_cells</span><span class="p">,</span>
+        <span class="n">xmin</span><span class="p">,</span>
+        <span class="n">xmax</span><span class="p">,</span>
+        <span class="n">exclude_empty_cells</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">V</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Lagrange&quot;</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+
+    <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">TrialFunction</span><span class="p">(</span><span class="n">V</span><span class="p">),</span> <span class="n">ufl</span><span class="o">.</span><span class="n">TestFunction</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">SpatialCoordinate</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">)</span>
+    <span class="n">u_exact</span> <span class="o">=</span> <span class="n">u_exact_expr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">gradu_exact</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">u_exact</span><span class="p">)</span>
+    <span class="n">f_exact</span> <span class="o">=</span> <span class="o">-</span><span class="n">ufl</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">gradu_exact</span><span class="p">)</span>
+
+    <span class="n">u_D</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="n">u_D</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">u_exact_numpy</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="n">bcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">dirichletbc</span><span class="p">(</span><span class="n">u_D</span><span class="p">,</span> <span class="n">dofs</span><span class="p">)</span> <span class="k">for</span> <span class="n">dofs</span> <span class="ow">in</span> <span class="n">locate_boundary_dofs</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">V</span><span class="p">)]</span>
+
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dx</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">unf_mesh</span><span class="p">)</span>
+    <span class="n">n_unf</span> <span class="o">=</span> <span class="n">UnfittedNormal</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">)</span>
+    <span class="n">ds_unf</span> <span class="o">=</span> <span class="n">dsu</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">unf_mesh</span><span class="p">)</span>
+
+    <span class="c1"># Bilinear form: a(u,v) = ∫_Ω ∇u·∇v dx</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="o">*</span> <span class="n">dx</span>
+
+    <span class="k">if</span> <span class="n">use_Nistche</span><span class="p">:</span>
+        <span class="c1"># Bilinear form: a(u,v) = ∫_Ω ∇u·∇v dx- ∫_Γ_N ∇u·n * v ds</span>
+        <span class="c1"># - ∫_Γ_N u * ∇v·n ds + β/h ∫_Γ_N u v ds</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_cells</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">degree</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">gradu_n</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">n_unf</span><span class="p">)</span>
+        <span class="n">gradv_n</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">v</span><span class="p">),</span> <span class="n">n_unf</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">-=</span> <span class="n">gradu_n</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">ds_unf</span>  <span class="c1"># consistency</span>
+        <span class="n">a</span> <span class="o">-=</span> <span class="n">u</span> <span class="o">*</span> <span class="n">gradv_n</span> <span class="o">*</span> <span class="n">ds_unf</span>  <span class="c1"># symmetry</span>
+        <span class="n">a</span> <span class="o">+=</span> <span class="n">beta</span> <span class="o">/</span> <span class="n">h</span> <span class="o">*</span> <span class="n">u</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">ds_unf</span>  <span class="c1"># stability</span>
+
+    <span class="c1"># Linear form: L(v) = ∫_Ω f v dx + ...</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">f_exact</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+
+    <span class="k">if</span> <span class="n">use_Nistche</span><span class="p">:</span>
+        <span class="c1"># Linear form: L(v) = ∫_Ω f v dx - ∫_Γ_N u_exact ∇v·n ds + β/h ∫_Γ_N u_exact * v ds</span>
+        <span class="n">L</span> <span class="o">+=</span> <span class="n">beta</span> <span class="o">/</span> <span class="n">h</span> <span class="o">*</span> <span class="n">u_exact</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">ds_unf</span>
+        <span class="n">L</span> <span class="o">-=</span> <span class="n">u_exact</span> <span class="o">*</span> <span class="n">gradv_n</span> <span class="o">*</span> <span class="n">ds_unf</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># Neumann</span>
+        <span class="c1"># Linear form: L(v) = ∫_Ω f v dx + ∫_Γ_N ∇(u_exact)·n v ds</span>
+        <span class="n">gradu_exact_n</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">gradu_exact</span><span class="p">,</span> <span class="n">n_unf</span><span class="p">)</span>
+        <span class="n">L</span> <span class="o">+=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">gradu_exact_n</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="o">*</span> <span class="n">ds_unf</span>
+
+    <span class="n">petsc_options</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;preonly&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pc_type&quot;</span><span class="p">:</span> <span class="s2">&quot;cholesky&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ksp_diagonal_scale&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># Jacobi preconditioner</span>
+    <span class="p">}</span>
+
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">petsc</span><span class="o">.</span><span class="n">LinearProblem</span><span class="p">(</span>
+        <span class="n">a</span><span class="p">,</span>
+        <span class="n">L</span><span class="p">,</span>
+        <span class="n">bcs</span><span class="o">=</span><span class="n">bcs</span><span class="p">,</span>
+        <span class="n">petsc_options</span><span class="o">=</span><span class="n">petsc_options</span><span class="p">,</span>
+        <span class="n">petsc_options_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;demo_poisson_conv_</span><span class="si">{</span><span class="n">n_cells</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">degree</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">uh</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">unf_mesh</span><span class="p">,</span> <span class="n">uh</span><span class="p">,</span> <span class="n">V</span>
+</pre></div>
+</div>
+</section>
+<section id="error-computation">
+<h3>Error Computation<a class="headerlink" href="#error-computation" title="Link to this heading"></a></h3>
+<p>Function to compute L² and H¹ error norms:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_l2_h1_errors</span><span class="p">(</span><span class="n">uh</span><span class="p">,</span> <span class="n">unf_mesh</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute L² error: ||u_h - u_exact||_L² and H¹ error: ||u_h - u_exact||_H¹&quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">SpatialCoordinate</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">)</span>
+    <span class="n">u_exact</span> <span class="o">=</span> <span class="n">u_exact_expr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">uh</span> <span class="o">-</span> <span class="n">u_exact</span>
+    <span class="n">grad_error</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dx</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">unf_mesh</span><span class="p">)</span>
+
+    <span class="c1"># Compute L² norm using appropriate quadrature</span>
+    <span class="n">L2_error_form</span> <span class="o">=</span> <span class="n">error</span> <span class="o">*</span> <span class="n">error</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">L2_error_form</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">dolfinx</span><span class="o">.</span><span class="n">form_custom</span><span class="p">(</span><span class="n">L2_error_form</span><span class="p">)</span>
+    <span class="n">L2_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">assemble_scalar</span><span class="p">(</span><span class="n">L2_error_form</span><span class="p">,</span> <span class="n">coeffs</span><span class="o">=</span><span class="n">L2_error_form</span><span class="o">.</span><span class="n">pack_coefficients</span><span class="p">())</span>
+    <span class="p">)</span>
+
+    <span class="c1"># H¹ semi norm = grad L²</span>
+    <span class="n">semi_H1_error_form</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">grad_error</span><span class="p">,</span> <span class="n">grad_error</span><span class="p">)</span> <span class="o">*</span> <span class="n">dx</span>
+    <span class="n">semi_H1_error_form</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">dolfinx</span><span class="o">.</span><span class="n">form_custom</span><span class="p">(</span><span class="n">semi_H1_error_form</span><span class="p">)</span>
+
+    <span class="n">semi_H1_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">assemble_scalar</span><span class="p">(</span>
+            <span class="n">semi_H1_error_form</span><span class="p">,</span> <span class="n">coeffs</span><span class="o">=</span><span class="n">semi_H1_error_form</span><span class="o">.</span><span class="n">pack_coefficients</span><span class="p">()</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1"># H¹ norm = L² + grad L²</span>
+    <span class="n">H1_error</span> <span class="o">=</span> <span class="n">L2_error</span> <span class="o">+</span> <span class="n">semi_H1_error</span>
+
+    <span class="k">return</span> <span class="n">L2_error</span><span class="p">,</span> <span class="n">H1_error</span>
+</pre></div>
+</div>
+</section>
+<section id="visualization">
+<h3>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h3>
+<p>Function to visualize the solution on a reparameterized mesh:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">visualize_solution</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">uh</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">rep_degree</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Visualize the solution.&quot;&quot;&quot;</span>
+    <span class="n">reparam</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_reparam_mesh</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="n">rep_degree</span><span class="p">,</span> <span class="n">levelset</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">rep_mesh</span> <span class="o">=</span> <span class="n">reparam</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">()</span>
+    <span class="n">rep_mesh_wb</span> <span class="o">=</span> <span class="n">reparam</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">(</span><span class="n">wirebasket</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">dim</span>
+
+    <span class="n">Vrep</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">rep_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;CG&quot;</span><span class="p">,</span> <span class="n">rep_degree</span><span class="p">,</span> <span class="p">(</span><span class="n">dim</span><span class="p">,)))</span>
+    <span class="n">Vrep_wb</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">rep_mesh_wb</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;CG&quot;</span><span class="p">,</span> <span class="n">rep_degree</span><span class="p">,</span> <span class="p">(</span><span class="n">dim</span><span class="p">,)))</span>
+
+    <span class="n">interp_data_vec</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_interpolation_data</span><span class="p">(</span><span class="n">Vrep</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+    <span class="n">uh_rep</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">Vrep</span><span class="p">)</span>
+    <span class="n">uh_rep</span><span class="o">.</span><span class="n">interpolate_nonmatching</span><span class="p">(</span><span class="n">uh</span><span class="p">,</span> <span class="o">*</span><span class="n">interp_data_vec</span><span class="p">)</span>
+    <span class="n">uh_rep</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;solution&quot;</span>
+
+    <span class="n">interp_data_wb</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_interpolation_data</span><span class="p">(</span><span class="n">Vrep_wb</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+    <span class="n">uh_rep_wb</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">Vrep_wb</span><span class="p">)</span>
+    <span class="n">uh_rep_wb</span><span class="o">.</span><span class="n">interpolate_nonmatching</span><span class="p">(</span><span class="n">uh</span><span class="p">,</span> <span class="o">*</span><span class="n">interp_data_wb</span><span class="p">)</span>
+    <span class="n">uh_rep_wb</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;solution_wirebasket&quot;</span>
+
+    <span class="n">results_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">)</span>
+    <span class="n">results_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">results_folder</span> <span class="o">/</span> <span class="n">name</span>
+
+    <span class="k">with</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">VTKFile</span><span class="p">(</span><span class="n">rep_mesh</span><span class="o">.</span><span class="n">comm</span><span class="p">,</span> <span class="n">filename</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.pvd&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">vtk</span><span class="p">:</span>
+        <span class="n">vtk</span><span class="o">.</span><span class="n">write_function</span><span class="p">(</span><span class="n">uh_rep</span><span class="p">)</span>
+        <span class="n">vtk</span><span class="o">.</span><span class="n">write_function</span><span class="p">(</span><span class="n">uh_rep_wb</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="convergence-study">
+<h3>Convergence Study<a class="headerlink" href="#convergence-study" title="Link to this heading"></a></h3>
+<p>Perform the convergence study by solving on a sequence of refined meshes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">]</span>  <span class="c1"># Cells per direction</span>
+<span class="n">fe_degree</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CONVERGENCE STUDY - Linear Poisson on Unit Square with Hole&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FE degree: </span><span class="si">{</span><span class="n">fe_degree</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mesh sizes (cells/direction): </span><span class="si">{</span><span class="n">mesh_sizes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;mesh_size&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;h&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;n_dofs&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;L2_error&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;H1_error&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;L2_rate&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;H1_rate&quot;</span><span class="p">:</span> <span class="p">[],</span>
+<span class="p">}</span>
+
+<span class="n">prev_L2</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">prev_H1</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">prev_h</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">for</span> <span class="n">n_cells</span> <span class="ow">in</span> <span class="n">mesh_sizes</span><span class="p">:</span>
+    <span class="n">mesh</span><span class="p">,</span> <span class="n">uh</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">solve_poisson</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="n">fe_degree</span><span class="p">)</span>
+
+    <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_cells</span>
+    <span class="n">n_dofs</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">dofmap</span><span class="o">.</span><span class="n">index_map</span><span class="o">.</span><span class="n">size_global</span>
+
+    <span class="n">L2_error</span><span class="p">,</span> <span class="n">H1_error</span> <span class="o">=</span> <span class="n">compute_l2_h1_errors</span><span class="p">(</span><span class="n">uh</span><span class="p">,</span> <span class="n">mesh</span><span class="p">)</span>
+
+    <span class="n">visualize</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">visualize</span><span class="p">:</span>
+        <span class="n">visualize_solution</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">uh</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;demo_poisson_plate_with_hole_</span><span class="si">{</span><span class="n">n_cells</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">prev_L2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">L2_rate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">prev_L2</span> <span class="o">/</span> <span class="n">L2_error</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">prev_h</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span>
+        <span class="n">H1_rate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">prev_H1</span> <span class="o">/</span> <span class="n">H1_error</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">prev_h</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">L2_rate</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">H1_rate</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;mesh_size&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n_cells</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;n_dofs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n_dofs</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;L2_error&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">L2_error</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;H1_error&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">H1_error</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;L2_rate&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">L2_rate</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;H1_rate&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">H1_rate</span><span class="p">)</span>
+
+    <span class="n">L2_rate_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">L2_rate</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">L2_rate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;  - &quot;</span>
+    <span class="n">H1_rate_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">H1_rate</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">H1_rate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;  - &quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;n_cells=</span><span class="si">{</span><span class="n">n_cells</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> | h=</span><span class="si">{</span><span class="n">h</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | DOFs=</span><span class="si">{</span><span class="n">n_dofs</span><span class="si">:</span><span class="s2">6d</span><span class="si">}</span><span class="s2"> | &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;L² error=</span><span class="si">{</span><span class="n">L2_error</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2"> (rate: </span><span class="si">{</span><span class="n">L2_rate_str</span><span class="si">}</span><span class="s2">) | &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;H¹ error=</span><span class="si">{</span><span class="n">H1_error</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2"> (rate: </span><span class="si">{</span><span class="n">H1_rate_str</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">prev_L2</span> <span class="o">=</span> <span class="n">L2_error</span>
+    <span class="n">prev_H1</span> <span class="o">=</span> <span class="n">H1_error</span>
+    <span class="n">prev_h</span> <span class="o">=</span> <span class="n">h</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">70</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Expected convergence rates:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  L²: O(h^</span><span class="si">{</span><span class="n">fe_degree</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  H¹: O(h^</span><span class="si">{</span><span class="n">fe_degree</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="plot-convergence">
+<h3>Plot Convergence<a class="headerlink" href="#plot-convergence" title="Link to this heading"></a></h3>
+<p>Generate convergence plots if matplotlib is available:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">has_matplotlib</span><span class="p">:</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+    <span class="n">h_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">])</span>
+    <span class="n">L2_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;L2_error&quot;</span><span class="p">])</span>
+    <span class="n">H1_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;H1_error&quot;</span><span class="p">])</span>
+
+    <span class="n">ax1</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">h_array</span><span class="p">,</span> <span class="n">L2_array</span><span class="p">,</span> <span class="s2">&quot;o-&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;L² error&quot;</span><span class="p">)</span>
+
+    <span class="n">ref_h</span> <span class="o">=</span> <span class="n">h_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ref_L2</span> <span class="o">=</span> <span class="n">L2_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span>
+        <span class="n">h_array</span><span class="p">,</span>
+        <span class="n">ref_L2</span> <span class="o">*</span> <span class="p">(</span><span class="n">h_array</span> <span class="o">/</span> <span class="n">ref_h</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="n">fe_degree</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="s2">&quot;k--&quot;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;O(h^</span><span class="si">{</span><span class="n">fe_degree</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Mesh size h&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;L² Error Convergence&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+
+    <span class="n">ax2</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">h_array</span><span class="p">,</span> <span class="n">H1_array</span><span class="p">,</span> <span class="s2">&quot;s-&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;H¹ error&quot;</span><span class="p">)</span>
+
+    <span class="n">ref_H1</span> <span class="o">=</span> <span class="n">H1_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span>
+        <span class="n">h_array</span><span class="p">,</span>
+        <span class="n">ref_H1</span> <span class="o">*</span> <span class="p">(</span><span class="n">h_array</span> <span class="o">/</span> <span class="n">ref_h</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="n">fe_degree</span><span class="p">),</span>
+        <span class="s2">&quot;k--&quot;</span><span class="p">,</span>
+        <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;O(h^</span><span class="si">{</span><span class="n">fe_degree</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Mesh size h&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;H¹ Error Convergence&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+    <span class="n">visualize</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">results_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">)</span>
+    <span class="n">results_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">results_folder</span> <span class="o">/</span> <span class="s2">&quot;demo_poisson_convergence.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+    <span class="n">conv_plot</span> <span class="o">=</span> <span class="n">results_folder</span> <span class="o">/</span> <span class="s2">&quot;demo_poisson_convergence.png&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Convergence plot saved to: </span><span class="si">{</span><span class="n">conv_plot</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h3>
+<p>Print summary of convergence results:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Summary of Results:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of mesh refinements: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mesh_sizes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final mesh size: </span><span class="si">{</span><span class="n">mesh_sizes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> × </span><span class="si">{</span><span class="n">mesh_sizes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> elements&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total DOFs in final solve: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;n_dofs&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final L² error: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;L2_error&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final H¹ error: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;H1_error&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;L2_rate&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Average convergence rates:&quot;</span><span class="p">)</span>
+    <span class="c1"># avg_L2_rate = np.mean([r for r in results[&quot;L2_rate&quot;][1:] if r is not None])</span>
+    <span class="c1"># avg_H1_rate = np.mean([r for r in results[&quot;H1_rate&quot;][1:] if r is not None])</span>
+    <span class="n">avg_L2_rate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;L2_rate&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])</span>
+    <span class="n">avg_H1_rate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;H1_rate&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  L²: </span><span class="si">{</span><span class="n">avg_L2_rate</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> (expected: </span><span class="si">{</span><span class="n">fe_degree</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  H¹: </span><span class="si">{</span><span class="n">avg_H1_rate</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> (expected: </span><span class="si">{</span><span class="n">fe_degree</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>|</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Convergence plot</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img alt="Convergence plot" src="../../_images/demo_poisson_convergence.png" /></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="demo_poisson.html" class="btn btn-neutral float-left" title="Poisson problem" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="demo_elasticity.html" class="btn btn-neutral float-right" title="Linear elasticity problem" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

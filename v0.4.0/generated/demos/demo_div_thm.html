@@ -1,0 +1,389 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Divergence theorem &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+      <script src="../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Divergence theorem (without FEniCSx)" href="demo_div_thm_no_fenicsx.html" />
+    <link rel="prev" title="Demos" href="../../demos.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../demos.html">Demos</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../demos.html#list-of-all-demos">List of all demos</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Divergence theorem</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#theorem-and-problem-definition">Theorem and problem definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="demo_div_thm_no_fenicsx.html">Divergence theorem (without FEniCSx)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_impl_funcs.html">Creation of unfitted implicit domains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_plot.html">PyVista visualization capabilities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_L2_projection.html"><span class="math notranslate nohighlight">\(L^2\)</span> projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_poisson.html">Poisson problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_poisson_convergence.html">Poisson Convergence Study: Unit Square with Circular Hole</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_elasticity.html">Linear elasticity problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_elasticity_convergence.html">Linear Elasticity Convergence Study: Unit Square with Circular Hole</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_hyperelasticity.html">Hyperelasticity problem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../demos.html">Demos</a></li>
+      <li class="breadcrumb-item active">Divergence theorem</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/generated/demos/demo_div_thm.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="divergence-theorem">
+<h1>Divergence theorem<a class="headerlink" href="#divergence-theorem" title="Link to this heading"></a></h1>
+<p>This demo is implemented in <a class="reference download internal" download="" href="../../_downloads/9632052cb19f69d67d4ff6e8606ccb34/demo_div_thm.py"><code class="xref download docutils literal notranslate"><span class="pre">demo_div_thm.py</span></code></a>. It
+illustrates:</p>
+<ul class="simple">
+<li><p>The basic concepts of unfitted domain discretizations.</p></li>
+<li><p>How to create an <a class="reference internal" href="../qugar.mesh.html#qugar.mesh.UnfittedCartMesh" title="qugar.mesh.UnfittedCartMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">unfitted</span> <span class="pre">Cartesian</span> <span class="pre">mesh</span></code></a>
+described by an <a class="reference internal" href="../qugar.impl.html#qugar.impl.ImplicitFunc" title="qugar.impl.ImplicitFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">implicit</span> <span class="pre">function</span></code></a>.</p></li>
+<li><p>How to compute integrals inside the unfitted domain and on its boundary using <a class="reference external" href="https://fenicsproject.org">FEniCSx</a>.</p></li>
+</ul>
+<section id="theorem-and-problem-definition">
+<h2>Theorem and problem definition<a class="headerlink" href="#theorem-and-problem-definition" title="Link to this heading"></a></h2>
+<p>Given <span class="math notranslate nohighlight">\(\Omega \subset \mathbb{R}^n\)</span> an open bounded domain
+with boundary <span class="math notranslate nohighlight">\(\partial \Omega = \Gamma\)</span>,
+and <span class="math notranslate nohighlight">\(\mathbf{F}:\bar\Omega\to\mathbb{R}^n\)</span> a continuously differentiable
+vector field, where <span class="math notranslate nohighlight">\(\bar\Omega\)</span> is the closure of <span class="math notranslate nohighlight">\(\Omega\)</span>,
+the divergence theorem states:</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{align}
+  \int_{\Omega} \text{div} \textbf{F} \text{d} x = \int_{\Gamma} \textbf{F}
+  \cdot \textbf{n}  {\rm d} s
+\end{align}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\textbf{n}\)</span> is the outward pointing unit normal at almost each point on the boundary
+<span class="math notranslate nohighlight">\(\Gamma\)</span>.
+Check the <a class="reference external" href="https://en.wikipedia.org/wiki/Divergence_theorem">wikipedia entry</a> for further details.</p>
+<p>Let now consider that the domain <span class="math notranslate nohighlight">\(\Omega\)</span> is embedded into a larger
+domain <span class="math notranslate nohighlight">\(\Omega^\ast\supset\Omega\)</span> that is discretized with a mesh <span class="math notranslate nohighlight">\(\mathcal{T}(\Omega^\ast)\)</span>.
+The aim of this demo is to verify the divergence theorem by computing both integrals, and
+comparing them, considering <span class="math notranslate nohighlight">\(\Omega\)</span> (and <span class="math notranslate nohighlight">\(\Gamma\)</span>) to be immersed in the mesh
+<span class="math notranslate nohighlight">\(\mathcal{T}(\Omega^\ast)\)</span>.
+For that purpose, we will use the quadrature rules generated by QUGaR in combination with FEniCSx
+capabilities.</p>
+<p>Hereinafter, and for the sake of simplicity, we will consider that the mesh
+<span class="math notranslate nohighlight">\(\mathcal{T}(\Omega^\ast)\)</span> corresponds exactly to the domain <span class="math notranslate nohighlight">\(\Omega^\ast\)</span>.
+This is generally true, as <span class="math notranslate nohighlight">\(\Omega^\ast\)</span> is usually chosen to be a <span class="math notranslate nohighlight">\(d\)</span>-dimensional hypercube that
+can be easily discretized with a Cartesian mesh. We also drop the depencency on <span class="math notranslate nohighlight">\(\Omega^\ast\)</span>
+in the notation.</p>
+<p>The mesh <span class="math notranslate nohighlight">\(\mathcal{T}\)</span> is naturally split into three disjoint families of cells as
+<span class="math notranslate nohighlight">\(\mathcal{T}=\mathcal{T}_{\text{cut}}\cup\mathcal{T}_{\text{full}}\cup\mathcal{T}_{\text{empty}}\)</span>,
+where <span class="math notranslate nohighlight">\(\mathcal{T}_{\text{cut}}\)</span>, <span class="math notranslate nohighlight">\(\mathcal{T}_{\text{full}}\)</span>, and <span class="math notranslate nohighlight">\(\mathcal{T}_{\text{empty}}\)</span>
+are the submeshes containing the cut, full, and empty cells, respectively, and are defined as</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathcal{T}_{\text{cut}} =\left\lbrace\tau\in\mathcal{T}:
+\tau\cap\Omega\neq\emptyset\,\text{and}\,\tau\cap\Omega\neq\tau\right\rbrace\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{T}_{\text{full}} =\left\lbrace\tau\in\mathcal{T}: \tau\cap\Omega=\tau\right\rbrace\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{T}_{\text{empty}} =\left\lbrace\tau\in\mathcal{T}:
+    \tau\cap\Omega=\emptyset\right\rbrace\)</span></p></li>
+</ul>
+<p>Therefore, it is easy to realize that <span class="math notranslate nohighlight">\(\mathcal{T}_{\text{full}}\subseteq\Omega\)</span>,
+<span class="math notranslate nohighlight">\(\mathcal{T}_{\text{cut}}\cap\Omega\neq\emptyset\)</span>, and
+<span class="math notranslate nohighlight">\(\mathcal{T}_{\text{empty}}\not\subset\Omega\)</span>.</p>
+<p>Thus, the volumetric integral over <span class="math notranslate nohighlight">\(\Omega\)</span> will be approximated as the integral over
+<span class="math notranslate nohighlight">\(\mathcal{T}_{\text{full}}\)</span> and <span class="math notranslate nohighlight">\(\mathcal{T}_{\text{cut}}\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{align}
+\int_{\Omega} \text{div} \textbf{F} \text{d} x \approx
+\sum_{\tau\in\mathcal{T}_{\scriptsize\mbox{full}}}\int_{\tau} \text{div} \textbf{F} \text{d} x +
+\sum_{\tau\in\mathcal{T}_{\scriptsize\mbox{cut}}}\int_{\tau\cap\Omega}
+{\rm div} \textbf{F} \text{d} x
+\end{align}
+\]</div>
+<p>The integrals over the full cells in <span class="math notranslate nohighlight">\(\mathcal{T}_{\text{full}}\)</span> are computed
+using DOLFINx standard capabilities. However, the integrals over the active part
+of the cut cells (<span class="math notranslate nohighlight">\(\tau\cap\Omega,\,\forall\tau\in\mathcal{T}_{\text{cut}}\)</span>) will be computed
+using QUGaR generated quadratures in combination with new custom forms that allow DOLFINx to use
+quadrature rules defined at runtime.</p>
+<p>Regarding the right-hand-side of the divergence theorem, for computing the surface integral
+we must consider that the boundary <span class="math notranslate nohighlight">\(\Gamma\)</span> is composed of two parts as
+<span class="math notranslate nohighlight">\(\Gamma=\Gamma_{\text{ext}}\cup\Gamma_{\text{unf}}\)</span>, where
+<span class="math notranslate nohighlight">\(\Gamma_{\text{ext}}=\Gamma\cap\partial\Omega^\ast\)</span> and
+<span class="math notranslate nohighlight">\(\Gamma_{\text{unf}}=\Gamma\setminus\partial\Omega^\ast\)</span></p>
+<p>The boundary <span class="math notranslate nohighlight">\(\Gamma_{\text{ext}}\)</span> is discretized through a subset of external facets
+(those that belong to a single cell) of the mesh <span class="math notranslate nohighlight">\(\mathcal{T}\)</span> (that we denote as <span class="math notranslate nohighlight">\(\mathcal{F}\)</span>).
+Let’s introduce <span class="math notranslate nohighlight">\(\mathcal{F}_{\text{ext}}\subset\mathcal{F}\)</span>, the subset of external facets of
+<span class="math notranslate nohighlight">\(\mathcal{T}\)</span> that intersects <span class="math notranslate nohighlight">\(\Gamma_{\text{ext}}\)</span>, i.e.,
+<span class="math notranslate nohighlight">\(\mathcal{F}_{\text{ext}} = \left\lbrace\zeta\in\mathcal{F}:
+  \zeta\cap\Gamma\neq\emptyset\right\rbrace\)</span>.
+Then, <span class="math notranslate nohighlight">\(\mathcal{F}_{\text{ext}}\)</span> can be split into two disjoint families of facets as
+<span class="math notranslate nohighlight">\(\mathcal{F}_{\text{ext}}=\mathcal{F}_{\text{cut}}\cup\mathcal{F}_{\text{full}}\)</span> where
+where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mathcal{F}_{\text{cut}} =\left\lbrace\zeta\in\mathcal{F}:
+\zeta\cap\Gamma\neq\emptyset\,\text{and}\,\zeta\cap\Gamma\neq\zeta\right\rbrace\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{F}_{\text{full}} =\left\lbrace\zeta\in\mathcal{F}:
+\zeta\cap\Gamma=\zeta\right\rbrace\)</span></p></li>
+</ul>
+<p>For computing the integral over <span class="math notranslate nohighlight">\(\Gamma_{\text{unf}}\)</span>, the part of the <span class="math notranslate nohighlight">\(\Gamma\)</span>
+that is immersed (unfitted) in the mesh <span class="math notranslate nohighlight">\(\mathcal{T}\)</span> but does not intersect <span class="math notranslate nohighlight">\(\mathcal{F}\)</span>,
+we will use special quadrature rules defined over the cut cells <span class="math notranslate nohighlight">\(\mathcal{T}_{\text{cut}}\)</span>
+(in some corner cases they may correspond to the boundary of full cells
+<span class="math notranslate nohighlight">\(\mathcal{T}_{\text{full}}\)</span>).</p>
+<p>Thus, the surface integral of the divergence theorem will be approximated as</p>
+<div class="math notranslate nohighlight">
+\[
+\begin{align}
+\int_{\Gamma} \textbf{F} \cdot \textbf{n}  {\rm d} s \approx
+\sum_{\zeta\in\mathcal{F}_{\scriptsize\mbox{full}}}\int_{\zeta} \textbf{F} \cdot \textbf{n}
+{\rm d} s + \sum_{\zeta\in\mathcal{F}_{\scriptsize\mbox{cut}}}\int_{\zeta\cap\mathcal{F}}
+\textbf{F} \cdot \textbf{n}  {\rm d} s
++ \sum_{\tau\in\mathcal{T}_{\scriptsize\mbox{cut}}}\int_{\tau\cap\Gamma_{\text{unf}}}
+\textbf{F} \cdot \textbf{n}  {\rm d} s
+\end{align}
+\]</div>
+<p>In this demo, we will use QUGaR (and FEniCSx) to compute all the integrals
+defined above. For that purpose, we consider the following setup:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\Omega^\ast = [0,1]^d\)</span> (with <span class="math notranslate nohighlight">\(d=2,3\)</span>) (a square in 2D, a cube in 3D)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{T}\)</span> is created with <span class="math notranslate nohighlight">\(16\times16\)</span> quadrangles in 2D, and
+and <span class="math notranslate nohighlight">\(16\times16\times16\)</span> hexahedra in 3D.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Omega=\left\lbrace x\in\Omega^\ast: \lVert x-x_0\rVert &lt; R\right\rbrace\)</span> (a disk in 2D,
+a sphere in 3D), with</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(x_0 = (-0.25, 0.15)\)</span> in 2D, and <span class="math notranslate nohighlight">\(x_0 = (0.25, 0.35, 0.45)\)</span> in 3D</p></li>
+<li><p><span class="math notranslate nohighlight">\(R=0.6\)</span> in 2D, and <span class="math notranslate nohighlight">\(R=0.7\)</span> in 3D</p></li>
+</ul>
+</li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{F} = \left(\sin(x),\cos(y)\right)\)</span> in 2D, and
+<span class="math notranslate nohighlight">\(\mathbf{F} = \left(\sin(x),\cos(y),\sin(z)\right)\)</span> in 3D.</p></li>
+</ul>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<p>First we check that FEniCSx installation is available.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">qugar.utils</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">qugar</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">has_FEniCSx</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;FEniCSx installation not found is required.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then the modules and functions to be used are imported:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.fem</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ufl</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.impl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomForm</span><span class="p">,</span> <span class="n">dsu</span><span class="p">,</span> <span class="n">UnfittedNormal</span><span class="p">,</span> <span class="n">form_custom</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_unfitted_impl_Cartesian_mesh</span>
+</pre></div>
+</div>
+<p>We define the floating point type to be used in the computations.
+So far, QUGaR supports 32 and 64 bits real floating point types.
+In the near future support for 64 and 128 bits complex types will be
+also available.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+</pre></div>
+</div>
+<p>We first define the geometry to be considered:
+a <a class="reference internal" href="../qugar.impl.html#qugar.impl.create_disk" title="qugar.impl.create_disk"><code class="xref py py-class docutils literal notranslate"><span class="pre">disk</span></code></a> in 2D and
+a <a class="reference internal" href="../qugar.impl.html#qugar.impl.create_sphere" title="qugar.impl.create_sphere"><code class="xref py py-class docutils literal notranslate"><span class="pre">sphere</span></code></a> in 3D.
+Uncomment the one you want to use.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># radius_2D = dtype(0.6)</span>
+<span class="c1"># center_2D = np.array([-0.25, 0.15], dtype=dtype)</span>
+<span class="c1"># impl_func = qugar.impl.create_disk(center=center_2D, radius=radius_2D)</span>
+<span class="c1"># name = &quot;disk&quot;</span>
+
+<span class="n">radius_3D</span> <span class="o">=</span> <span class="n">dtype</span><span class="p">(</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">center_3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">impl_func</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_sphere</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">center_3D</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius_3D</span><span class="p">)</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;sphere&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> - divergence theorem verification&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Other possible geometries can be check in the <a class="reference internal" href="demo_impl_funcs.html"><span class="std std-doc">Implicit functions demo</span></a>.</p>
+<p>We create an <a class="reference internal" href="../qugar.mesh.html#qugar.mesh.UnfittedCartMesh" title="qugar.mesh.UnfittedCartMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">unfitted</span> <span class="pre">Cartesian</span> <span class="pre">mesh</span></code></a>
+(corresponding to <span class="math notranslate nohighlight">\(\mathcal{T}\)</span>) in which we embed the domain <span class="math notranslate nohighlight">\(\Omega\)</span>,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dim</span> <span class="o">=</span> <span class="n">impl_func</span><span class="o">.</span><span class="n">dim</span>
+<span class="n">n_cells</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span>
+<span class="c1"># xmin and xmax define the domain $\Omega^\ast$</span>
+<span class="n">xmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+<span class="n">xmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+<span class="n">comm</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">unf_mesh</span> <span class="o">=</span> <span class="n">create_unfitted_impl_Cartesian_mesh</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span> <span class="n">impl_func</span><span class="p">,</span> <span class="n">n_cells</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We create the vector function <span class="math notranslate nohighlight">\(\mathbf{F}\)</span> and its divergence.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">SpatialCoordinate</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">as_vector</span><span class="p">([</span><span class="n">ufl</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">ufl</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>  <span class="c1"># type: ignore</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">as_vector</span><span class="p">([</span><span class="n">ufl</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">ufl</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">ufl</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])])</span>  <span class="c1"># type: ignore</span>
+
+<span class="n">div_F</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In order to be able to integrate over the different families of cells and facets,
+we create tags for the cut and full cells and facets using QUGaR built-in functions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cell_tags</span> <span class="o">=</span> <span class="n">unf_mesh</span><span class="o">.</span><span class="n">create_cell_meshtags</span><span class="p">(</span><span class="n">cut_tag</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">full_tag</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">facet_tags</span> <span class="o">=</span> <span class="n">unf_mesh</span><span class="o">.</span><span class="n">create_facet_tags</span><span class="p">(</span><span class="n">cut_tag</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">full_tag</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ext_integral</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For computing volumetric integrals, we use standard UFL measures with the
+defined cell tags.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dx</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dx</span><span class="p">(</span>
+    <span class="n">subdomain_id</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">domain</span><span class="o">=</span><span class="n">unf_mesh</span><span class="p">,</span>
+    <span class="n">subdomain_data</span><span class="o">=</span><span class="n">cell_tags</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ufl_form_vol</span> <span class="o">=</span> <span class="n">div_F</span> <span class="o">*</span> <span class="n">dx</span>
+</pre></div>
+</div>
+<p>While in the case of the surface integrals, the procedure is twofold:
+for <span class="math notranslate nohighlight">\(\Gamma_{\text{unf}}\)</span> we use the
+<a class="reference internal" href="../qugar.dolfinx.html#qugar.dolfinx.dsu" title="qugar.dolfinx.dsu"><code class="xref py py-class docutils literal notranslate"><span class="pre">dsu</span></code></a> measure introduced in QUGaR
+(note that we integrate over the cut cells only)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ds_unf</span> <span class="o">=</span> <span class="n">dsu</span><span class="p">(</span><span class="n">subdomain_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">subdomain_data</span><span class="o">=</span><span class="n">cell_tags</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and the standard UFL external facet measure for (both parts of) <span class="math notranslate nohighlight">\(\Gamma_{\text{ext}}\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ds</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">ds</span><span class="p">(</span><span class="n">subdomain_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">subdomain_data</span><span class="o">=</span><span class="n">facet_tags</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the same way, the unit outward normal vector at the boundary <span class="math notranslate nohighlight">\(\Gamma_{\text{unf}}\)</span>  requires
+the <a class="reference internal" href="../qugar.dolfinx.html#qugar.dolfinx.UnfittedNormal" title="qugar.dolfinx.UnfittedNormal"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnfittedNormal</span></code></a> function introduced in QUGaR.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bound_normal</span> <span class="o">=</span> <span class="n">UnfittedNormal</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>while the normal at the external facets is defined using the standard UFL function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">facet_normal</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">FacetNormal</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Using these measures and normals we define the integrals over the surface as</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ufl_form_srf</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">bound_normal</span><span class="p">)</span> <span class="o">*</span> <span class="n">ds_unf</span> <span class="o">+</span> <span class="n">ufl</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">facet_normal</span><span class="p">)</span> <span class="o">*</span> <span class="n">ds</span>
+</pre></div>
+</div>
+<p>Finally, we create the DOLFINx forms for the volumetric and surface integrals
+using the <a class="reference internal" href="../qugar.dolfinx.html#qugar.dolfinx.form_custom" title="qugar.dolfinx.form_custom"><code class="xref py py-class docutils literal notranslate"><span class="pre">form_custom</span></code></a> functionality from QUGaR</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">form_vol</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">CustomForm</span><span class="p">,</span> <span class="n">form_custom</span><span class="p">(</span><span class="n">ufl_form_vol</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">))</span>
+<span class="n">form_srf</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">CustomForm</span><span class="p">,</span> <span class="n">form_custom</span><span class="p">(</span><span class="n">ufl_form_srf</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>and assemble them using the custom quadrature rules generated by QUGaR
+and fed to DOLFINx at runtime through the coefficients.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vol_intgr</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">assemble_scalar</span><span class="p">(</span><span class="n">form_vol</span><span class="p">,</span> <span class="n">coeffs</span><span class="o">=</span><span class="n">form_vol</span><span class="o">.</span><span class="n">pack_coefficients</span><span class="p">())</span>
+<span class="n">srf_intgr</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">assemble_scalar</span><span class="p">(</span><span class="n">form_srf</span><span class="p">,</span> <span class="n">coeffs</span><span class="o">=</span><span class="n">form_srf</span><span class="o">.</span><span class="n">pack_coefficients</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Finally, we compare both integrals</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Volumetric integral: </span><span class="si">{</span><span class="n">vol_intgr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Surface integral: </span><span class="si">{</span><span class="n">srf_intgr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../demos.html" class="btn btn-neutral float-left" title="Demos" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="demo_div_thm_no_fenicsx.html" class="btn btn-neutral float-right" title="Divergence theorem (without FEniCSx)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

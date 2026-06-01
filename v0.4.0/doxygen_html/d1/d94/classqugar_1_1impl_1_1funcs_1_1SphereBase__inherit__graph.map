@@ -1,0 +1,7 @@
+<map id="qugar::impl::funcs::SphereBase&lt; dim &gt;" name="qugar::impl::funcs::SphereBase&lt; dim &gt;">
+<area shape="rect" id="Node000001" title="Dimension independent spherical function." alt="" coords="77,5,240,45"/>
+<area shape="rect" id="Node000002" href="$d1/def/classqugar_1_1impl_1_1funcs_1_1Sphere.html" title="Dimension independent spherical function. The function is defined by its center and radius...." alt="" coords="5,93,144,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,57,95,95,91,91,129,53"/>
+<area shape="rect" id="Node000003" href="$d1/dfc/classqugar_1_1impl_1_1funcs_1_1SphereBzr.html" title="Dimension independent spherical function. The function is defined by its center and radius...." alt="" coords="169,93,319,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="189,53,227,91,223,95,185,57"/>
+</map>

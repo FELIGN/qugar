@@ -1,0 +1,6 @@
+﻿qugar
+=====
+
+.. automodule:: qugar
+
+   

@@ -1,0 +1,451 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creation of unfitted implicit domains &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+      <script src="../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="PyVista visualization capabilities." href="demo_plot.html" />
+    <link rel="prev" title="Divergence theorem (without FEniCSx)" href="demo_div_thm_no_fenicsx.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../demos.html">Demos</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../demos.html#list-of-all-demos">List of all demos</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="demo_div_thm.html">Divergence theorem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_div_thm_no_fenicsx.html">Divergence theorem (without FEniCSx)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Creation of unfitted implicit domains</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#geometry-definition">Geometry definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generating-the-unfitted-mesh">Generating the unfitted mesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#visualization">Visualization</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="demo_plot.html">PyVista visualization capabilities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_L2_projection.html"><span class="math notranslate nohighlight">\(L^2\)</span> projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_poisson.html">Poisson problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_poisson_convergence.html">Poisson Convergence Study: Unit Square with Circular Hole</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_elasticity.html">Linear elasticity problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_elasticity_convergence.html">Linear Elasticity Convergence Study: Unit Square with Circular Hole</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_hyperelasticity.html">Hyperelasticity problem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../demos.html">Demos</a></li>
+      <li class="breadcrumb-item active">Creation of unfitted implicit domains</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/generated/demos/demo_impl_funcs.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="creation-of-unfitted-implicit-domains">
+<h1>Creation of unfitted implicit domains<a class="headerlink" href="#creation-of-unfitted-implicit-domains" title="Link to this heading"></a></h1>
+<p>This demo is implemented in <a class="reference download internal" download="" href="../../_downloads/d799930a8e6462895dbba381499858a4/demo_impl_funcs.py"><code class="xref download docutils literal notranslate"><span class="pre">demo_impl_funcs.py</span></code></a> and it
+illustrates:</p>
+<ul class="simple">
+<li><p>The library of available implicit functions for defining domains.</p></li>
+<li><p>How to create an unfitted mesh described by an implicit function.</p></li>
+<li><p>How to visualize an unfitted domain in PyVista by creating a reparameterization.</p></li>
+</ul>
+<p>This demo requires the <a class="reference external" href="https://fenicsproject.org">FEniCSx</a> and <a class="reference external" href="https://pyvista.org">PyVista</a>
+capabilities of QUGaR.</p>
+<section id="geometry-definition">
+<h2>Geometry definition<a class="headerlink" href="#geometry-definition" title="Link to this heading"></a></h2>
+<p>First we check that FEniCSx and PyVista installations are available.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">qugar.utils</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">qugar</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">has_FEniCSx</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;FEniCSx installation not found is required.&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">qugar</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">has_PyVista</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;PyVista installation not found is required.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then the modules and functions to be used are imported:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.cpp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.impl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.mesh</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.plot</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.reparam</span>
+</pre></div>
+</div>
+<p>We have to choose a function for implicitly defining the domain
+among the ones available.</p>
+<section id="primitives">
+<h3>Primitives<a class="headerlink" href="#primitives" title="Link to this heading"></a></h3>
+<p>QUGaR provides a basic collection of 2D and 3D primitive geometries for defining
+implicit domains, namely:</p>
+<ul class="simple">
+<li><p>A <a class="reference internal" href="../qugar.impl.html#qugar.impl.create_disk" title="qugar.impl.create_disk"><code class="xref py py-class docutils literal notranslate"><span class="pre">2D</span> <span class="pre">disk</span></code></a> defined by its center and radius.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_disk</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_disk</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.51</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">]),</span> <span class="n">use_bzr</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>A <a class="reference internal" href="../qugar.impl.html#qugar.impl.create_sphere" title="qugar.impl.create_sphere"><code class="xref py py-class docutils literal notranslate"><span class="pre">3D</span> <span class="pre">sphere</span></code></a> defined by its center and radius.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_sphere</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_sphere</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">]),</span> <span class="n">use_bzr</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>A <a class="reference internal" href="../qugar.impl.html#qugar.impl.create_line" title="qugar.impl.create_line"><code class="xref py py-class docutils literal notranslate"><span class="pre">2D</span> <span class="pre">half-space</span></code></a> defined as the domain
+on one side of an infinite line.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_line</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_line</span><span class="p">(</span>
+    <span class="n">origin</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]),</span> <span class="n">normal</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]),</span> <span class="n">use_bzr</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>A <a class="reference internal" href="../qugar.impl.html#qugar.impl.create_plane" title="qugar.impl.create_plane"><code class="xref py py-class docutils literal notranslate"><span class="pre">3D</span> <span class="pre">half-space</span></code></a> defined as the domain
+on one side of an infinite plane.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_plane</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_plane</span><span class="p">(</span>
+    <span class="n">origin</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.47</span><span class="p">,</span> <span class="mf">0.27</span><span class="p">]),</span> <span class="n">normal</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">]),</span> <span class="n">use_bzr</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>A <a class="reference internal" href="../qugar.impl.html#qugar.impl.create_cylinder" title="qugar.impl.create_cylinder"><code class="xref py py-class docutils literal notranslate"><span class="pre">3D</span> <span class="pre">cylinder</span></code></a> defined by a point on the axis,
+the direction of the revolution axis, and the radius.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_cylinder</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_cylinder</span><span class="p">(</span>
+    <span class="n">radius</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="mf">0.47</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.95</span><span class="p">]),</span> <span class="n">use_bzr</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>A <a class="reference internal" href="../qugar.impl.html#qugar.impl.create_annulus" title="qugar.impl.create_annulus"><code class="xref py py-class docutils literal notranslate"><span class="pre">2D</span> <span class="pre">annulus</span></code></a> defined by its center and inner and outer
+radii.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_annulus</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_annulus</span><span class="p">(</span>
+    <span class="n">inner_radius</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">outer_radius</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.47</span><span class="p">]),</span> <span class="n">use_bzr</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>A <a class="reference internal" href="../qugar.impl.html#qugar.impl.create_ellipse" title="qugar.impl.create_ellipse"><code class="xref py py-class docutils literal notranslate"><span class="pre">2D</span> <span class="pre">ellipse</span></code></a> defined by a 2D reference system
+(described through an origin and <span class="math notranslate nohighlight">\(x\)</span>-axis) and the length of the semi-axes along the
+reference system directions.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ref_system</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_ref_system</span><span class="p">(</span><span class="n">origin</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]))</span>
+<span class="n">func_ellipse</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_ellipse</span><span class="p">(</span>
+    <span class="n">semi_axes</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]),</span> <span class="n">ref_system</span><span class="o">=</span><span class="n">ref_system</span><span class="p">,</span> <span class="n">use_bzr</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>A <a class="reference internal" href="../qugar.impl.html#qugar.impl.create_ellipsoid" title="qugar.impl.create_ellipsoid"><code class="xref py py-class docutils literal notranslate"><span class="pre">3D</span> <span class="pre">ellipsoid</span></code></a> defined by a 3D reference system
+(described through an origin and <span class="math notranslate nohighlight">\(x\)</span>- and <span class="math notranslate nohighlight">\(y\)</span>-axes) and the length of the semi-axes along the
+reference system directions.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ref_system</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_ref_system</span><span class="p">(</span>
+    <span class="n">origin</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]),</span>
+    <span class="n">axis_x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]),</span>
+    <span class="n">axis_y</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]),</span>
+<span class="p">)</span>
+<span class="n">func_ellipsoid</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_ellipsoid</span><span class="p">(</span>
+    <span class="n">semi_axes</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="mf">0.52</span><span class="p">]),</span> <span class="n">ref_system</span><span class="o">=</span><span class="n">ref_system</span><span class="p">,</span> <span class="n">use_bzr</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>A <a class="reference internal" href="../qugar.impl.html#qugar.impl.create_torus" title="qugar.impl.create_torus"><code class="xref py py-class docutils literal notranslate"><span class="pre">3D</span> <span class="pre">torus</span></code></a> defined by its major and minor radii,
+its center, and the direction of the revolution axis for the major radius.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_torus</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_torus</span><span class="p">(</span>
+    <span class="n">major_radius</span><span class="o">=</span><span class="mf">0.77</span><span class="p">,</span>
+    <span class="n">minor_radius</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span>
+    <span class="n">center</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.47</span><span class="p">,</span> <span class="mf">0.51</span><span class="p">]),</span>
+    <span class="n">axis</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]),</span>
+    <span class="n">use_bzr</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>A 2D or 3D <a class="reference internal" href="../qugar.impl.html#qugar.impl.create_constant" title="qugar.impl.create_constant"><code class="xref py py-class docutils literal notranslate"><span class="pre">constant</span> <span class="pre">function</span></code></a> defined by
+a constant value and a dimension.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_constant</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_constant</span><span class="p">(</span><span class="n">value</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">use_bzr</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>A 2D or 3D <a class="reference internal" href="../qugar.impl.html#qugar.impl.create_dim_linear" title="qugar.impl.create_dim_linear"><code class="xref py py-class docutils literal notranslate"><span class="pre">dim-linear</span> <span class="pre">function</span></code></a> that defines
+a bi- or tri-linear function through its values in the 4 (respec. 8) vertices
+of the unit square (resp. cube)</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_dimlinear</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_dim_linear</span><span class="p">(</span><span class="n">coefs</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.7</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Internally, (almost all) these functions can be represented through (Bezier) polynomials
+or analytical <span class="math notranslate nohighlight">\(C^1(\mathbb{R}^d)\)</span> functions by propertly setting the argument <code class="docutils literal notranslate"><span class="pre">use_bzr</span></code>
+to <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>, respectively.
+This will setup the type of algorithm to be used in the generation of quadratures and
+reparameterizations.
+Check <a class="reference external" href="https://algoim.github.io">Algoim library</a> for more details.</p>
+</section>
+<section id="triply-periodic-minimal-surface-tpms">
+<h3>Triply periodic minimal surface (TPMS)<a class="headerlink" href="#triply-periodic-minimal-surface-tpms" title="Link to this heading"></a></h3>
+<p>QUGaR also defines a library of triply periodic minimal surfaces (TPMS) that can be used
+to generate more complex implicit domains. The available TPMSs are:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Gyroid">Schoen gyroid</a>, defined as:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\begin{align}
+  \phi(x,y,z) = \sin(\alpha x) \cos(\beta y) + \sin(\beta y) \cos(\gamma z)
++ \sin(\gamma z) \cos(\alpha x)
+\end{align}
+\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_schoen</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_Schoen</span><span class="p">(</span><span class="n">periods</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://minimalsurfaces.blog/home/repository/triply-periodic/schoen-f-rd/">Schoen F-RD</a>,
+defined as:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+  \phi(x,y,z) &amp;=   4 \cos(\alpha x) \cos(\beta y) \cos(\gamma z)
+        - \cos(2\alpha x) \cos(2\beta y)\\ &amp;- \cos(2\beta y) \cos(2\gamma z)
+        - \cos(\gamma z) \cos(2\alpha x)
+\end{align}
+\end{split}\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_schoeniwp</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_Schoen_IWP</span><span class="p">(</span><span class="n">periods</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://minimalsurfaces.blog/home/repository/triply-periodic/schoen-i-wp/">Schoen I-WP</a>,
+defined as:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+  \phi(x,y,z) &amp;= 2 \left(\cos(\alpha x) \cos(\beta y) + \cos(\beta y) \cos(\gamma z)
+             + \cos(\gamma z) \cos(\alpha x)\right)\\
+             &amp;- \cos(2\alpha  x) - \cos(2\beta  y) - \cos(2\gamma z))
+\end{align}
+\end{split}\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_schoenfrd</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_Schoen_FRD</span><span class="p">(</span><span class="n">periods</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><a class="reference external" href="http://kenbrakke.com/evolver/examples/periodic/periodic.html#fishers">Fischer-Koch S</a>,
+defined as:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+  \phi(x,y,z) &amp;= \cos(2\alpha x) \sin(\beta y) \cos(\gamma z)
+        + \cos(\alpha x) \cos(2\beta y) \sin(\gamma z)\\
+        &amp;+ \sin(\alpha x) \cos(\beta y) \cos(2\gamma z)
+\end{align}
+\end{split}\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_fischerkochs</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_Fischer_Koch_S</span><span class="p">(</span><span class="n">periods</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Schwarz_minimal_surface#Schwarz_D_(%22Diamond%22)">Schwarz D (Diamond)</a>,
+defined as:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\begin{align}
+  \phi(x,y,z) = \cos(\alpha x) \cos(\beta y) \cos(\gamma z)
+- \sin(\alpha x) \sin(\beta y) \sin(\gamma z)
+\end{align}
+\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_schwarzd</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_Schwarz_Diamond</span><span class="p">(</span><span class="n">periods</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Schwarz_minimal_surface#Schwarz_P_(%22Primitive%22)">Schwarz P (Primitive)</a>,
+defined as:</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+\begin{align}
+  \phi(x,y,z) = \cos(\alpha x) + \cos(\beta y) + \cos(\gamma z)
+\end{align}
+\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func_schwarzp</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_Schwarz_Primitive</span><span class="p">(</span><span class="n">periods</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha=2\pi m\)</span>, <span class="math notranslate nohighlight">\(\beta=2\pi n\)</span>, and <span class="math notranslate nohighlight">\(\gamma=2\pi p\)</span>, and <span class="math notranslate nohighlight">\(m\)</span>, <span class="math notranslate nohighlight">\(n\)</span>, and <span class="math notranslate nohighlight">\(p\)</span>
+the periods along each parametric direction. Given one of the functions above
+<span class="math notranslate nohighlight">\(\phi:\mathbb{R}^3\to\mathbb{R}\)</span>, the implicit domain is defined as
+<span class="math notranslate nohighlight">\(\Omega = \{\mathbf{x}\in\mathbb{R}^3\,|\,\phi(\mathbf{x})\leq 0\}\)</span>.</p>
+<p>2D versions can be generated by passing only 2 periods instead of 3.
+In that case, the mathematical expressionss above hold, but the coordinate <span class="math notranslate nohighlight">\(z\)</span> is assumed to be
+<span class="math notranslate nohighlight">\(z=0\)</span>.</p>
+<p>Note that TPMSs can not be represented through Bezier polynomials.</p>
+</section>
+<section id="other-functions">
+<h3>Other functions<a class="headerlink" href="#other-functions" title="Link to this heading"></a></h3>
+<p>In addition to the primitives and TPMSs, QUGaR provides other implicit functions that
+operate as modifiers of already existing functions, as:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../qugar.impl.html#qugar.impl.create_negative" title="qugar.impl.create_negative"><code class="xref py py-class docutils literal notranslate"><span class="pre">Function</span> <span class="pre">negative</span></code></a>: changes the sign of a given function.</p></li>
+<li><p><a class="reference internal" href="../qugar.impl.html#qugar.impl.create_functions_addition" title="qugar.impl.create_functions_addition"><code class="xref py py-class docutils literal notranslate"><span class="pre">Functions</span> <span class="pre">addition</span></code></a>:
+adds two given functions.</p></li>
+<li><p><a class="reference internal" href="../qugar.impl.html#qugar.impl.create_functions_subtraction" title="qugar.impl.create_functions_subtraction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Functions</span> <span class="pre">subtraction</span></code></a>:
+subtracts two given functions.</p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Affine</span> <span class="pre">transformation</span></code>:
+applies an affine transformation to a given function.</p></li>
+</ul>
+</section>
+<section id="future-functions">
+<h3>Future functions<a class="headerlink" href="#future-functions" title="Link to this heading"></a></h3>
+<p>QUGaR is continuously updated with new functions and features. In the near/mid future,
+support will be provided for Bezier functions explicitly defined through its control points
+and for B-spline functions.</p>
+</section>
+</section>
+<section id="generating-the-unfitted-mesh">
+<h2>Generating the unfitted mesh<a class="headerlink" href="#generating-the-unfitted-mesh" title="Link to this heading"></a></h2>
+<p>First we choose a function among the ones defined above.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">func</span> <span class="o">=</span> <span class="n">func_schoen</span>
+</pre></div>
+</div>
+<p>and then generate the unfitted Cartesian mesh over a hypercube <span class="math notranslate nohighlight">\([0,1]^d\)</span>
+with 8 cells per direction, where <span class="math notranslate nohighlight">\(d=2\)</span> or <span class="math notranslate nohighlight">\(d=3\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dim</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">dim</span>
+<span class="n">n_cells</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span>
+<span class="n">comm</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">unf_mesh</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">create_unfitted_impl_Cartesian_mesh</span><span class="p">(</span>
+    <span class="n">comm</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">n_cells</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dim</span><span class="p">),</span> <span class="n">xmax</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h2>
+<p>Finally, we create a visualization of the unfitted mesh’s interior a levelset
+through a parameterization.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">reparam</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_reparam_mesh</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">levelset</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">reparam_pv</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">reparam_mesh_to_PyVista</span><span class="p">(</span><span class="n">reparam</span><span class="p">)</span>
+
+<span class="n">reparam_srf</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_reparam_mesh</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">levelset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">reparam_srf_pv</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">reparam_mesh_to_PyVista</span><span class="p">(</span><span class="n">reparam_srf</span><span class="p">)</span>
+
+<span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">reparam_pv</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reparam&quot;</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">reparam_pv</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wirebasket&quot;</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">reparam_srf_pv</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reparam&quot;</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">reparam_srf_pv</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;wirebasket&quot;</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">line_width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="demo_div_thm_no_fenicsx.html" class="btn btn-neutral float-left" title="Divergence theorem (without FEniCSx)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="demo_plot.html" class="btn btn-neutral float-right" title="PyVista visualization capabilities." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

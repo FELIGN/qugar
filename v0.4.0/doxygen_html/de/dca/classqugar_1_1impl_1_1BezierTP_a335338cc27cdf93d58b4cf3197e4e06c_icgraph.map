@@ -1,0 +1,15 @@
+<map id="qugar::impl::BezierTP::BezierTP" name="qugar::impl::BezierTP::BezierTP">
+<area shape="rect" id="Node000001" title="Constructor." alt="" coords="215,165,376,205"/>
+<area shape="rect" id="Node000002" href="$de/dca/classqugar_1_1impl_1_1BezierTP.html#abc62d16a46ec8c5456d24e2d863ed5d0" title="Copy constructor." alt="" coords="5,5,167,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="268,156,223,107,165,60,144,48,146,43,168,55,226,103,272,153"/>
+<area shape="rect" id="Node000003" href="$de/dca/classqugar_1_1impl_1_1BezierTP.html#ae096dc789b1da08351831acf8dfeb860" title="Composes the current Bezier with the given Bezier rhs." alt="" coords="5,69,167,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="242,161,166,124,138,112,140,107,168,119,245,156"/>
+<area shape="rect" id="Node000004" href="$de/dca/classqugar_1_1impl_1_1BezierTP.html#a1083c04cfb280750980c3ddf983952d4" title=" " alt="" coords="5,133,167,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="200,174,166,168,167,163,201,168"/>
+<area shape="rect" id="Node000005" href="$de/dca/classqugar_1_1impl_1_1BezierTP.html#a71b6ec248f2608a8477b89cc64264add" title="Product of two Beziers." alt="" coords="5,197,167,237"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="201,202,167,208,166,202,200,197"/>
+<area shape="rect" id="Node000006" href="$de/dca/classqugar_1_1impl_1_1BezierTP.html#ade5d79cdcb2204d9f1c5e949ade22e55" title="Addition of two Beziers." alt="" coords="5,261,167,301"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="245,214,168,252,140,264,138,259,166,247,242,209"/>
+<area shape="rect" id="Node000007" href="$de/dca/classqugar_1_1impl_1_1BezierTP.html#afccb288c2098cecf970f029bca4eea65" title="Subtraction of two Beziers." alt="" coords="5,325,167,365"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="272,218,226,267,168,316,146,328,144,323,165,311,223,263,268,214"/>
+</map>

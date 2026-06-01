@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qugar.reparam.reparam &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos.html">Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">qugar.reparam.reparam</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for qugar.reparam.reparam</h1><div class="highlight"><pre>
+<span></span><span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2025-present by Pablo Antolin</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of the QUGaR library.</span>
+<span class="c1">#</span>
+<span class="c1"># SPDX-License-Identifier:    MIT</span>
+<span class="c1">#</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeAlias</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">basix.ufl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.cpp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dlf_cpp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.mesh</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">dlf_mesh</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ufl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">basix</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.fem</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_interpolation_data</span> <span class="k">as</span> <span class="n">dlf_create_interpolation_data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.fem.function</span><span class="w"> </span><span class="kn">import</span> <span class="n">FunctionSpace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">PointOwnershipData</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.cpp</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cpp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DOLFINx_to_lexicg_nodes</span><span class="p">,</span>
+    <span class="n">UnfittedDomain</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">identity_partitioner</span><span class="p">(</span>
+    <span class="n">mpi_comm</span><span class="p">:</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Comm</span><span class="p">,</span>
+    <span class="n">n_parts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">cell_types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">dlf_mesh</span><span class="o">.</span><span class="n">CellType</span><span class="p">],</span>
+    <span class="n">cells</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dlf_cpp</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">AdjacencyList_int32</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;(Dummy) mesh partitioner for leaving cells on the current rank.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        comm (MPI.Comm): Mesh&#39;s MPI communicator.</span>
+<span class="sd">        n_parts (int): Number of part in which the mesh will be partitioned.</span>
+<span class="sd">        cell_types (list[dlf_mesh.CellType]): Cell types.</span>
+<span class="sd">        cells (list[npt.NDArray[np.int32]]): List of cells to distribute.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dlf_cpp.graph.AdjacencyList_int32: Adjaceny list assigning to</span>
+<span class="sd">        every cell in the list cells, the MPI rank of destination.</span>
+<span class="sd">        In this case, the destination rank will be the current one.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">cell_types</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Not implemented for multiple cell types&quot;</span>
+
+    <span class="n">valid_cells</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">dlf_mesh</span><span class="o">.</span><span class="n">CellType</span><span class="o">.</span><span class="n">interval</span><span class="p">,</span>
+        <span class="n">dlf_mesh</span><span class="o">.</span><span class="n">CellType</span><span class="o">.</span><span class="n">quadrilateral</span><span class="p">,</span>
+        <span class="n">dlf_mesh</span><span class="o">.</span><span class="n">CellType</span><span class="o">.</span><span class="n">hexahedron</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">cell_type</span> <span class="o">=</span> <span class="n">cell_types</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">cell_type</span> <span class="ow">in</span> <span class="n">valid_cells</span><span class="p">,</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Cell type </span><span class="si">{</span><span class="n">cell_type</span><span class="si">}</span><span class="s2"> not supported. Only quadrilateral and hexahedron are supported.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">tdim</span> <span class="o">=</span> <span class="n">valid_cells</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">cell_type</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">n_pts_per_cell</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">tdim</span>
+
+    <span class="n">n_cells</span> <span class="o">=</span> <span class="n">cells</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="n">n_pts_per_cell</span>
+    <span class="n">rank_dest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="n">mpi_comm</span><span class="o">.</span><span class="n">rank</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">rank_dest</span> <span class="o">=</span> <span class="n">dlf_cpp</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">AdjacencyList_int32</span><span class="p">(</span><span class="n">rank_dest</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rank_dest</span>
+
+
+<div class="viewcode-block" id="UnfDomainReparamMesh">
+<a class="viewcode-back" href="../../../generated/qugar.reparam.html#qugar.reparam.UnfDomainReparamMesh">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnfDomainReparamMesh</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to represent the unfitted domain raparameterization mesh.&quot;&quot;&quot;</span>
+
+    <span class="n">ReparamMesh</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">cpp</span><span class="o">.</span><span class="n">ReparamMesh_1_2</span> <span class="o">|</span> <span class="n">cpp</span><span class="o">.</span><span class="n">ReparamMesh_2_2</span> <span class="o">|</span> <span class="n">cpp</span><span class="o">.</span><span class="n">ReparamMesh_2_3</span> <span class="o">|</span> <span class="n">cpp</span><span class="o">.</span><span class="n">ReparamMesh_3_3</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unf_domain</span><span class="p">:</span> <span class="n">UnfittedDomain</span><span class="p">,</span> <span class="n">cpp_object</span><span class="p">:</span> <span class="n">ReparamMesh</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Reparam object with a given C++ ReparamMesh object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            unf_domain (UnfittedDomain): An instance of the UnfittedDomain class.</span>
+<span class="sd">            cpp_object (ReparamMesh): An instance of a C++ ReparamMesh object, either 2D or 3D.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_unf_domain</span> <span class="o">=</span> <span class="n">unf_domain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_object</span> <span class="o">=</span> <span class="n">cpp_object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tdim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_object</span><span class="o">.</span><span class="n">dim</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cpp_object</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReparamMesh</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the C++ object associated with this instance.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ReparamMesh: The C++ object underlying this instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_object</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unf_domain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnfittedDomain</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the unfitted domain associated with this instance.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            UnfittedDomain: The unfitted domain associated with this instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unf_domain</span>
+
+<div class="viewcode-block" id="UnfDomainReparamMesh.create_mesh">
+<a class="viewcode-back" href="../../../generated/qugar.reparam.html#qugar.reparam.UnfDomainReparamMesh.create_mesh">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wirebasket</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dlf_mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a DOLFINx mesh from the reparameterization data.</span>
+
+<span class="sd">        This method generates a `dlf_mesh.Mesh` object representing either</span>
+<span class="sd">        the reparameterized cells or the wirebasket of the reparameterization,</span>
+<span class="sd">        based on the `wirebasket` flag.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            wirebasket (bool, optional): If True, creates the mesh for the</span>
+<span class="sd">                wirebasket connectivity. If False, creates the mesh for the</span>
+<span class="sd">                cell connectivity. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dlf_mesh.Mesh: The generated DOLFINx mesh object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">degree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_object</span><span class="o">.</span><span class="n">order</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_object</span><span class="o">.</span><span class="n">points</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_object</span><span class="o">.</span><span class="n">wirebasket_conn</span> <span class="k">if</span> <span class="n">wirebasket</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_object</span><span class="o">.</span><span class="n">cells_conn</span>
+
+        <span class="n">reparam_tdim</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">wirebasket</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tdim</span>
+        <span class="n">conn_mask</span> <span class="o">=</span> <span class="n">DOLFINx_to_lexicg_nodes</span><span class="p">(</span><span class="n">reparam_tdim</span><span class="p">,</span> <span class="n">degree</span><span class="p">)</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">conn</span><span class="p">[:,</span> <span class="n">conn_mask</span><span class="p">]</span>
+
+        <span class="n">cell_type</span> <span class="o">=</span> <span class="p">[</span><span class="n">CellType</span><span class="o">.</span><span class="n">interval</span><span class="p">,</span> <span class="n">CellType</span><span class="o">.</span><span class="n">quadrilateral</span><span class="p">,</span> <span class="n">CellType</span><span class="o">.</span><span class="n">hexahedron</span><span class="p">][</span>
+            <span class="n">reparam_tdim</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="p">]</span>
+
+        <span class="n">gdim</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">element</span> <span class="o">=</span> <span class="n">basix</span><span class="o">.</span><span class="n">ufl</span><span class="o">.</span><span class="n">element</span><span class="p">(</span>
+            <span class="s2">&quot;Lagrange&quot;</span><span class="p">,</span>
+            <span class="n">cell_type</span><span class="p">,</span>
+            <span class="n">degree</span><span class="p">,</span>
+            <span class="c1"># lagrange_variant=basix.LagrangeVariant.equispaced,</span>
+            <span class="n">lagrange_variant</span><span class="o">=</span><span class="n">basix</span><span class="o">.</span><span class="n">LagrangeVariant</span><span class="o">.</span><span class="n">gll_warped</span><span class="p">,</span>
+            <span class="n">discontinuous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">gdim</span><span class="p">,),</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">points</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">domain</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">Mesh</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+
+        <span class="n">comm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unf_domain</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">comm</span>
+
+        <span class="c1"># For parallel meshes, we need to use an identity partitioner</span>
+        <span class="c1"># as the (default) ParMetis partitioner fails for non-connected</span>
+        <span class="c1"># meshes as this one.</span>
+
+        <span class="c1"># partitioner = identity_partitioner if comm.size &gt; 1 else None</span>
+        <span class="n">partitioner</span> <span class="o">=</span> <span class="n">identity_partitioner</span>
+
+        <span class="c1"># In DOLFINx 0.10.0 the third and fourth positional arguments of</span>
+        <span class="c1"># ``create_mesh`` swapped: the signature is now</span>
+        <span class="c1"># ``create_mesh(comm, cells, e, x, partitioner=None, ...)``.</span>
+        <span class="k">return</span> <span class="n">dlf_mesh</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span> <span class="n">conn</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">),</span> <span class="n">domain</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">partitioner</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="create_reparam_mesh">
+<a class="viewcode-back" href="../../../generated/qugar.reparam.html#qugar.reparam.create_reparam_mesh">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_reparam_mesh</span><span class="p">(</span>
+    <span class="n">unf_domain</span><span class="p">:</span> <span class="n">UnfittedDomain</span><span class="p">,</span> <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">levelset</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnfDomainReparamMesh</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a reparameterized mesh for a given unfitted domain.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        unf_domain (UnfittedDomain): The unfitted domain to be reparameterized.</span>
+<span class="sd">        degree (int, optional): The reparameterization degree along each direction.</span>
+<span class="sd">            It must be a positive value. Defaults to 3.</span>
+<span class="sd">        levelset (bool, optional): Whether to create a levelset reparameterization (True)</span>
+<span class="sd">            or a solid one (False). Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        UnfDomainReparam: The reparameterized domain.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">degree</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;The reparameterization degree must be positive.&quot;</span>
+
+    <span class="n">algo</span> <span class="o">=</span> <span class="n">cpp</span><span class="o">.</span><span class="n">create_reparameterization_levelset</span> <span class="k">if</span> <span class="n">levelset</span> <span class="k">else</span> <span class="n">cpp</span><span class="o">.</span><span class="n">create_reparameterization</span>
+    <span class="n">n_pts_dir</span> <span class="o">=</span> <span class="n">degree</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">merge_points</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">reparam_cpp</span> <span class="o">=</span> <span class="n">algo</span><span class="p">(</span><span class="n">unf_domain</span><span class="o">.</span><span class="n">cpp_unf_domain_object</span><span class="p">,</span> <span class="n">n_pts_dir</span><span class="p">,</span> <span class="n">merge_points</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">UnfDomainReparamMesh</span><span class="p">(</span><span class="n">unf_domain</span><span class="p">,</span> <span class="n">reparam_cpp</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_interpolation_data">
+<a class="viewcode-back" href="../../../generated/qugar.reparam.html#qugar.reparam.create_interpolation_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_interpolation_data</span><span class="p">(</span>
+    <span class="n">V_to</span><span class="p">:</span> <span class="n">FunctionSpace</span><span class="p">,</span>
+    <span class="n">V_from</span><span class="p">:</span> <span class="n">FunctionSpace</span><span class="p">,</span>
+    <span class="n">padding</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0e-14</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="n">PointOwnershipData</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate data needed to interpolate discrete functions across different meshes.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Note that the function spaces `V_to` and `V_from` must be defined</span>
+<span class="sd">        on meshes with different dimensions. E.g., `V_from` (2D or 3D)</span>
+<span class="sd">        can be the function space of a computed solution and `V_to` the</span>
+<span class="sd">        function space for interpolating the solution in the</span>
+<span class="sd">       reparameterization wirebasket (1D).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        V_to (FunctionSpace): Function space to interpolate into.</span>
+<span class="sd">        V_from (FunctionSpace): Function space to interpolate from.</span>
+<span class="sd">        padding (float): Absolute padding of bounding boxes of all</span>
+<span class="sd">            entities on the mesh associated to `V_to`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Cell indices of the mesh associated</span>
+<span class="sd">        to `V_to` on which to interpolate into.</span>
+<span class="sd">        PointOwnershipData: Data needed to interpolation functions</span>
+<span class="sd">        defined on function spaces on the meshes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">V_to</span><span class="o">.</span><span class="n">mesh</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">index_map</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+    <span class="n">num_cells</span> <span class="o">=</span> <span class="n">cmap</span><span class="o">.</span><span class="n">size_local</span> <span class="o">+</span> <span class="n">cmap</span><span class="o">.</span><span class="n">num_ghosts</span>
+    <span class="n">cells</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_cells</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cells</span><span class="p">,</span> <span class="n">dlf_create_interpolation_data</span><span class="p">(</span><span class="n">V_to</span><span class="p">,</span> <span class="n">V_from</span><span class="p">,</span> <span class="n">cells</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

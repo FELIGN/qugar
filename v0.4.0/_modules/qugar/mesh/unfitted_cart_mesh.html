@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qugar.mesh.unfitted_cart_mesh &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos.html">Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">qugar.mesh.unfitted_cart_mesh</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for qugar.mesh.unfitted_cart_mesh</h1><div class="highlight"><pre>
+<span></span><span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2025-present by Pablo Antolin</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of the QUGaR library.</span>
+<span class="c1">#</span>
+<span class="c1"># SPDX-License-Identifier:    MIT</span>
+<span class="c1">#</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_FEniCSx</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">has_FEniCSx</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;FEniCSx installation not found is required.&quot;</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.cpp.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">GhostMode</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.cpp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.cpp</span><span class="w"> </span><span class="kn">import</span> <span class="n">CartGridTP_2D</span><span class="p">,</span> <span class="n">CartGridTP_3D</span><span class="p">,</span> <span class="n">UnfittedDomain_2D</span><span class="p">,</span> <span class="n">UnfittedDomain_3D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.impl</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImplicitFunc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh.tp_mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">CartesianMesh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh.unfitted_domain</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnfittedDomain</span>
+
+
+<div class="viewcode-block" id="UnfittedCartMesh">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.UnfittedCartMesh">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnfittedCartMesh</span><span class="p">(</span><span class="n">CartesianMesh</span><span class="p">,</span> <span class="n">UnfittedDomain</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for storing an unfitted Cartesian mesh domain</span>
+<span class="sd">    and access its cut, full, and empty cells and facets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">comm</span><span class="p">:</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Comm</span><span class="p">,</span>
+        <span class="n">cpp_unf_domain</span><span class="p">:</span> <span class="n">UnfittedDomain_2D</span> <span class="o">|</span> <span class="n">UnfittedDomain_3D</span><span class="p">,</span>
+        <span class="n">cpp_cart_grid_tp</span><span class="p">:</span> <span class="n">CartGridTP_2D</span> <span class="o">|</span> <span class="n">CartGridTP_3D</span><span class="p">,</span>
+        <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">exclude_empty_cells</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">ghost_mode</span><span class="p">:</span> <span class="n">GhostMode</span> <span class="o">=</span> <span class="n">GhostMode</span><span class="o">.</span><span class="n">none</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This constructor is not intended to be called directly,</span>
+<span class="sd">            but rather use the function `create_Cartesian_mesh`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            comm (MPI.Comm): MPI communicator to be used for</span>
+<span class="sd">                distributing the mesh.</span>
+<span class="sd">            cpp_unf_domain (UnfittedDomain_2D | UnfittedDomain_3D):</span>
+<span class="sd">                C++ unfitted domain object.</span>
+<span class="sd">            cpp_cart_grid_tp (CartGridTP_2D | CartGridTP_3D):</span>
+<span class="sd">                C++ Cartesian grid object.</span>
+<span class="sd">            degree (int, optional): Degree of the mesh. Defaults to 1.</span>
+<span class="sd">                It must be greater than zero.</span>
+<span class="sd">            exclude_empty_cells (bool, optional): If True, empty cells</span>
+<span class="sd">                are excluded from the mesh. Defaults to True.</span>
+<span class="sd">            ghost_mode (GhostMode, optional): Ghost mode used for mesh</span>
+<span class="sd">                partitioning. Defaults to `none`.</span>
+<span class="sd">            dtype (type[np.float32 | np.float64], optional): Type to</span>
+<span class="sd">                be used in the grid. Defaults to `np.float64`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">exclude_empty_cells</span><span class="p">:</span>
+            <span class="n">active_cells</span> <span class="o">=</span> <span class="n">cpp_unf_domain</span><span class="o">.</span><span class="n">get_full_cells</span><span class="p">()</span>
+            <span class="n">active_cells</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">active_cells</span><span class="p">,</span> <span class="n">cpp_unf_domain</span><span class="o">.</span><span class="n">get_cut_cells</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">active_cells</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">CartesianMesh</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">comm</span><span class="p">,</span> <span class="n">cpp_cart_grid_tp</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">active_cells</span><span class="p">,</span> <span class="n">ghost_mode</span><span class="p">,</span> <span class="n">dtype</span>
+        <span class="p">)</span>
+        <span class="n">UnfittedDomain</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cpp_unf_domain</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_unfitted_impl_Cartesian_mesh">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.create_unfitted_impl_Cartesian_mesh">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_unfitted_impl_Cartesian_mesh</span><span class="p">(</span>
+    <span class="n">comm</span><span class="p">:</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Comm</span><span class="p">,</span>
+    <span class="n">impl_func</span><span class="p">:</span> <span class="n">ImplicitFunc</span><span class="p">,</span>
+    <span class="n">n_cells</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">xmin</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">xmax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">exclude_empty_cells</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">ghost_mode</span><span class="p">:</span> <span class="n">GhostMode</span> <span class="o">=</span> <span class="n">GhostMode</span><span class="o">.</span><span class="n">none</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UnfittedCartMesh</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates an uniftted Cartesian mesh generated with a bounding box and the number of</span>
+<span class="sd">    cells per direction, and an implicit function describing the domain</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        comm: MPI communicator to be used for distributing the mesh.</span>
+<span class="sd">        impl_func (ImplicitFunc_2D | ImplicitFunc_3D): Implicit function</span>
+<span class="sd">            that describes the domain.</span>
+<span class="sd">        n_cells (npt.NDArray[np.int32] | list[np.int32] | list[int] | int):</span>
+<span class="sd">            Number of cells per direction in the mesh.</span>
+<span class="sd">        xmin (Optional[npt.NDArray[np.float32 | np.float64]]): Minimum</span>
+<span class="sd">            coordinates of the mesh&#39;s bounding box. Defaults to a vector</span>
+<span class="sd">            of zeros with double floating precision.</span>
+<span class="sd">        xmax (Optional[npt.NDArray[np.float32 | np.float64]]): Maximum</span>
+<span class="sd">            coordinates of the mesh&#39;s bounding box. Defaults to a vector</span>
+<span class="sd">            of ones with double floating precision.</span>
+<span class="sd">        degree (int, optional): Degree of the mesh. Defaults to 1.</span>
+<span class="sd">        exclude_empty_cells (bool, optional): If True, empty cells</span>
+<span class="sd">            are excluded from the mesh. Defaults to True.</span>
+<span class="sd">        ghost_mode (GhostMode, optional): Ghost mode used for mesh</span>
+<span class="sd">            partitioning. Defaults to `none`.</span>
+<span class="sd">        dtype (Optional[type[np.float32 | np.float64]]): Type to</span>
+<span class="sd">            be used in the grid. If not provided, it will be inferred</span>
+<span class="sd">            from `xmin` and/or `xmax`, and if not provided either</span>
+<span class="sd">            it will be set to `np.float64`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        UnfittedCartMesh: Generated unfitted Cartesian mesh.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">impl_func</span><span class="o">.</span><span class="n">dim</span>
+    <span class="k">assert</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid dimension.&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_cells</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">n_cells</span> <span class="o">=</span> <span class="p">[</span><span class="n">n_cells</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span>
+    <span class="n">n_cells</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">n_cells</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n_cells</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="n">dim</span><span class="p">,</span> <span class="s2">&quot;Invalid number of cells per direction.&quot;</span>
+
+    <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">xmin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">xmin</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span>
+        <span class="k">elif</span> <span class="n">xmax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">xmax</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+
+    <span class="k">if</span> <span class="n">xmin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">xmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">xmin</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">dtype</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid type for xmin: </span><span class="si">{</span><span class="n">xmin</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">. Expected </span><span class="si">{</span><span class="n">dtype</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">xmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">xmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">xmax</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">dtype</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid type for xmax: </span><span class="si">{</span><span class="n">xmax</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">. Expected </span><span class="si">{</span><span class="n">dtype</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">dim</span> <span class="o">==</span> <span class="n">xmin</span><span class="o">.</span><span class="n">size</span> <span class="ow">and</span> <span class="n">dim</span> <span class="o">==</span> <span class="n">xmax</span><span class="o">.</span><span class="n">size</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">xmax</span> <span class="o">&gt;</span> <span class="n">xmin</span><span class="p">)</span>
+
+    <span class="n">cell_breaks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+        <span class="n">cell_breaks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">[</span><span class="nb">dir</span><span class="p">],</span> <span class="n">xmax</span><span class="p">[</span><span class="nb">dir</span><span class="p">],</span> <span class="n">n_cells</span><span class="p">[</span><span class="nb">dir</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+
+    <span class="n">cpp_grid</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_cart_grid</span><span class="p">(</span><span class="n">cell_breaks</span><span class="p">)</span>
+
+    <span class="n">cpp_unf_domain</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_unfitted_impl_domain</span><span class="p">(</span>
+        <span class="n">impl_func</span><span class="o">.</span><span class="n">cpp_object</span><span class="p">,</span>
+        <span class="n">cpp_grid</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">UnfittedCartMesh</span><span class="p">(</span>
+        <span class="n">comm</span><span class="p">,</span> <span class="n">cpp_unf_domain</span><span class="p">,</span> <span class="n">cpp_grid</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">exclude_empty_cells</span><span class="p">,</span> <span class="n">ghost_mode</span><span class="p">,</span> <span class="n">xmin</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

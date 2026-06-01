@@ -1,0 +1,17 @@
+<map id="/__w/qugar/qugar/cpp/include/qugar/polynomial_tp.hpp" name="/__w/qugar/qugar/cpp/include/qugar/polynomial_tp.hpp">
+<area shape="rect" id="Node000001" title="Declaration of tensor&#45;product polynomial class." alt="" coords="307,5,498,60"/>
+<area shape="rect" id="Node000002" href="$d2/d6e/bezier__tp_8hpp.html" title="Declaration of tensor&#45;product Bezier class." alt="" coords="256,211,416,265"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="382,73,365,109,350,163,342,211,337,210,345,162,360,107,377,71"/>
+<area shape="rect" id="Node000007" href="$d6/d82/monomials__tp_8hpp.html" title="Declaration of tensor&#45;product monomials class." alt="" coords="374,108,565,163"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="430,70,454,106,450,109,425,73"/>
+<area shape="rect" id="Node000003" href="$de/d62/bezier__tp__utils_8hpp.html" title="Declaration of tensor&#45;product Bezier utils." alt="" coords="5,313,165,368"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="259,273,152,316,150,311,257,268"/>
+<area shape="rect" id="Node000004" href="$d6/d87/impl__reparam__bezier_8hpp.html" title="Declaration of tools for creating Bezier reparameterizations." alt="" coords="190,313,399,368"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="323,279,308,314,303,312,318,277"/>
+<area shape="rect" id="Node000005" href="$d7/d6f/primitive__funcs__lib_8hpp.html" title="Declaration of a primitive implicit functions ready to be consumed by Algoim." alt="" coords="423,313,601,368"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="395,270,467,311,465,315,392,274"/>
+<area shape="rect" id="Node000006" href="$d0/d6f/demo__quad__sphere_2main_8cpp.html" title=" " alt="" coords="415,416,609,471"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="515,382,515,416,509,416,509,382"/>
+<area shape="poly" id="edge7_Node000007_Node000002" title=" " alt="" coords="425,173,373,213,369,208,422,169"/>
+<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="480,175,509,312,504,313,475,177"/>
+</map>

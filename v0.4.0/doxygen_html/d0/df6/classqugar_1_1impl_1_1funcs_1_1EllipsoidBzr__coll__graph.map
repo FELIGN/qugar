@@ -1,0 +1,11 @@
+<map id="qugar::impl::funcs::EllipsoidBzr&lt; dim &gt;" name="qugar::impl::funcs::EllipsoidBzr&lt; dim &gt;">
+<area shape="rect" id="Node000001" title="Dimension independent ellipsoidal function. The function is defined by the ellipsoid&#39;s semi&#45;axes and ..." alt="" coords="105,269,267,309"/>
+<area shape="rect" id="Node000002" href="$d9/d7e/classqugar_1_1impl_1_1funcs_1_1EllipsoidBase.html" title="Dimension independent ellipsoidal function (base cass). The function is defined by the ellipsoid&#39;s se..." alt="" coords="5,181,177,221"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,229,167,267,163,271,121,233"/>
+<area shape="rect" id="Node000003" href="$de/dca/classqugar_1_1impl_1_1BezierTP.html" title=" " alt="" coords="201,181,363,221"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="252,233,209,271,205,267,249,229"/>
+<area shape="rect" id="Node000004" href="$d2/d05/classqugar_1_1impl_1_1PolynomialTP.html" title="Base class for tensor&#45;product polynomial functions." alt="" coords="185,93,379,133"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="285,147,285,181,279,181,279,147"/>
+<area shape="rect" id="Node000005" href="$dd/d80/classqugar_1_1impl_1_1DomainFunc.html" title="Domain functions." alt="" coords="189,5,375,45"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="285,59,285,93,279,93,279,59"/>
+</map>

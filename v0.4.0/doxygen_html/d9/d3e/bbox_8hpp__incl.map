@@ -1,0 +1,24 @@
+<map id="/__w/qugar/qugar/cpp/include/qugar/bbox.hpp" name="/__w/qugar/qugar/cpp/include/qugar/bbox.hpp">
+<area shape="rect" id="Node000001" title="Definition of Cartesian bounding box class." alt="" coords="253,5,432,45"/>
+<area shape="rect" id="Node000002" href="$d7/dd8/concepts_8hpp.html" title="Declaration of concepts." alt="" coords="5,93,155,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="281,48,132,92,131,87,279,43"/>
+<area shape="rect" id="Node000003" href="$d0/de4/point_8hpp.html" title="Definition and implementation of Point class." alt="" coords="331,93,455,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="357,44,381,80,376,83,353,47"/>
+<area shape="rect" id="Node000004" href="$dd/de3/types_8hpp.html" title="Declaration of types." alt="" coords="230,167,357,192"/>
+<area shape="poly" id="edge9_Node000001_Node000004" title=" " alt="" coords="338,47,321,94,303,154,298,153,316,92,333,45"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="258,240,329,265"/>
+<area shape="poly" id="edge12_Node000001_Node000005" title=" " alt="" coords="319,47,265,97,239,131,220,168,217,179,220,191,237,213,259,231,255,235,233,217,215,193,211,179,215,166,235,128,261,94,315,44"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="480,93,677,119"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="400,43,532,87,531,92,398,48"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="701,93,757,119"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="433,39,550,61,688,91,687,96,549,66,432,44"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="379,121,322,161,319,156,376,117"/>
+<area shape="poly" id="edge7_Node000003_Node000005" title=" " alt="" coords="395,119,388,154,370,193,350,216,327,234,324,230,346,212,366,191,383,152,390,118"/>
+<area shape="rect" id="Node000006" href="$da/d16/vector_8hpp.html" title=" " alt="" coords="432,167,563,192"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="412,116,470,156,467,161,409,121"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="587,167,650,192"/>
+<area shape="poly" id="edge8_Node000003_Node000008" title=" " alt="" coords="430,116,575,162,574,167,429,121"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="296,192,296,226,291,226,291,192"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="424,240,571,265"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="500,192,500,226,495,226,495,192"/>
+</map>

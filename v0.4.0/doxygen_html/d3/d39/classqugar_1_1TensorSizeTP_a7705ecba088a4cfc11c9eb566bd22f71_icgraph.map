@@ -1,0 +1,5 @@
+<map id="qugar::TensorSizeTP::size" name="qugar::TensorSizeTP::size">
+<area shape="rect" id="Node000001" title="Gets the total number of entries (product of sizes along all directions)." alt="" coords="205,5,357,45"/>
+<area shape="rect" id="Node000002" href="$d3/d39/classqugar_1_1TensorSizeTP.html#adc97121e59d8ac6b1218258c1449c08a" title="Construct a new TensorSizeTP object from size along directions." alt="" coords="5,5,157,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,28,158,28,158,23,191,23"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="qugar::impl::funcs::ConstantBzr&lt; dim &gt;" name="qugar::impl::funcs::ConstantBzr&lt; dim &gt;">
+<area shape="rect" id="Node000001" title="Dimension independent constant function." alt="" coords="79,269,243,309"/>
+<area shape="rect" id="Node000002" href="$d1/d78/classqugar_1_1impl_1_1funcs_1_1ConstantBase.html" title="Dimension independent constant function." alt="" coords="5,181,144,221"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,229,144,267,140,271,102,233"/>
+<area shape="rect" id="Node000003" href="$de/dca/classqugar_1_1impl_1_1BezierTP.html" title=" " alt="" coords="169,181,330,221"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="222,233,183,271,179,267,218,229"/>
+<area shape="rect" id="Node000004" href="$d2/d05/classqugar_1_1impl_1_1PolynomialTP.html" title="Base class for tensor&#45;product polynomial functions." alt="" coords="153,93,346,133"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="252,147,252,181,247,181,247,147"/>
+<area shape="rect" id="Node000005" href="$dd/d80/classqugar_1_1impl_1_1DomainFunc.html" title="Domain functions." alt="" coords="157,5,342,45"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="252,59,252,93,247,93,247,59"/>
+</map>

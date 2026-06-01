@@ -1,0 +1,9 @@
+<map id="main" name="main">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,63,60,88"/>
+<area shape="rect" id="Node000002" href="$d0/d6b/namespacequgar.html#ae64056761f525b5d9b618eb67d6ecce5" title="Creates quadrature for cells." alt="" coords="108,5,295,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,61,107,41,135,32,136,37,109,46,61,65"/>
+<area shape="rect" id="Node000003" href="$d0/d6b/namespacequgar.html#ada98f71d3a8eef961a96cc6e9ea3bd8c" title="Creates a quadrature for the unfitted boundary." alt="" coords="119,55,284,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="60,73,105,73,105,78,60,78"/>
+<area shape="rect" id="Node000004" href="$df/d58/classqugar_1_1UnfittedDomain.html#a067552ebee9e21562fa7d464a51c4678" title=" " alt="" coords="116,119,287,159"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="61,85,109,105,129,112,127,117,107,110,59,90"/>
+</map>

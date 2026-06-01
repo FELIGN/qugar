@@ -1,0 +1,7 @@
+<map id="qugar::impl::funcs::PlaneBase::PlaneBase" name="qugar::impl::funcs::PlaneBase::PlaneBase">
+<area shape="rect" id="Node000001" title="Constructs a new plane function. The line is defined by an origin and a normal vector." alt="" coords="5,37,180,77"/>
+<area shape="rect" id="Node000002" href="$db/d5b/classqugar_1_1impl_1_1funcs_1_1PlaneBase.html#a4341bb67bb5aa7ddb9f5a529ad24f481" title="Gets the normal of the plane." alt="" coords="228,5,380,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,41,214,36,214,42,180,47"/>
+<area shape="rect" id="Node000003" href="$db/d5b/classqugar_1_1impl_1_1funcs_1_1PlaneBase.html#a7f5654556a5830120386a66983a4c3e5" title="Gets the origin of the plane." alt="" coords="233,69,375,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,68,219,74,218,79,180,73"/>
+</map>

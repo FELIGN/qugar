@@ -1,0 +1,5 @@
+<map id="qugar::Tolerance::coincident" name="qugar::Tolerance::coincident">
+<area shape="rect" id="Node000001" title="Checks if two points are coincident." alt="" coords="5,5,209,31"/>
+<area shape="rect" id="Node000002" href="$db/d28/classqugar_1_1Tolerance.html#a58abff93ba4a9e6b5229c806416f6905" title="Compares if two values are equal up to tolerance." alt="" coords="257,5,431,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="210,15,244,15,244,21,210,21"/>
+</map>

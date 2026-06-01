@@ -1,0 +1,11 @@
+<map id="qugar::impl::funcs::CylinderBase::axis" name="qugar::impl::funcs::CylinderBase::axis">
+<area shape="rect" id="Node000001" title="Gets the axis of the cylinder." alt="" coords="264,117,415,157"/>
+<area shape="rect" id="Node000002" href="$dc/de2/classqugar_1_1impl_1_1funcs_1_1CylinderBzr.html#a9dbdd1c588c7fbdf76c349373bd2a8c1" title="Creates a polynomial representation based on monomials for the given center, radius,..." alt="" coords="33,5,188,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="289,112,215,75,185,62,187,58,217,70,292,108"/>
+<area shape="rect" id="Node000003" href="$d6/dcd/classqugar_1_1impl_1_1funcs_1_1Cylinder.html#a51acf0eb4c48793fdff0f87c0eee6d50" title="Constructor." alt="" coords="37,85,184,125"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="250,127,184,118,185,112,251,122"/>
+<area shape="rect" id="Node000004" href="$d5/d65/classqugar_1_1impl_1_1funcs_1_1CylinderBase.html#a78c44e6c623e1568fb2359e052a16176" title="Constructor." alt="" coords="5,149,216,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="251,152,216,157,216,151,250,146"/>
+<area shape="rect" id="Node000005" href="$dc/de2/classqugar_1_1impl_1_1funcs_1_1CylinderBzr.html#aafb226e16a8edf2c5ec3bcd3f664510a" title="Constructor." alt="" coords="17,213,205,253"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="293,166,217,203,185,215,183,210,215,198,291,161"/>
+</map>

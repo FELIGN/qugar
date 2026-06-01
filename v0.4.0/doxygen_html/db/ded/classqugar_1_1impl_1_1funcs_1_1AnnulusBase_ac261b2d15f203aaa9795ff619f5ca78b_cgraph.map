@@ -1,0 +1,9 @@
+<map id="qugar::impl::funcs::AnnulusBase::AnnulusBase" name="qugar::impl::funcs::AnnulusBase::AnnulusBase">
+<area shape="rect" id="Node000001" title="Constructor." alt="" coords="5,77,212,117"/>
+<area shape="rect" id="Node000002" href="$db/ded/classqugar_1_1impl_1_1funcs_1_1AnnulusBase.html#a8643fab693ba5b2a7722c663cd1af7a5" title="Gets the center of the annulus." alt="" coords="260,5,423,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,75,262,47,264,52,175,80"/>
+<area shape="rect" id="Node000003" href="$db/ded/classqugar_1_1impl_1_1funcs_1_1AnnulusBase.html#a9d21165e747425d9ce9604310f34fbdd" title="Gets the inner radius of the annulus." alt="" coords="264,70,419,125"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,95,251,95,251,100,212,100"/>
+<area shape="rect" id="Node000004" href="$db/ded/classqugar_1_1impl_1_1funcs_1_1AnnulusBase.html#a12cb3c770c083654e03d24449179649f" title="Gets the outer radius of the annulus." alt="" coords="263,149,419,203"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="169,115,251,143,250,148,168,120"/>
+</map>

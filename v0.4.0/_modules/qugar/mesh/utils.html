@@ -1,0 +1,863 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qugar.mesh.utils &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos.html">Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">qugar.mesh.utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for qugar.mesh.utils</h1><div class="highlight"><pre>
+<span></span><span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2025-present by Pablo Antolin</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of the QUGaR library.</span>
+<span class="c1">#</span>
+<span class="c1"># SPDX-License-Identifier:    MIT</span>
+<span class="c1">#</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot;A few utils for mesh connectivity.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_invert_map</span><span class="p">(</span><span class="n">map_ind</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Inverts a 1 to 1 map of indices.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        map_ind (npt.NDArray[np.int32]): 1 to 1 map of indices to</span>
+<span class="sd">            invert.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Inverted map such that</span>
+<span class="sd">            `inv_map_ind[map_ind[i]] = i` and `map_ind[inv_map_ind[i]] = i`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">map_ind</span> <span class="o">==</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">map_ind</span><span class="o">.</span><span class="n">size</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="VTK_to_lexicg_nodes">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.VTK_to_lexicg_nodes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">VTK_to_lexicg_nodes</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from VTK to lexicographical</span>
+<span class="sd">    nodes ordering.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+<span class="sd">        degree (int): Cell&#39;s degree. It must be greater than 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Permutation array from VTK to</span>
+<span class="sd">            lexicographical such that `a_vtk[i] = a_lex[perm_array[i]]`.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The VTK numbering is referred to the Arbitrary-order Lagrange</span>
+<span class="sd">        Finite Elements as defined in</span>
+<span class="sd">        https://www.kitware.com//modeling-arbitrary-order-lagrange-finite-elements-in-the-visualization-toolkit</span>
+<span class="sd">        These are the cells with cell ids 68 (1D), 70 (2D), or 72 (3D),</span>
+<span class="sd">        and not the linear ones (3, 9, 12, respec.) or quadratic (21,</span>
+<span class="sd">        28, 29, respec.).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid dimension.&quot;</span>
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">,</span> <span class="s2">&quot;Invalid degree.&quot;</span>
+
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_VTK_to_lexicg_1D_nodes</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_VTK_to_lexicg_2D_nodes</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># if dim == 3:</span>
+        <span class="k">return</span> <span class="n">_VTK_to_lexicg_3D_nodes</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_VTK_to_lexicg_1D_nodes</span><span class="p">(</span><span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from VTK to lexicographical</span>
+<span class="sd">    nodes ordering for 1D cells.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        degree (int): Cell&#39;s degree. It must be greater than 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Permutation array from VTK to</span>
+<span class="sd">            lexicographical such that `a_vtk[i] = a_lex[perm_array[i]]` or</span>
+<span class="sd">            `a_lex[i] = perm_array[a_vtk[i]]`.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The VTK numbering is referred to the Arbitrary-order Lagrange</span>
+<span class="sd">        https://www.kitware.com//modeling-arbitrary-order-lagrange-finite-elements-in-the-visualization-toolkit</span>
+<span class="sd">        These are the cells with cell id 68 (1D) and not the linear</span>
+<span class="sd">        (with id 3) or quadratic (21) ones.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">,</span> <span class="s2">&quot;Invalid degree.&quot;</span>
+
+    <span class="c1"># Vertices</span>
+    <span class="n">vtk_to_lex</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">]</span>
+
+    <span class="c1"># Internal points.</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vtk_to_lex</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_VTK_to_lexicg_2D_nodes</span><span class="p">(</span><span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from VTK to lexicographical</span>
+<span class="sd">    nodes ordering for 2D cells.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        degree (int): Cell&#39;s degree. It must be greater than 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Permutation array from VTK to</span>
+<span class="sd">            lexicographical such that `a_vtk[i] = a_lex[perm_array[i]]` or</span>
+<span class="sd">            `a_lex[i] = perm_array[a_vtk[i]]`.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The VTK numbering is referred to the Arbitrary-order Lagrange</span>
+<span class="sd">        Finite Elements as defined in</span>
+<span class="sd">        https://www.kitware.com//modeling-arbitrary-order-lagrange-finite-elements-in-the-visualization-toolkit</span>
+<span class="sd">        These are the cells with cell id 70 (2D) and not the linear</span>
+<span class="sd">        (with id 9) or quadratic (28) ones.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">,</span> <span class="s2">&quot;Invalid degree.&quot;</span>
+
+    <span class="n">order</span> <span class="o">=</span> <span class="n">degree</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">u</span> <span class="o">+</span> <span class="n">v</span> <span class="o">*</span> <span class="n">order</span>
+
+    <span class="n">vtk_to_lex</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Vertices</span>
+    <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+
+    <span class="c1"># Edges</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+
+    <span class="c1"># Internal</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vtk_to_lex</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_VTK_to_lexicg_3D_nodes</span><span class="p">(</span><span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from VTK to lexicographical</span>
+<span class="sd">    nodes ordering for 3D cells.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        degree (int): Cell&#39;s degree. It must be greater than 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Permutation array from VTK to</span>
+<span class="sd">            lexicographical such that `a_vtk[i] = a_lex[perm_array[i]]` or</span>
+<span class="sd">            `a_lex[i] = perm_array[a_vtk[i]]`.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The VTK numbering is referred to the Arbitrary-order Lagrange</span>
+<span class="sd">        Finite Elements as defined in</span>
+<span class="sd">        https://www.kitware.com//modeling-arbitrary-order-lagrange-finite-elements-in-the-visualization-toolkit</span>
+<span class="sd">        These are the cells with cell id 72 (3D) and not the linear</span>
+<span class="sd">        (with id 12) or quadratic (29) ones.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">,</span> <span class="s2">&quot;Invalid degree.&quot;</span>
+
+    <span class="n">order</span> <span class="o">=</span> <span class="n">degree</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">u</span> <span class="o">+</span> <span class="n">v</span> <span class="o">*</span> <span class="n">order</span> <span class="o">+</span> <span class="n">w</span> <span class="o">*</span> <span class="n">order</span> <span class="o">*</span> <span class="n">order</span>
+
+    <span class="n">vtk_to_lex</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Vertices</span>
+    <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+
+    <span class="c1"># Edges</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+
+    <span class="c1"># Faces</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+
+    <span class="c1"># Internal</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+                <span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vtk_to_lex</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="lexicg_to_VTK_nodes">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.lexicg_to_VTK_nodes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lexicg_to_VTK_nodes</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from lexicographical to VTK</span>
+<span class="sd">    nodes ordering.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+<span class="sd">        degree (int): Cell&#39;s degree. It must be greater than 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Permutation array from lexicographical to</span>
+<span class="sd">            VTK such that `a_lex[i] = a_vtk[perm_array[i]]` or</span>
+<span class="sd">            `a_vtk[i] = perm_array[a_lex[i]]`.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The VTK numbering is referred to the Arbitrary-order Lagrange</span>
+<span class="sd">        Finite Elements as defined in</span>
+<span class="sd">        https://www.kitware.com//modeling-arbitrary-order-lagrange-finite-elements-in-the-visualization-toolkit</span>
+<span class="sd">        These are the cells with cell ids 68 (1D), 70 (2D), or 72 (3D),</span>
+<span class="sd">        and not the linear ones (3, 9, 12, respec.) or quadratic (21,</span>
+<span class="sd">        28, 29, respec.).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">vtk_to_lex</span> <span class="o">=</span> <span class="n">VTK_to_lexicg_nodes</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_invert_map</span><span class="p">(</span><span class="n">vtk_to_lex</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+
+
+
+<div class="viewcode-block" id="DOLFINx_to_lexicg_nodes">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.DOLFINx_to_lexicg_nodes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">DOLFINx_to_lexicg_nodes</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from DOLFINx to</span>
+<span class="sd">    lexicographical nodes ordering.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+<span class="sd">        degree (int): Cell&#39;s degree. It must be greater than 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Permutation array from DOLFINx to</span>
+<span class="sd">            lexicographical, i.e., such that `a_dlf[i] = a_lex[perm_array[i]]` or</span>
+<span class="sd">            `a_lex[i] = perm_array[a_dlf[i]]`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid dimension.&quot;</span>
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">,</span> <span class="s2">&quot;Invalid degree.&quot;</span>
+
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_DOLFINx_to_lexicg_1D_nodes</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_DOLFINx_to_lexicg_2D_nodes</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># if dim == 3:</span>
+        <span class="k">return</span> <span class="n">_DOLFINx_to_lexicg_3D_nodes</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_DOLFINx_to_lexicg_1D_nodes</span><span class="p">(</span><span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from DOLFINx to</span>
+<span class="sd">    lexicographical nodes ordering for 1D cells.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+<span class="sd">        degree (int): Cell&#39;s degree. It must be greater than 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Permutation array from DOLFINx to</span>
+<span class="sd">            lexicographical, i.e., such that `a_dlf[i] = a_lex[perm_array[i]]` or</span>
+<span class="sd">            `a_lex[i] = perm_array[a_dlf[i]]`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">,</span> <span class="s2">&quot;Invalid degree.&quot;</span>
+
+    <span class="c1"># Vertices</span>
+    <span class="n">dlf_to_lex</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">]</span>
+
+    <span class="c1"># Internal points.</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dlf_to_lex</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_DOLFINx_to_lexicg_2D_nodes</span><span class="p">(</span><span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from DOLFINx to</span>
+<span class="sd">    lexicographical nodes ordering for 2D cells.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+<span class="sd">        degree (int): Cell&#39;s degree. It must be greater than 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Permutation array from DOLFINx to</span>
+<span class="sd">            lexicographical, i.e., such that `a_dlf[i] = a_lex[perm_array[i]]` or</span>
+<span class="sd">            `a_lex[i] = perm_array[a_dlf[i]]`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">,</span> <span class="s2">&quot;Invalid degree.&quot;</span>
+
+    <span class="n">order</span> <span class="o">=</span> <span class="n">degree</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">u</span> <span class="o">+</span> <span class="n">v</span> <span class="o">*</span> <span class="n">order</span>
+
+    <span class="n">dlf_to_lex</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Vertices</span>
+    <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+
+    <span class="c1"># Edges</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+
+    <span class="c1"># Internal</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dlf_to_lex</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_DOLFINx_to_lexicg_3D_nodes</span><span class="p">(</span><span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from DOLFINx to</span>
+<span class="sd">    lexicographical nodes ordering for 3D cells.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+<span class="sd">        degree (int): Cell&#39;s degree. It must be greater than 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Permutation array from DOLFINx to</span>
+<span class="sd">            lexicographical, i.e., such that</span>
+<span class="sd">            `a_dlf[i] = a_lex[perm_array[i]]` or</span>
+<span class="sd">            `a_lex[i] = perm_array[a_dlf[i]]`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">,</span> <span class="s2">&quot;Invalid degree.&quot;</span>
+
+    <span class="n">order</span> <span class="o">=</span> <span class="n">degree</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">u</span> <span class="o">+</span> <span class="n">v</span> <span class="o">*</span> <span class="n">order</span> <span class="o">+</span> <span class="n">w</span> <span class="o">*</span> <span class="n">order</span> <span class="o">*</span> <span class="n">order</span>
+
+    <span class="n">dlf_to_lex</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Vertices</span>
+    <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+
+    <span class="c1"># Edges</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+
+    <span class="c1"># Faces</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+
+    <span class="c1"># Internal</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">degree</span><span class="p">):</span>
+                <span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_tensor_to_flat</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dlf_to_lex</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="lexicg_to_DOLFINx_nodes">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.lexicg_to_DOLFINx_nodes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lexicg_to_DOLFINx_nodes</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from lexicographical to</span>
+<span class="sd">    DOLFINx nodes ordering.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+<span class="sd">        degree (int): Cell&#39;s degree. It must be greater than 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Permutation array from lexicographical to</span>
+<span class="sd">            DOLFINx, i.e., such that `a_lex[i] = a_dlf[perm_array[i]]` or</span>
+<span class="sd">            `a_dlf[i] = perm_array[a_lex[i]]`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">dlf_to_lex</span> <span class="o">=</span> <span class="n">DOLFINx_to_lexicg_nodes</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_invert_map</span><span class="p">(</span><span class="n">dlf_to_lex</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+
+
+
+<div class="viewcode-block" id="DOLFINx_to_VTK_nodes">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.DOLFINx_to_VTK_nodes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">DOLFINx_to_VTK_nodes</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from DOLFINx to VTK nodes</span>
+<span class="sd">    ordering.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+<span class="sd">        degree (int): Cell&#39;s degree. It must be greater than 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Permutation array from DOLFINx to VTK</span>
+<span class="sd">            such that `a_dlf[i] = a_vtk[perm_array[i]]` or</span>
+<span class="sd">            `a_vtk[i] = perm_array[a_dlf[i]]`.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The VTK numbering is referred to the Arbitrary-order Lagrange</span>
+<span class="sd">        Finite Elements as defined in</span>
+<span class="sd">        https://www.kitware.com//modeling-arbitrary-order-lagrange-finite-elements-in-the-visualization-toolkit</span>
+<span class="sd">        These are the cells with cell ids 68 (1D), 70 (2D), or 72 (3D),</span>
+<span class="sd">        and not the linear ones (3, 9, 12, respec.) or quadratic (21,</span>
+<span class="sd">        28, 29, respec.).&quot;&quot;&quot;</span>
+
+    <span class="n">dlf_to_lex</span> <span class="o">=</span> <span class="n">DOLFINx_to_lexicg_nodes</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">)</span>
+    <span class="n">lex_to_vtk</span> <span class="o">=</span> <span class="n">lexicg_to_VTK_nodes</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">lex_to_vtk</span><span class="p">[</span><span class="n">dlf_to_lex</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dlf_to_lex</span><span class="o">.</span><span class="n">size</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="VTK_to_DOLFINx_nodes">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.VTK_to_DOLFINx_nodes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">VTK_to_DOLFINx_nodes</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">degree</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from VTK to DOLFINx nodes</span>
+<span class="sd">    ordering.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+<span class="sd">        degree (int): Cell&#39;s degree. It must be greater than 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Permutation array from VTK to DOLFINx</span>
+<span class="sd">            such that `a_vtk[i] = a_dlf[perm_array[i]]` or</span>
+<span class="sd">            `a_dlf[i] = perm_array[a_vtk[i]]`.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The VTK numbering is referred to the Arbitrary-order Lagrange</span>
+<span class="sd">        Finite Elements as defined in</span>
+<span class="sd">        https://www.kitware.com//modeling-arbitrary-order-lagrange-finite-elements-in-the-visualization-toolkit</span>
+<span class="sd">        These are the cells with cell ids 68 (1D), 70 (2D), or 72 (3D),</span>
+<span class="sd">        and not the linear ones (3, 9, 12, respec.) or quadratic (21,</span>
+<span class="sd">        28, 29, respec.).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">vtk_to_lex</span> <span class="o">=</span> <span class="n">VTK_to_lexicg_nodes</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">)</span>
+    <span class="n">lex_to_dlf</span> <span class="o">=</span> <span class="n">lexicg_to_DOLFINx_nodes</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">degree</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">lex_to_dlf</span><span class="p">[</span><span class="n">vtk_to_lex</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vtk_to_lex</span><span class="o">.</span><span class="n">size</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span></div>
+
+
+    <span class="c1"># dlf_to_vtk = create_DOLFINx_to_VTK(dim, degree)</span>
+    <span class="c1"># return _invert_map(dlf_to_vtk)</span>
+
+
+<div class="viewcode-block" id="lexicg_to_DOLFINx_faces">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.lexicg_to_DOLFINx_faces">[docs]</a>
+<span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lexicg_to_DOLFINx_faces</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from lexicographical to</span>
+<span class="sd">    DOLFINx faces ordering.</span>
+
+<span class="sd">    See https://github.com/FEniCS/basix/#supported-elements</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]:  Permutation array from lexicographical</span>
+<span class="sd">            to DOLFINx such that `faces_dlf[i] = faces_lex[perm_array[i]]`</span>
+<span class="sd">            or `faces_lex[i] = perm_array[faces_dlf[i]]`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># if dim == 3:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="DOLFINx_to_lexicg_faces">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.DOLFINx_to_lexicg_faces">[docs]</a>
+<span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">DOLFINx_to_lexicg_faces</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from DOLFINx to</span>
+<span class="sd">    lexicographical faces ordering.</span>
+
+<span class="sd">    See https://github.com/FEniCS/basix/#supported-elements</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]:  Permutation array from DOLFINx to</span>
+<span class="sd">            lexicographical such that `faces_lex[i] = faces_dlf[perm_array[i]]` or</span>
+<span class="sd">            `faces_dlf[i] = perm_array[faces_lex[i]]`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># if dim == 3:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="lexicg_to_VTK_faces">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.lexicg_to_VTK_faces">[docs]</a>
+<span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lexicg_to_VTK_faces</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from lexicographical to</span>
+<span class="sd">    VTK faces ordering.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]:  Permutation array from lexicographical</span>
+<span class="sd">            to VTK such that `faces_vtk[i] = faces_lex[perm_array[i]]`</span>
+<span class="sd">            or `faces_lex[i] = perm_array[faces_vtk[i]]`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># if dim == 3:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="VTK_to_lexicg_faces">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.VTK_to_lexicg_faces">[docs]</a>
+<span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">VTK_to_lexicg_faces</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from VTK to</span>
+<span class="sd">    lexicographical faces ordering.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]:  Permutation array from VTK to</span>
+<span class="sd">            lexicographical such that `faces_lex[i] = faces_vtk[perm_array[i]]` or</span>
+<span class="sd">            `faces_vtk[i] = perm_array[faces_lex[i]]`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># if dim == 3:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="lexicg_to_DOLFINx_edges">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.lexicg_to_DOLFINx_edges">[docs]</a>
+<span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lexicg_to_DOLFINx_edges</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from lexicographical to</span>
+<span class="sd">    DOLFINx edges ordering.</span>
+
+<span class="sd">    See https://github.com/FEniCS/basix/#supported-elements</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]:  Permutation array from lexicographical</span>
+<span class="sd">            to DOLFINx such that `edges_dlf[i] = edges_lex[perm_array[i]]`</span>
+<span class="sd">            or `edges_lex[i] = perm_array[edges_dlf[i]]`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">lexicg_to_DOLFINx_faces</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># if dim == 3:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="DOLFINx_to_lexicg_edges">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.DOLFINx_to_lexicg_edges">[docs]</a>
+<span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">DOLFINx_to_lexicg_edges</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the permutation array to map from DOLFINx to</span>
+<span class="sd">    lexicographical edges ordering.</span>
+
+<span class="sd">    See https://github.com/FEniCS/basix/#supported-elements</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): Parametric dimension of the cells (1D, 2D, or 3D).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]:  Permutation array from DOLFINx to</span>
+<span class="sd">            lexicographical such that `edges_lex[i] = edges_dlf[perm_array[i]]` or</span>
+<span class="sd">            `edges_dlf[i] = perm_array[edges_lex[i]]`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DOLFINx_to_lexicg_faces</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># if dim == 3:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span></div>
+
+
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.utils</span>
+
+<span class="k">if</span> <span class="n">qugar</span><span class="o">.</span><span class="n">has_FEniCSx</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+
+    <span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.cpp.graph</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_identity_partitioner</span><span class="p">(</span>
+        <span class="n">comm</span><span class="p">:</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Comm</span><span class="p">,</span>
+        <span class="n">n_parts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">cells</span><span class="p">:</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">AdjacencyList_int64</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">AdjacencyList_int32</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;(Dummy) mesh partitioner for leaving cells on the current</span>
+<span class="sd">        rank.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            comm (MPI.Comm): Mesh&#39;s MPI communicator.</span>
+<span class="sd">            n_parts (int): Number of part in which the mesh will be</span>
+<span class="sd">                partitioned. Not really used as the number of parts is</span>
+<span class="sd">                determined by the number of processes.</span>
+<span class="sd">            dim (int): Parametric dimension of the mesh.</span>
+<span class="sd">            cells (dolfinx.cpp.graph.AdjacencyList_int64): List of cells</span>
+<span class="sd">                to distribute.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dolfinx.cpp.graph.AdjacencyList_int32: Adjaceny list</span>
+<span class="sd">                assigning to every cell in the list cells, the MPI rank of</span>
+<span class="sd">                destination. In this case, the destination rank will be the</span>
+<span class="sd">                current one.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+
+            <span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.cpp.graph</span>
+        <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">Comm</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cells</span><span class="p">,</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">AdjacencyList_int64</span><span class="p">)</span>
+
+        <span class="n">rank_dest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">cells</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">comm</span><span class="o">.</span><span class="n">rank</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">AdjacencyList_int32</span><span class="p">(</span><span class="n">rank_dest</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

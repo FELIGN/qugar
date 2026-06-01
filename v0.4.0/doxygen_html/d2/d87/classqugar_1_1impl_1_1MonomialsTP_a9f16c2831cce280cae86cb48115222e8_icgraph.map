@@ -1,0 +1,9 @@
+<map id="qugar::impl::MonomialsTP::MonomialsTP" name="qugar::impl::MonomialsTP::MonomialsTP">
+<area shape="rect" id="Node000001" title="Constructor." alt="" coords="257,69,449,109"/>
+<area shape="rect" id="Node000002" href="$d2/d87/classqugar_1_1impl_1_1MonomialsTP.html#acb64e5ba0b4534eef0a1752adc979f9f" title="Extracts a facet from the monomials tensor product." alt="" coords="11,5,203,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,68,184,48,185,43,263,63"/>
+<area shape="rect" id="Node000003" href="$d2/d87/classqugar_1_1impl_1_1MonomialsTP.html#a7104d6e93aaddd614c189b4407c7aacc" title="Copy constructor." alt="" coords="11,69,203,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="244,92,204,92,204,87,244,87"/>
+<area shape="rect" id="Node000004" href="$d2/d87/classqugar_1_1impl_1_1MonomialsTP.html#ad662dc8c07d1fc67aedc2437c4a445ea" title="Transforms the coefficients of monomials to Bezier form." alt="" coords="5,133,209,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="263,115,185,136,184,131,262,110"/>
+</map>

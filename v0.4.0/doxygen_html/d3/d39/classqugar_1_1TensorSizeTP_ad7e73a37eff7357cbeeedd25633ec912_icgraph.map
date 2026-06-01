@@ -1,0 +1,7 @@
+<map id="qugar::TensorSizeTP::TensorSizeTP" name="qugar::TensorSizeTP::TensorSizeTP">
+<area shape="rect" id="Node000001" title="Default constructor. Initializes indices to zero." alt="" coords="205,37,357,77"/>
+<area shape="rect" id="Node000002" href="$d3/d39/classqugar_1_1TensorSizeTP.html#a1f947628a8946db24ee296154591c506" title="Adds two TensorSizeTP objects." alt="" coords="5,5,157,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,46,157,40,158,35,192,40"/>
+<area shape="rect" id="Node000003" href="$d3/d39/classqugar_1_1TensorSizeTP.html#ada391e037cd56f112900a4053f3808fa" title="Checks if two tensor sizes are equal by comparing all its components. They are equal if all the compo..." alt="" coords="5,69,157,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,74,158,80,157,75,191,69"/>
+</map>

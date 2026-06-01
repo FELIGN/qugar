@@ -1,0 +1,11 @@
+<map id="/__w/qugar/qugar/cpp/include/qugar/impl_reparam_mesh.hpp" name="/__w/qugar/qugar/cpp/include/qugar/impl_reparam_mesh.hpp">
+<area shape="rect" id="Node000001" title="Declaration of reparameterization class." alt="" coords="267,5,477,60"/>
+<area shape="rect" id="Node000002" href="$d0/d4c/impl__reparam_8hpp.html" title="Declaration of reparameterization generization tools implicit functions on grids." alt="" coords="5,115,243,155"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="296,67,172,118,170,113,294,63"/>
+<area shape="rect" id="Node000004" href="$d6/d87/impl__reparam__bezier_8hpp.html" title="Declaration of tools for creating Bezier reparameterizations." alt="" coords="267,108,477,163"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="375,74,375,108,369,108,369,74"/>
+<area shape="rect" id="Node000005" href="$d5/da9/impl__reparam__general_8hpp.html" title="Declaration of tools for creating reparameterizations of general functions." alt="" coords="501,108,710,163"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="446,63,546,105,543,110,444,68"/>
+<area shape="rect" id="Node000003" href="$d2/d66/demo__reparam__gyroid_2main_8cpp.html" title=" " alt="" coords="17,211,231,265"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="127,169,127,210,121,210,121,169"/>
+</map>

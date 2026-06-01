@@ -1,0 +1,49 @@
+<map id="/__w/qugar/qugar/cpp/include/qugar/domain_function.hpp" name="/__w/qugar/qugar/cpp/include/qugar/domain_function.hpp">
+<area shape="rect" id="Node000001" title="Declaration of a few implicit functions template class ready to be consumed by Algoim." alt="" coords="589,5,755,60"/>
+<area shape="rect" id="Node000002" href="$d2/d6e/bezier__tp_8hpp.html" title="Declaration of tensor&#45;product Bezier class." alt="" coords="49,313,209,368"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="575,41,422,49,249,64,102,84,52,96,26,110,12,134,8,160,14,187,26,215,63,269,102,311,98,315,58,272,21,218,9,189,3,160,7,132,22,106,50,91,101,79,248,58,421,44,575,35"/>
+<area shape="rect" id="Node000005" href="$d7/d6f/primitive__funcs__lib_8hpp.html" title="Declaration of a primitive implicit functions ready to be consumed by Algoim." alt="" coords="227,416,405,471"/>
+<area shape="poly" id="edge28_Node000001_Node000005" title=" " alt="" coords="576,57,512,78,447,110,416,130,388,154,363,181,344,212,324,265,315,322,314,374,316,416,310,416,308,374,310,321,319,264,339,209,359,178,384,150,413,126,444,105,510,73,575,52"/>
+<area shape="rect" id="Node000007" href="$d5/d2a/impl__funcs__lib_8hpp.html" title="Declaration of a few implicit functions ready to be consumed by Algoim." alt="" coords="1112,108,1301,163"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="769,47,1094,105,1112,109,1111,114,1093,111,768,52"/>
+<area shape="rect" id="Node000008" href="$d6/dc8/impl__quadrature_8hpp.html" title="Declaration of quadratures for general implicit functions on grids." alt="" coords="1228,218,1481,258"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="769,34,835,41,907,54,981,75,1051,106,1067,119,1077,133,1086,147,1102,160,1135,179,1171,194,1243,215,1242,220,1169,199,1133,183,1098,165,1082,151,1073,136,1064,123,1048,110,979,80,906,59,834,46,769,39"/>
+<area shape="rect" id="Node000009" href="$d0/d4c/impl__reparam_8hpp.html" title="Declaration of reparameterization generization tools implicit functions on grids." alt="" coords="639,218,876,258"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="700,70,720,107,742,167,756,217,750,219,737,168,715,109,695,73"/>
+<area shape="rect" id="Node000011" href="$d5/da9/impl__reparam__general_8hpp.html" title="Declaration of tools for creating reparameterizations of general functions." alt="" coords="354,211,563,265"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="576,55,527,76,505,91,486,110,472,133,464,160,460,211,454,210,459,159,467,131,482,106,502,87,524,71,574,50"/>
+<area shape="rect" id="Node000012" href="$d3/d42/impl__reparam__mesh_8hpp.html" title="Declaration of reparameterization class." alt="" coords="497,108,706,163"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="648,73,622,109,618,106,643,70"/>
+<area shape="rect" id="Node000013" href="$d6/d03/impl__unfitted__domain_8hpp.html" title="Declaration of of UnfittedImplDomain class." alt="" coords="833,108,1037,163"/>
+<area shape="poly" id="edge16_Node000001_Node000013" title=" " alt="" coords="754,62,867,105,865,110,752,67"/>
+<area shape="rect" id="Node000014" href="$df/dc4/impl__utils_8hpp.html" title="Declaration of utility functions for implicit geometries." alt="" coords="1325,115,1536,155"/>
+<area shape="poly" id="edge21_Node000001_Node000014" title=" " alt="" coords="769,39,1017,64,1165,83,1314,105,1352,113,1351,118,1313,111,1165,88,1016,70,768,45"/>
+<area shape="rect" id="Node000015" href="$d6/d82/monomials__tp_8hpp.html" title="Declaration of tensor&#45;product monomials class." alt="" coords="87,211,278,265"/>
+<area shape="poly" id="edge22_Node000001_Node000015" title=" " alt="" coords="575,39,511,46,439,59,367,79,299,110,278,127,253,153,205,212,201,209,249,150,275,123,296,106,365,74,438,53,510,40,575,34"/>
+<area shape="rect" id="Node000016" href="$d2/dee/polynomial__tp_8hpp.html" title="Declaration of tensor&#45;product polynomial class." alt="" coords="37,108,227,163"/>
+<area shape="poly" id="edge25_Node000001_Node000016" title=" " alt="" coords="576,52,247,111,228,115,227,109,246,105,575,47"/>
+<area shape="rect" id="Node000017" href="$d4/d7f/tpms__lib_8hpp.html" title="Declaration of TPMS functions to be consumed by Algoim." alt="" coords="900,218,1103,258"/>
+<area shape="poly" id="edge29_Node000001_Node000017" title=" " alt="" coords="708,67,760,115,823,160,884,192,944,215,942,220,882,197,820,165,757,119,705,71"/>
+<area shape="rect" id="Node000003" href="$de/d62/bezier__tp__utils_8hpp.html" title="Declaration of tensor&#45;product Bezier utils." alt="" coords="43,416,203,471"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="129,382,127,416,122,416,124,382"/>
+<area shape="rect" id="Node000004" href="$d6/d87/impl__reparam__bezier_8hpp.html" title="Declaration of tools for creating Bezier reparameterizations." alt="" coords="463,416,673,471"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="224,361,464,416,463,421,222,366"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="191,372,268,413,266,418,189,377"/>
+<area shape="rect" id="Node000006" href="$d0/d6f/demo__quad__sphere_2main_8cpp.html" title=" " alt="" coords="1093,519,1288,573"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="419,463,451,468,628,491,805,510,1093,535,1093,540,804,515,627,496,450,473,418,468"/>
+<area shape="poly" id="edge8_Node000008_Node000006" title=" " alt="" coords="1340,272,1207,520,1202,517,1336,269"/>
+<area shape="rect" id="Node000010" href="$d2/d66/demo__reparam__gyroid_2main_8cpp.html" title=" " alt="" coords="894,313,1109,368"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="817,261,939,311,937,316,815,266"/>
+<area shape="poly" id="edge14_Node000012_Node000004" title=" " alt="" coords="600,176,574,416,568,415,594,176"/>
+<area shape="poly" id="edge13_Node000012_Node000009" title=" " alt="" coords="655,168,729,215,726,220,652,172"/>
+<area shape="poly" id="edge15_Node000012_Node000011" title=" " alt="" coords="555,173,498,213,495,208,551,168"/>
+<area shape="poly" id="edge17_Node000013_Node000006" title=" " alt="" coords="1048,164,1103,185,1125,197,1139,209,1164,246,1182,288,1193,332,1200,376,1202,458,1197,519,1192,518,1197,457,1195,376,1188,333,1177,290,1159,249,1135,212,1122,201,1101,190,1046,169"/>
+<area shape="poly" id="edge19_Node000013_Node000008" title=" " alt="" coords="1051,162,1277,215,1276,221,1049,167"/>
+<area shape="poly" id="edge20_Node000013_Node000009" title=" " alt="" coords="878,172,792,220,790,215,875,167"/>
+<area shape="poly" id="edge18_Node000013_Node000010" title=" " alt="" coords="1051,159,1088,179,1117,209,1125,224,1127,238,1117,267,1095,294,1066,315,1063,311,1091,291,1112,264,1121,237,1119,226,1113,212,1084,183,1048,163"/>
+<area shape="poly" id="edge23_Node000015_Node000002" title=" " alt="" coords="165,279,146,314,141,312,160,276"/>
+<area shape="poly" id="edge24_Node000015_Node000005" title=" " alt="" coords="209,275,301,414,296,417,205,278"/>
+<area shape="poly" id="edge26_Node000016_Node000002" title=" " alt="" coords="98,175,86,192,77,212,72,238,77,264,89,290,106,312,102,315,85,292,72,266,66,238,72,210,81,190,94,172"/>
+<area shape="poly" id="edge27_Node000016_Node000015" title=" " alt="" coords="154,174,172,209,167,212,149,176"/>
+<area shape="poly" id="edge30_Node000017_Node000010" title=" " alt="" coords="1004,272,1004,313,999,313,999,272"/>
+</map>

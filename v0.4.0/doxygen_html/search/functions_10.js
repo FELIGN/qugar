@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['scale_5ffrom_5f0_5f1_0',['scale_from_0_1',['../d2/dfe/classqugar_1_1BoundBox.html#a9d96731fff23236bac684b07cd9a8af3',1,'qugar::BoundBox']]],
+  ['scale_5fpoints_1',['scale_points',['../d8/d99/classqugar_1_1ReparamMesh.html#afa79e41dd53b34a8e42e4e6d5ba06f58',1,'qugar::ReparamMesh::scale_points(const std::vector&lt; int &gt; &amp;point_ids, const BoundBox&lt; range &gt; &amp;old_domain, const BoundBox&lt; range &gt; &amp;new_domain)'],['../d8/d99/classqugar_1_1ReparamMesh.html#abdf93fab8ea1adf1814cced461cacabb',1,'qugar::ReparamMesh::scale_points(const BoundBox&lt; range &gt; &amp;old_domain, const BoundBox&lt; range &gt; &amp;new_domain)']]],
+  ['scale_5fto_5f0_5f1_2',['scale_to_0_1',['../d2/dfe/classqugar_1_1BoundBox.html#a82d562f47f56af8d3fb2623b38013d92',1,'qugar::BoundBox']]],
+  ['scale_5fto_5fnew_5fdomain_3',['scale_to_new_domain',['../d2/dfe/classqugar_1_1BoundBox.html#a0e4ada053148a543a57eedefc3c8ca15',1,'qugar::BoundBox']]],
+  ['scale_5fweights_4',['scale_weights',['../d8/d30/classqugar_1_1Quadrature.html#a5bd21a2165d9ba9ef92e76e5eb7d0432',1,'qugar::Quadrature']]],
+  ['semi_5faxes_5',['semi_axes',['../d9/d7e/classqugar_1_1impl_1_1funcs_1_1EllipsoidBase.html#a49c0caf01f5933b49c7e9316a776f227',1,'qugar::impl::funcs::EllipsoidBase']]],
+  ['set_6',['set',['../d2/dfe/classqugar_1_1BoundBox.html#af2575cd3cf1e14d9e429b42d43115355',1,'qugar::BoundBox']]],
+  ['set_5fstatus_7',['set_status',['../df/de4/classqugar_1_1UnfittedBinarySpacePart.html#a7fabfa56ab2d963efccd7e594e1dd961',1,'qugar::UnfittedBinarySpacePart']]],
+  ['sgn_8',['sgn',['../da/d38/classqugar_1_1impl_1_1funcs_1_1Square.html#a77fad35a1b68d8297cfe8dc33f576fd6',1,'qugar::impl::funcs::Square']]],
+  ['sign_9',['sign',['../de/dca/classqugar_1_1impl_1_1BezierTP.html#a1fc22ce6b5fd154961d01df54a628d67',1,'qugar::impl::BezierTP']]],
+  ['size_10',['size',['../d3/d39/classqugar_1_1TensorSizeTP.html#a7705ecba088a4cfc11c9eb566bd22f71',1,'qugar::TensorSizeTP::size()'],['../d5/df1/classqugar_1_1TensorIndexRangeTP.html#a90e0efcfec4540f4732263135de7423b',1,'qugar::TensorIndexRangeTP::size()']]],
+  ['slice_11',['slice',['../d2/dfe/classqugar_1_1BoundBox.html#a909e24abaebca57f318b7082419586c3',1,'qugar::BoundBox']]],
+  ['smaller_5fequal_5fthan_12',['smaller_equal_than',['../db/d28/classqugar_1_1Tolerance.html#abe4b57913f1777179d8ff0320a5423ca',1,'qugar::Tolerance']]],
+  ['smaller_5fthan_13',['smaller_than',['../db/d28/classqugar_1_1Tolerance.html#a406a6d01121d8b867aa457a68d3594c9',1,'qugar::Tolerance']]],
+  ['smaller_5fthan_5frel_14',['smaller_than_rel',['../db/d28/classqugar_1_1Tolerance.html#a77ad23134146ef4f2f65b19c95f9e865',1,'qugar::Tolerance']]],
+  ['sort_5fedge_5fpoints_15',['sort_edge_points',['../d8/d99/classqugar_1_1ReparamMesh.html#a8264f467d3a500aeb771c1702b0e4273',1,'qugar::ReparamMesh']]],
+  ['sort_5froots_16',['sort_roots',['../d7/d46/structqugar_1_1impl_1_1RootsIntervals.html#a72d682daf88b84fe4c3107d207b2c3ae',1,'qugar::impl::RootsIntervals']]],
+  ['sort_5fwirebasket_5fedges_17',['sort_wirebasket_edges',['../d8/d99/classqugar_1_1ReparamMesh.html#afe87a096696d57298802e28688ebe4a7',1,'qugar::ReparamMesh']]],
+  ['sphere_18',['Sphere',['../d1/def/classqugar_1_1impl_1_1funcs_1_1Sphere.html#affbdb853708bb963e3c1d6e45e999d1a',1,'qugar::impl::funcs::Sphere::Sphere(real radius)'],['../d1/def/classqugar_1_1impl_1_1funcs_1_1Sphere.html#a59f8c0b76ce8b7514a4233a2f9d3853e',1,'qugar::impl::funcs::Sphere::Sphere(real radius, const Point&lt; dim &gt; &amp;center)']]],
+  ['spherebase_19',['SphereBase',['../d7/d90/classqugar_1_1impl_1_1funcs_1_1SphereBase.html#a58cb04e72d70b8a32b64d766deec70e9',1,'qugar::impl::funcs::SphereBase']]],
+  ['spherebzr_20',['SphereBzr',['../d1/dfc/classqugar_1_1impl_1_1funcs_1_1SphereBzr.html#a9acdc0f854144e4d774e3f1549787785',1,'qugar::impl::funcs::SphereBzr::SphereBzr(real radius)'],['../d1/dfc/classqugar_1_1impl_1_1funcs_1_1SphereBzr.html#aafeb16a2ea5df1ef884a428a3b99573e',1,'qugar::impl::funcs::SphereBzr::SphereBzr(real radius, const Point&lt; dim &gt; &amp;center)']]],
+  ['split_21',['split',['../d2/df9/classqugar_1_1SubCartGridTP.html#abb2c4db9809dad922f539c249832d486',1,'qugar::SubCartGridTP::split()'],['../d5/df1/classqugar_1_1TensorIndexRangeTP.html#a0549b236256c6e712778cc5f6d2bec9c',1,'qugar::TensorIndexRangeTP::split()']]],
+  ['square_22',['Square',['../da/d38/classqugar_1_1impl_1_1funcs_1_1Square.html#a37b1c3892583c9cfa6697db545151054',1,'qugar::impl::funcs::Square::Square()=default'],['../da/d38/classqugar_1_1impl_1_1funcs_1_1Square.html#aec78e5ce25e3a3b3894566e9cc9c8a38',1,'qugar::impl::funcs::Square::Square(const AffineTransf&lt; dim &gt; &amp;transf)']]],
+  ['subcartgridtp_23',['SubCartGridTP',['../d2/df9/classqugar_1_1SubCartGridTP.html#abdc92f04a2f24b3ba5bee7854dbaf516',1,'qugar::SubCartGridTP::SubCartGridTP(const GridPtr grid, const TensorIndexTP&lt; dim &gt; &amp;indices_start, const TensorIndexTP&lt; dim &gt; &amp;indices_end)'],['../d2/df9/classqugar_1_1SubCartGridTP.html#a5bf7085a9a579121404c536b95076496',1,'qugar::SubCartGridTP::SubCartGridTP(const GridPtr grid, const TensorIndexRangeTP&lt; dim &gt; &amp;indices_range)'],['../d2/df9/classqugar_1_1SubCartGridTP.html#acdad019e4351a2efd84ee24d6ad4d2c3',1,'qugar::SubCartGridTP::SubCartGridTP(const GridPtr grid)']]],
+  ['subtractfunctions_24',['SubtractFunctions',['../dc/dde/classqugar_1_1impl_1_1funcs_1_1SubtractFunctions.html#a626072c80a02e3c4b8da63d149f3509a',1,'qugar::impl::funcs::SubtractFunctions']]]
+];

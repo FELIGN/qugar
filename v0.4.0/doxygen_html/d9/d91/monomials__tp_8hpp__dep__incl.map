@@ -1,0 +1,14 @@
+<map id="/__w/qugar/qugar/cpp/include/qugar/monomials_tp.hpp" name="/__w/qugar/qugar/cpp/include/qugar/monomials_tp.hpp">
+<area shape="rect" id="Node000001" title="Declaration of tensor&#45;product monomials class." alt="" coords="307,5,498,60"/>
+<area shape="rect" id="Node000002" href="$d2/d6e/bezier__tp_8hpp.html" title="Declaration of tensor&#45;product Bezier class." alt="" coords="264,108,424,163"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="383,73,362,109,357,107,378,71"/>
+<area shape="rect" id="Node000005" href="$d7/d6f/primitive__funcs__lib_8hpp.html" title="Declaration of a primitive implicit functions ready to be consumed by Algoim." alt="" coords="423,211,601,265"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="426,71,500,209,495,211,421,74"/>
+<area shape="rect" id="Node000003" href="$de/d62/bezier__tp__utils_8hpp.html" title="Declaration of tensor&#45;product Bezier utils." alt="" coords="5,211,165,265"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="265,170,154,213,152,208,263,165"/>
+<area shape="rect" id="Node000004" href="$d6/d87/impl__reparam__bezier_8hpp.html" title="Declaration of tools for creating Bezier reparameterizations." alt="" coords="190,211,399,265"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="327,176,310,212,305,209,323,174"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="401,168,469,208,467,213,398,172"/>
+<area shape="rect" id="Node000006" href="$d0/d6f/demo__quad__sphere_2main_8cpp.html" title=" " alt="" coords="415,313,609,368"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="515,279,515,313,509,313,509,279"/>
+</map>

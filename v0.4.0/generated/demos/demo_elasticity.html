@@ -1,0 +1,471 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linear elasticity problem &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+      <script src="../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Linear Elasticity Convergence Study: Unit Square with Circular Hole" href="demo_elasticity_convergence.html" />
+    <link rel="prev" title="Poisson Convergence Study: Unit Square with Circular Hole" href="demo_poisson_convergence.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../demos.html">Demos</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../demos.html#list-of-all-demos">List of all demos</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="demo_div_thm.html">Divergence theorem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_div_thm_no_fenicsx.html">Divergence theorem (without FEniCSx)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_impl_funcs.html">Creation of unfitted implicit domains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_plot.html">PyVista visualization capabilities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_L2_projection.html"><span class="math notranslate nohighlight">\(L^2\)</span> projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_poisson.html">Poisson problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_poisson_convergence.html">Poisson Convergence Study: Unit Square with Circular Hole</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Linear elasticity problem</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#problem-definition">Problem definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="demo_elasticity_convergence.html">Linear Elasticity Convergence Study: Unit Square with Circular Hole</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_hyperelasticity.html">Hyperelasticity problem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../demos.html">Demos</a></li>
+      <li class="breadcrumb-item active">Linear elasticity problem</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/generated/demos/demo_elasticity.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="linear-elasticity-problem">
+<h1>Linear elasticity problem<a class="headerlink" href="#linear-elasticity-problem" title="Link to this heading"></a></h1>
+<p>This demo is implemented in <a class="reference download internal" download="" href="../../_downloads/4c10d1fc2d8220b413009132cdc98166/demo_elasticity.py"><code class="xref download docutils literal notranslate"><span class="pre">demo_elasticity.py</span></code></a>. It
+illustrates:</p>
+<ul class="simple">
+<li><p>How to solve a linear elasticity problem using QUGaR and FEniCSx.</p></li>
+<li><p>How to impose Dirichlet conditions on a vector field.</p></li>
+<li><p>How to visualize vector solutions on an unfitted domain.</p></li>
+</ul>
+<section id="problem-definition">
+<h2>Problem definition<a class="headerlink" href="#problem-definition" title="Link to this heading"></a></h2>
+<p>Let us consider the domain <span class="math notranslate nohighlight">\(\Omega \subset \mathbb{R}^3\)</span>,
+immersed in a mesh <span class="math notranslate nohighlight">\(\mathcal{T}(\Omega)\)</span> (see
+<a class="reference internal" href="demo_div_thm.html"><span class="std std-doc">Divergence theorem demo</span></a> for further details
+about the immersed setting), and the vector finite element space <span class="math notranslate nohighlight">\(V\)</span> defined
+over the mesh <span class="math notranslate nohighlight">\(\mathcal{T}(\Omega)\)</span>. The linear elasticity problem reads:
+Finding <span class="math notranslate nohighlight">\(\mathbf{u} \in V\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+  -\nabla \cdot \sigma(\mathbf{u}) &amp;= \mathbf{f} \quad {\rm in} \ \Omega, \\
+  \mathbf{u} &amp;= \mathbf{u}_D \quad {\rm on} \ \Gamma_{D}, \\
+  \sigma(\mathbf{u}) \cdot \mathbf{n} &amp;= \mathbf{g} \quad {\rm on} \ \Gamma_{N}.
+\end{align}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{f}\)</span> is a body force, <span class="math notranslate nohighlight">\(\mathbf{g}\)</span> is a traction force, and <span class="math notranslate nohighlight">\(\mathbf{n}\)</span> denotes the outward directed
+boundary normal. The stress tensor <span class="math notranslate nohighlight">\(\sigma\)</span> is related to the strain tensor <span class="math notranslate nohighlight">\(\varepsilon\)</span> by the constitutive relation:</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma(\mathbf{u}) = 2\mu\varepsilon(\mathbf{u}) + \lambda\text{tr}(\varepsilon(\mathbf{u}))I
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\lambda\)</span> are the Lamé parameters, <span class="math notranslate nohighlight">\(\text{tr}\)</span> is the trace operator, and <span class="math notranslate nohighlight">\(I\)</span> is the identity tensor. The strain tensor is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon(\mathbf{u}) = \frac{1}{2}(\nabla\mathbf{u} + \nabla\mathbf{u}^T)
+\]</div>
+<p>The variational problem reads: find <span class="math notranslate nohighlight">\(\mathbf{u} \in V_D\)</span> such
+that</p>
+<div class="math notranslate nohighlight">
+\[
+a(\mathbf{u}, \mathbf{v}) = L(\mathbf{v}) \quad \forall \ \mathbf{v} \in V_0,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(V_D\)</span> is the space of functions that satisfy the Dirichlet
+boundary conditions, <span class="math notranslate nohighlight">\(V_0\)</span> is the space of test functions that
+vanish on the Dirichlet boundary <span class="math notranslate nohighlight">\(\Gamma_D\)</span>, and <span class="math notranslate nohighlight">\(a(\mathbf{u}, \mathbf{v})\)</span> and
+<span class="math notranslate nohighlight">\(L(\mathbf{v})\)</span> are the bilinear and linear forms defined as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+  a(\mathbf{u}, \mathbf{v}) &amp;:= \int_{\Omega} \sigma(\mathbf{u}) : \varepsilon(\mathbf{v}) \, {\rm d} x, \\
+  L(\mathbf{v})    &amp;:= \int_{\Omega} \mathbf{f} \cdot \mathbf{v} \, {\rm d} x + \int_{\Gamma_{N}} \mathbf{g} \cdot \mathbf{v} \, {\rm d} s.
+\end{align}
+\end{split}\]</div>
+<p>In this demo we consider a domain <span class="math notranslate nohighlight">\(\Omega\)</span> that is a Schoen gyroid
+inside a cube <span class="math notranslate nohighlight">\([0,1]^3\)</span> (see figure below).
+For the boundary conditions, we fix the bottom face (<span class="math notranslate nohighlight">\(z=0\)</span>) and apply
+a compression on the top face (<span class="math notranslate nohighlight">\(z=1\)</span>).</p>
+<figure class="align-default" id="fig-demo-elasticity-geom">
+<img alt="../../_images/demo_elasticity_geom.png" src="../../_images/demo_elasticity_geom.png" />
+<figcaption>
+<p><span class="caption-text">Schoen gyroid unfitted domain.</span><a class="headerlink" href="#fig-demo-elasticity-geom" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<section id="modules-import">
+<h3>Modules import<a class="headerlink" href="#modules-import" title="Link to this heading"></a></h3>
+<p>First we add the needed modules and functions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qugar.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_FEniCSx</span><span class="p">,</span> <span class="n">has_PETSc</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">has_FEniCSx</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;FEniCSx installation not found is required.&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">has_PETSc</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;petsc4py installation not found is required.&quot;</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.fem</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.fem.petsc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ufl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_scalar_type</span> <span class="k">as</span> <span class="n">dtype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.fem.petsc</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearProblem</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.dolfinx</span>  <span class="c1"># noqa: F401  (import patches DOLFINx for transparent unfitted assembly)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.impl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_unfitted_impl_Cartesian_mesh</span>
+</pre></div>
+</div>
+</section>
+<section id="geometry-and-mesh">
+<h3>Geometry and mesh<a class="headerlink" href="#geometry-and-mesh" title="Link to this heading"></a></h3>
+<p>We define the Schoen gyroid geometry using an implicit function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">impl_func</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_Schoen</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>We create an <a class="reference internal" href="../qugar.mesh.html#qugar.mesh.UnfittedCartMesh" title="qugar.mesh.UnfittedCartMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">unfitted</span> <span class="pre">Cartesian</span> <span class="pre">mesh</span></code></a>
+(corresponding to <span class="math notranslate nohighlight">\(\mathcal{T}\)</span>) in which we embed the domain <span class="math notranslate nohighlight">\(\Omega\)</span>.
+This is a Cartesian mesh corresponding to the domain <span class="math notranslate nohighlight">\([0,1]^3\)</span> and
+with <code class="docutils literal notranslate"><span class="pre">n_cells</span></code> cells per direction.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n_cells</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="n">unf_mesh</span> <span class="o">=</span> <span class="n">create_unfitted_impl_Cartesian_mesh</span><span class="p">(</span>
+    <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">,</span> <span class="n">impl_func</span><span class="p">,</span> <span class="n">n_cells</span><span class="p">,</span> <span class="n">exclude_empty_cells</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span>
+<span class="p">)</span>
+
+<span class="n">dim</span> <span class="o">=</span> <span class="n">unf_mesh</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">dim</span>
+</pre></div>
+</div>
+</section>
+<section id="material-parameters-and-spaces">
+<h3>Material parameters and spaces<a class="headerlink" href="#material-parameters-and-spaces" title="Link to this heading"></a></h3>
+<p>We define the material parameters for our elasticity problem:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Young&#39;s modulus and Poisson&#39;s ratio</span>
+<span class="n">E</span><span class="p">,</span> <span class="n">nu</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.3</span>
+
+<span class="c1"># Lamé parameters</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">E</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">nu</span><span class="p">))</span>
+<span class="n">lmbda</span> <span class="o">=</span> <span class="n">E</span> <span class="o">*</span> <span class="n">nu</span> <span class="o">/</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">nu</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">nu</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>and the finite element space <span class="math notranslate nohighlight">\(V\)</span> over the unfitted mesh
+(corresponding to the mesh <span class="math notranslate nohighlight">\(\mathcal{T}\)</span>) needed to define the test
+and trial functions <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{v}\)</span>.
+The finite element space is defined as a vector Lagrange space of the given
+<code class="docutils literal notranslate"><span class="pre">degree</span></code> (2 in this case).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">degree</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">V</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Lagrange&quot;</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="p">(</span><span class="n">dim</span><span class="p">,)))</span>
+<span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">TrialFunction</span><span class="p">(</span><span class="n">V</span><span class="p">),</span> <span class="n">ufl</span><span class="o">.</span><span class="n">TestFunction</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="boundary-conditions">
+<h3>Boundary conditions<a class="headerlink" href="#boundary-conditions" title="Link to this heading"></a></h3>
+<p>We define the Dirichlet boundary conditions:</p>
+<ul class="simple">
+<li><p>Bottom face (z = 0) is fixed: u = (0, 0, 0)</p></li>
+<li><p>Top face (z = 1) has a prescribed displacement: u = (0, 0, -0.1)</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bottom face (fixed)</span>
+<span class="n">bottom_facets</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">locate_entities_boundary</span><span class="p">(</span>
+    <span class="n">unf_mesh</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">bottom_dofs</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">locate_dofs_topological</span><span class="p">(</span><span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">,</span> <span class="n">entity_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="n">bottom_facets</span><span class="p">)</span>
+<span class="n">u_bottom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">bc_bottom</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">dirichletbc</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">u_bottom</span><span class="p">,</span> <span class="n">dofs</span><span class="o">=</span><span class="n">bottom_dofs</span><span class="p">,</span> <span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">)</span>
+
+<span class="c1"># Top face (compression)</span>
+<span class="n">top_facets</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">locate_entities_boundary</span><span class="p">(</span>
+    <span class="n">unf_mesh</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">top_dofs</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">locate_dofs_topological</span><span class="p">(</span><span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">,</span> <span class="n">entity_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="n">top_facets</span><span class="p">)</span>
+<span class="n">u_top</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">u_top</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1</span>  <span class="c1"># Apply compression along the last direction</span>
+<span class="n">bc_top</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">dirichletbc</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">u_top</span><span class="p">,</span> <span class="n">dofs</span><span class="o">=</span><span class="n">top_dofs</span><span class="p">,</span> <span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">)</span>
+
+<span class="c1"># List of boundary conditions</span>
+<span class="n">bcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">bc_bottom</span><span class="p">,</span> <span class="n">bc_top</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="strain-stress-and-variational-formulation">
+<h3>Strain, stress and variational formulation<a class="headerlink" href="#strain-stress-and-variational-formulation" title="Link to this heading"></a></h3>
+<p>We define the strain and stress tensors:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">epsilon</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">ufl</span><span class="o">.</span><span class="n">sym</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">u</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sigma</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">mu</span> <span class="o">*</span> <span class="n">epsilon</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="n">lmbda</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="n">epsilon</span><span class="p">(</span><span class="n">u</span><span class="p">))</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">Identity</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>With the strain and stress defined, we can now define the variational
+formulation of the elasticity problem. We set no external forces,
+so the linear form only includes contributions from the boundary conditions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Body force (zero for this demo)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="p">(</span><span class="n">dtype</span><span class="p">(</span><span class="mf">0.0</span><span class="p">),)</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+
+<span class="c1"># Quadrature degree</span>
+<span class="c1"># Bilinear and linear forms</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">sigma</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">epsilon</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dx</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dx</span>
+</pre></div>
+</div>
+</section>
+<section id="linear-system-solution">
+<h3>Linear system solution<a class="headerlink" href="#linear-system-solution" title="Link to this heading"></a></h3>
+<p>We solve the associated linear system
+<span class="math notranslate nohighlight">\(A\mathbf{u} = \mathbf{b}\)</span>, where <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> is the
+solution of the problem. The solution is stored in a
+a finite element function <code class="docutils literal notranslate"><span class="pre">uh</span></code> defined over the same finite
+element space <span class="math notranslate nohighlight">\(V\)</span> as the trial functions.</p>
+<p>We use a direct solver (since the problem size is small)
+with a Jacobi preconditioner to help with possible ill-conditioning
+from the unfitted domain.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">petsc_options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;preonly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pc_type&quot;</span><span class="p">:</span> <span class="s2">&quot;cholesky&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ksp_diagonal_scale&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># Jacobi preconditioner</span>
+<span class="p">}</span>
+
+<span class="n">problem</span> <span class="o">=</span> <span class="n">LinearProblem</span><span class="p">(</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">bcs</span><span class="o">=</span><span class="n">bcs</span><span class="p">,</span> <span class="n">petsc_options</span><span class="o">=</span><span class="n">petsc_options</span><span class="p">,</span> <span class="n">petsc_options_prefix</span><span class="o">=</span><span class="s2">&quot;demo_elasticity_&quot;</span>
+<span class="p">)</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+
+<span class="n">uh</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">u</span>
+</pre></div>
+</div>
+</section>
+<section id="result-analysis">
+<h3>Result analysis<a class="headerlink" href="#result-analysis" title="Link to this heading"></a></h3>
+<p>We can compute the strain and stress fields from the solution.
+This helps in understanding the mechanical behavior of the structure.</p>
+<p>First we create function for strain and stress:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">V_tensor</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Lagrange&quot;</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">)))</span>
+
+<span class="n">strain</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">V_tensor</span><span class="p">)</span>
+<span class="n">stress</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">V_tensor</span><span class="p">)</span>
+
+<span class="n">strain_expr</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">epsilon</span><span class="p">(</span><span class="n">uh</span><span class="p">),</span> <span class="n">V_tensor</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">interpolation_points</span><span class="p">)</span>
+<span class="n">strain</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">strain_expr</span><span class="p">)</span>
+
+<span class="n">stress_expr</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">sigma</span><span class="p">(</span><span class="n">uh</span><span class="p">),</span> <span class="n">V_tensor</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">interpolation_points</span><span class="p">)</span>
+<span class="n">stress</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">stress_expr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then we can compute the <a class="reference external" href="https://en.wikipedia.org/wiki/Von_Mises_yield_criterion">von Mises stress</a>,
+which is a scalar measure of the intensity of the stress state.
+It is often used in engineering  applications to predict yielding of
+materials under complex loading conditions.
+The von Mises stress is defined as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">V_scalar</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Lagrange&quot;</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+<span class="n">von_mises</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">V_scalar</span><span class="p">)</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">sigma</span><span class="p">(</span><span class="n">uh</span><span class="p">)</span>
+<span class="n">s_dev</span> <span class="o">=</span> <span class="n">s</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">Identity</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">uh</span><span class="p">))</span>
+<span class="n">von_mises_expr</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span>
+    <span class="n">ufl</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">s_dev</span><span class="p">,</span> <span class="n">s_dev</span><span class="p">)),</span> <span class="n">V_scalar</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">interpolation_points</span>
+<span class="p">)</span>
+<span class="n">von_mises</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">von_mises_expr</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="visualization">
+<h3>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h3>
+<p>Finally, we visualize the obtained displacement, strain, and stress by generating
+reparameterization meshes and interpolating the solutions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create reparameterization meshes</span>
+<span class="n">rep_degree</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">reparam</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_reparam_mesh</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="n">rep_degree</span><span class="p">,</span> <span class="n">levelset</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">rep_mesh</span> <span class="o">=</span> <span class="n">reparam</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">()</span>
+<span class="n">rep_mesh_wb</span> <span class="o">=</span> <span class="n">reparam</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">(</span><span class="n">wirebasket</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Create function spaces on the reparameterized meshes</span>
+<span class="n">Vrep_tensor</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">rep_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;CG&quot;</span><span class="p">,</span> <span class="n">rep_degree</span><span class="p">,</span> <span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dim</span><span class="p">)))</span>
+<span class="n">Vrep_vec</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">rep_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;CG&quot;</span><span class="p">,</span> <span class="n">rep_degree</span><span class="p">,</span> <span class="p">(</span><span class="n">dim</span><span class="p">,)))</span>
+<span class="n">Vrep_scalar</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">rep_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;CG&quot;</span><span class="p">,</span> <span class="n">rep_degree</span><span class="p">))</span>
+<span class="n">Vrep_wb_vec</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">rep_mesh_wb</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;CG&quot;</span><span class="p">,</span> <span class="n">rep_degree</span><span class="p">,</span> <span class="p">(</span><span class="n">dim</span><span class="p">,)))</span>
+
+<span class="c1"># Interpolate displacement</span>
+<span class="n">interp_data_vec</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_interpolation_data</span><span class="p">(</span><span class="n">Vrep_vec</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+<span class="n">uh_rep</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">Vrep_vec</span><span class="p">)</span>
+<span class="n">uh_rep</span><span class="o">.</span><span class="n">interpolate_nonmatching</span><span class="p">(</span><span class="n">uh</span><span class="p">,</span> <span class="o">*</span><span class="n">interp_data_vec</span><span class="p">)</span>
+<span class="n">uh_rep</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;displacement&quot;</span>
+
+<span class="c1"># Interpolate stress and strain tensors</span>
+<span class="n">interp_data_tensor</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_interpolation_data</span><span class="p">(</span><span class="n">Vrep_tensor</span><span class="p">,</span> <span class="n">V_scalar</span><span class="p">)</span>
+<span class="n">stress_rep</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">Vrep_tensor</span><span class="p">)</span>
+<span class="n">stress_rep</span><span class="o">.</span><span class="n">interpolate_nonmatching</span><span class="p">(</span><span class="n">stress</span><span class="p">,</span> <span class="o">*</span><span class="n">interp_data_tensor</span><span class="p">)</span>
+<span class="n">stress_rep</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;stress&quot;</span>
+
+<span class="n">strain_rep</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">Vrep_tensor</span><span class="p">)</span>
+<span class="n">strain_rep</span><span class="o">.</span><span class="n">interpolate_nonmatching</span><span class="p">(</span><span class="n">strain</span><span class="p">,</span> <span class="o">*</span><span class="n">interp_data_tensor</span><span class="p">)</span>
+<span class="n">strain_rep</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;strain&quot;</span>
+
+<span class="c1"># Interpolate von Mises stress</span>
+<span class="n">interp_data_scalar</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_interpolation_data</span><span class="p">(</span><span class="n">Vrep_scalar</span><span class="p">,</span> <span class="n">V_scalar</span><span class="p">)</span>
+<span class="n">von_mises_rep</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">Vrep_scalar</span><span class="p">)</span>
+<span class="n">von_mises_rep</span><span class="o">.</span><span class="n">interpolate_nonmatching</span><span class="p">(</span><span class="n">von_mises</span><span class="p">,</span> <span class="o">*</span><span class="n">interp_data_scalar</span><span class="p">)</span>
+<span class="n">von_mises_rep</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;von_mises_stress&quot;</span>
+
+<span class="c1"># Interpolate solution to wirebasket mesh for better visualization</span>
+<span class="n">interp_data_wb</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_interpolation_data</span><span class="p">(</span><span class="n">Vrep_wb_vec</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+<span class="n">uh_rep_wb</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">Vrep_wb_vec</span><span class="p">)</span>
+<span class="n">uh_rep_wb</span><span class="o">.</span><span class="n">interpolate_nonmatching</span><span class="p">(</span><span class="n">uh</span><span class="p">,</span> <span class="o">*</span><span class="n">interp_data_wb</span><span class="p">)</span>
+<span class="n">uh_rep_wb</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;displacement_wirebasket&quot;</span>
+</pre></div>
+</div>
+<p>Finally, we export the meshes to VTK files and visualize them
+using ParaView. In ParaView, you can use the <code class="docutils literal notranslate"><span class="pre">Warp</span> <span class="pre">By</span> <span class="pre">Vector</span></code> filter
+with the displacement field to visualize the deformed structure.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">)</span>
+<span class="n">results_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">results_folder</span> <span class="o">/</span> <span class="s2">&quot;demo_elasticity&quot;</span>
+
+<span class="k">with</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">VTKFile</span><span class="p">(</span><span class="n">rep_mesh</span><span class="o">.</span><span class="n">comm</span><span class="p">,</span> <span class="n">filename</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.pvd&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">vtk</span><span class="p">:</span>
+    <span class="n">vtk</span><span class="o">.</span><span class="n">write_function</span><span class="p">(</span><span class="n">uh_rep</span><span class="p">)</span>
+    <span class="n">vtk</span><span class="o">.</span><span class="n">write_function</span><span class="p">(</span><span class="n">uh_rep_wb</span><span class="p">)</span>
+    <span class="n">vtk</span><span class="o">.</span><span class="n">write_function</span><span class="p">(</span><span class="n">stress_rep</span><span class="p">)</span>
+    <span class="n">vtk</span><span class="o">.</span><span class="n">write_function</span><span class="p">(</span><span class="n">strain_rep</span><span class="p">)</span>
+    <span class="n">vtk</span><span class="o">.</span><span class="n">write_function</span><span class="p">(</span><span class="n">von_mises_rep</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The results can be visualized in ParaView (see figure bloew).
+To visualize the deformed structure:</p>
+<ol class="arabic simple">
+<li><p>Open the VTK file in ParaView</p></li>
+<li><p>Select the mesh with the displacement field</p></li>
+<li><p>Apply the <code class="docutils literal notranslate"><span class="pre">Warp</span> <span class="pre">By</span> <span class="pre">Vector</span></code> filter using the displacement field</p></li>
+<li><p>Adjust the scale factor if needed to make deformations more visible</p></li>
+<li><p>Color by von Mises stress to see stress concentrations</p></li>
+</ol>
+<p>Optionally, a ParaView state file <code class="docutils literal notranslate"><span class="pre">demo_elasticity.pvsm</span></code> is provided
+in the <code class="docutils literal notranslate"><span class="pre">demo/assests</span></code> folder.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>von Mises stress distribution</p></th>
+<th class="head text-center"><p>Deformed configuration</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img alt="Approximate solution" src="../../_images/demo_elasticity_vm.png" /></p></td>
+<td class="text-center"><p><img alt="Deformed configuration" src="../../_images/demo_elasticity_deformed.png" /></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="demo_poisson_convergence.html" class="btn btn-neutral float-left" title="Poisson Convergence Study: Unit Square with Circular Hole" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="demo_elasticity_convergence.html" class="btn btn-neutral float-right" title="Linear Elasticity Convergence Study: Unit Square with Circular Hole" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

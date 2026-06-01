@@ -1,0 +1,1052 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qugar.impl.impl_function &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos.html">Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">qugar.impl.impl_function</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for qugar.impl.impl_function</h1><div class="highlight"><pre>
+<span></span><span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2025-present by Pablo Antolin</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of the QUGaR library.</span>
+<span class="c1">#</span>
+<span class="c1"># SPDX-License-Identifier:    MIT</span>
+<span class="c1">#</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.cpp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.impl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.cpp</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImplicitFunc_2D</span><span class="p">,</span> <span class="n">ImplicitFunc_3D</span>
+
+
+<div class="viewcode-block" id="ImplicitFunc">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.ImplicitFunc">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for storing an implicit function that describes a domain.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cpp_object</span><span class="p">:</span> <span class="n">ImplicitFunc_2D</span> <span class="o">|</span> <span class="n">ImplicitFunc_3D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cpp_object (ImplicitFunc_2D | ImplicitFunc_3D):</span>
+<span class="sd">                Already generated implicit function binary object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_object</span> <span class="o">=</span> <span class="n">cpp_object</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cpp_object</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc_2D</span> <span class="o">|</span> <span class="n">ImplicitFunc_3D</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the C++ object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ImplicitFunc_2D | ImplicitFunc_3D: Underlying function C++ object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_object</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the dimension of the function&#39;s domain.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Function&#39;s dimension.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_object</span><span class="o">.</span><span class="n">dim</span>
+
+<div class="viewcode-block" id="ImplicitFunc.eval">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.ImplicitFunc.eval">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluates the implicit function at the given points.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            points (npt.NDArray[np.float32 | np.float64]):</span>
+<span class="sd">                Points to evaluate the implicit function.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            npt.NDArray[np.float32 | np.float64]: Evaluated values of the implicit function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="p">(</span>
+            <span class="s2">&quot;Invalid points dimension. It must match the function&#39;s dimension&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">points_</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="k">if</span> <span class="n">points</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="k">else</span> <span class="n">points</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_object</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">points_</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">vals</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="k">if</span> <span class="n">points</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="k">else</span> <span class="n">vals</span></div>
+
+
+<div class="viewcode-block" id="ImplicitFunc.grad">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.ImplicitFunc.grad">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">grad</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluates the implicit function gradient at the given points.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            points (npt.NDArray[np.float32 | np.float64]):</span>
+<span class="sd">                Points to evaluate the implicit function.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            npt.NDArray[np.float32 | np.float64]: Evaluated gradients</span>
+<span class="sd">            values of the implicit function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="p">(</span>
+            <span class="s2">&quot;Invalid points dimension. It must match the function&#39;s dimension&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">points_</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="k">if</span> <span class="n">points</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="k">else</span> <span class="n">points</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cpp_object</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">points_</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">vals</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="k">if</span> <span class="n">points</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="k">else</span> <span class="n">vals</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="create_disk">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_disk">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_disk</span><span class="p">(</span>
+    <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+    <span class="n">center</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_bzr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a 2D disk with the given radius and optional center.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        radius (float | np.float32 | np.float64): The radius of the disk.</span>
+<span class="sd">        center (Optional[npt.NDArray[np.float32 | np.float64]], optional):</span>
+<span class="sd">            The center of the disk. Defaults to None. If not provided,</span>
+<span class="sd">            the radius is centered at the origin.</span>
+<span class="sd">        use_bzr (bool, optional): Flag to use Bezier representation. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: The implicit function representing the disk.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the radius is not positive.</span>
+<span class="sd">        AssertionError: If the origin array, if provided, does not have exactly 2 coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">radius</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Invalid radius. It must be positive&quot;</span>
+
+    <span class="k">if</span> <span class="n">center</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_disk</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">use_bzr</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">center</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Invalid center dimension. It must have 2 coordinates&quot;</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_disk</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">center</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">use_bzr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">cpp_obj</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_sphere">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_sphere">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_sphere</span><span class="p">(</span>
+    <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+    <span class="n">center</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_bzr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a 3D sphere with the given radius and optional center.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        radius (float | np.float32 | np.float64): The radius of the sphere.</span>
+<span class="sd">        center (Optional[npt.NDArray[np.float32 | np.float64]], optional):</span>
+<span class="sd">            The center of the sphere. Defaults to None. If not provided,</span>
+<span class="sd">            the radius is centered at the origin.</span>
+<span class="sd">        use_bzr (bool, optional): Flag to use Bezier representation. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: The implicit function representing the sphere.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the radius is not positive.</span>
+<span class="sd">        AssertionError: If the origin array, if provided, does not have exactly 3 coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">radius</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Invalid radius. It must be positive&quot;</span>
+
+    <span class="k">if</span> <span class="n">center</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_sphere</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">use_bzr</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">center</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid center dimension. It must have 3 coordinates&quot;</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_sphere</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">center</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">use_bzr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">cpp_obj</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_ellipse">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_ellipse">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_ellipse</span><span class="p">(</span>
+    <span class="n">semi_axes</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">ref_system</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">RefSystem_2D</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_bzr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a 2D ellipse with the given semi-axes and optional reference system.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        semi_axes (Optional[npt.NDArray[np.float32 | np.float64]], optional):</span>
+<span class="sd">            The semi-axes of the ellipse. It must have two entries.</span>
+<span class="sd">        ref_system (Optional[qugar.cpp.RefSystem], optional): The reference system of the ellipse.</span>
+<span class="sd">            Defaults to None. If not provided, the ellipse is aligned with the Cartesian system.</span>
+<span class="sd">        use_bzr (bool, optional): Flag to use Bezier representation. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: The implicit function representing the ellipse.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If any of the semi_axes is not positive or it does</span>
+<span class="sd">            not have exactly 2 coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="n">semi_axes</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Invalid semi-axes dimension. It must have 2 coordinates&quot;</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">semi_axes</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">),</span> <span class="s2">&quot;Invalid semi-axes. They must be all positive&quot;</span>
+    <span class="n">semi_axes</span> <span class="o">=</span> <span class="n">semi_axes</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ref_system</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_ellipse</span><span class="p">(</span><span class="n">semi_axes</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">use_bzr</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_ellipse</span><span class="p">(</span><span class="n">semi_axes</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">ref_system</span><span class="p">,</span> <span class="n">use_bzr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">cpp_obj</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_ellipsoid">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_ellipsoid">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_ellipsoid</span><span class="p">(</span>
+    <span class="n">semi_axes</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">ref_system</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">RefSystem_3D</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_bzr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a 3D ellipsoid with the given semi-axes and optional reference system.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        semi_axes (Optional[npt.NDArray[np.float32 | np.float64]], optional):</span>
+<span class="sd">            The semi-axes of the ellipsoid. It must have three entries.</span>
+<span class="sd">        ref_system (Optional[qugar.cpp.RefSystem], optional): The reference system of the ellipsoid.</span>
+<span class="sd">            Defaults to None. If not provided, the ellipsoid is aligned with the Cartesian system.</span>
+<span class="sd">        use_bzr (bool, optional): Flag to use Bezier representation. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: The implicit function representing the ellipsoid.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If any of the semi_axes is not positive or it does</span>
+<span class="sd">            not have exactly 3 coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="n">semi_axes</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid semi-axes dimension. It must have 3 coordinates&quot;</span>
+    <span class="n">semi_axes</span> <span class="o">=</span> <span class="n">semi_axes</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">semi_axes</span> <span class="o">=</span> <span class="n">semi_axes</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ref_system</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_ellipsoid</span><span class="p">(</span><span class="n">semi_axes</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">use_bzr</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_ellipsoid</span><span class="p">(</span><span class="n">semi_axes</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">ref_system</span><span class="p">,</span> <span class="n">use_bzr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">cpp_obj</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_cylinder">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_cylinder">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_cylinder</span><span class="p">(</span>
+    <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+    <span class="n">origin</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">axis</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]],</span>
+    <span class="n">use_bzr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a 3D cylinder with the given radius, origin, and axis.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        radius (float | np.float32 | np.float64): Cylider&#39;s radius.</span>
+<span class="sd">        origin (npt.NDArray[np.float32 | np.float64]): Cylinder&#39;s origin</span>
+<span class="sd">            (a point in the revolution axis).</span>
+<span class="sd">        axis (Optional[npt.NDArray[np.float32 | np.float64]]):</span>
+<span class="sd">            Cylinder&#39;s axis. If not provided, the cylinder is aligned with the z-axis.</span>
+<span class="sd">        use_bzr (bool, optional): Flag to use Bezier representation. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: _description_</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the radius is not positive.</span>
+<span class="sd">        AssertionError: If the origin array, if provided, does not have exactly 3 coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="n">origin</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid origin dimension. It must have 3 coordinates&quot;</span>
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">radius</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Invalid radius. It must be positive&quot;</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_cylinder</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">use_bzr</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_cylinder</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">axis</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">use_bzr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">cpp_obj</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_annulus">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_annulus">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_annulus</span><span class="p">(</span>
+    <span class="n">inner_radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+    <span class="n">outer_radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+    <span class="n">center</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_bzr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a 2D annulus (a ring-shaped object) with the specified inner and outer radii,</span>
+<span class="sd">    and optional center.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        inner_radius (float | np.float32 | np.float64): The inner radius of the annulus.</span>
+<span class="sd">            Must be positive.</span>
+<span class="sd">        outer_radius (float | np.float32 | np.float64): The outer radius of the annulus.</span>
+<span class="sd">            Must be positive.</span>
+<span class="sd">        center (Optional[npt.NDArray[np.float32 | np.float64]], optional): The center coordinates</span>
+<span class="sd">            of the annulus. Must be a 2-dimensional array. Defaults to None.</span>
+<span class="sd">        use_bzr (bool, optional): Flag to use Bezier representation. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An implicit function representing the created annulus.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the inner or outer radius is not positive.</span>
+<span class="sd">        AssertionError: If the center array, if provided, does not have exactly 2 coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">inner_radius</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">inner_radius</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">inner_radius</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Invalid inner radius. It must be positive&quot;</span>
+
+    <span class="n">outer_radius</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">outer_radius</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">outer_radius</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Invalid outer radius. It must be positive&quot;</span>
+
+    <span class="k">if</span> <span class="n">center</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_annulus</span><span class="p">(</span><span class="n">inner_radius</span><span class="p">,</span> <span class="n">outer_radius</span><span class="p">,</span> <span class="n">use_bzr</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">center</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Invalid center dimension. It must have 2 coordinates&quot;</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_annulus</span><span class="p">(</span>
+            <span class="n">inner_radius</span><span class="p">,</span> <span class="n">outer_radius</span><span class="p">,</span> <span class="n">center</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">use_bzr</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">cpp_obj</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_torus">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_torus">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_torus</span><span class="p">(</span>
+    <span class="n">major_radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+    <span class="n">minor_radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+    <span class="n">center</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">axis</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_bzr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a 3D torus (a ring-shaped object) with the specified major and outer radii,</span>
+<span class="sd">    and optional center and axis</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        major_radius (float | np.float32 | np.float64): The major radius of the annulus.</span>
+<span class="sd">            Must be positive.</span>
+<span class="sd">        minor_radius (float | np.float32 | np.float64): The outer radius of the annulus.</span>
+<span class="sd">            Must be positive.</span>
+<span class="sd">        center (Optional[npt.NDArray[np.float32 | np.float64]], optional): The center coordinates</span>
+<span class="sd">            of the annulus. Must be a 3-dimensional array. Defaults to None.</span>
+<span class="sd">        axis (Optional[npt.NDArray[np.float32 | np.float64]], optional): The axis coordinates</span>
+<span class="sd">            of the torus (perpendicular to the torus plane). Must be a 3-dimensional array.</span>
+<span class="sd">            Defaults to None.</span>
+<span class="sd">        use_bzr (bool, optional): Flag to use Bezier representation. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An implicit function representing the created annulus.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the major or outer radius are not positive.</span>
+<span class="sd">        AssertionError: If the center array, if provided, does not have exactly 3 coordinates.</span>
+<span class="sd">        AssertionError: If the axis array, if provided, does not have exactly 3 coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">major_radius</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">major_radius</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">major_radius</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Invalid major radius. It must be positive&quot;</span>
+
+    <span class="n">minor_radius</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">minor_radius</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">minor_radius</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;Invalid outer radius. It must be positive&quot;</span>
+
+    <span class="k">if</span> <span class="n">center</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_torus</span><span class="p">(</span><span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">use_bzr</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span>
+                <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_torus</span><span class="p">(</span>
+                    <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">axis</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">use_bzr</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="n">center</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_torus</span><span class="p">(</span><span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">use_bzr</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span>
+                <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_torus</span><span class="p">(</span>
+                    <span class="n">major_radius</span><span class="p">,</span> <span class="n">minor_radius</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">axis</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">use_bzr</span>
+                <span class="p">)</span>
+            <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_constant">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_constant">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_constant</span><span class="p">(</span>
+    <span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+    <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">use_bzr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a constant implicit function with the specified value and dimension.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value (float | np.float32 | np.float64): The constant value for the implicit function.</span>
+<span class="sd">        dim (int): The dimension of the implicit function. Must be 2 or 3.</span>
+<span class="sd">        use_bzr (bool, optional): Flag to use Bezier representation. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An instance of ImplicitFunc representing the constant function.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the dimension is not 2 or 3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid dimension. It must be 2 or 3&quot;</span>
+
+    <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_constant_2D</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">use_bzr</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_constant_3D</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">use_bzr</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">cpp_obj</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_plane">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_plane">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_plane</span><span class="p">(</span>
+    <span class="n">origin</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]],</span>
+    <span class="n">normal</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]],</span>
+    <span class="n">use_bzr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates an implicit plane function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        origin (Optional[npt.NDArray[np.float32 | np.float64]]): The origin point of the plane.</span>
+<span class="sd">            If None, defaults to [0.0, 0.0, 0.0].</span>
+<span class="sd">        normal (Optional[npt.NDArray[np.float32 | np.float64]]): The normal vector of the plane.</span>
+<span class="sd">          If None, defaults to [1.0, 0.0, 0.0].</span>
+<span class="sd">        use_bzr (bool): A flag indicating whether to use BZR. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An implicit function representing the plane.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the origin array, if provided, does not have exactly 3 coordinates.</span>
+<span class="sd">        AssertionError: If the normal array, if provided, does not have exactly 3 coordinates.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">origin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">normal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_plane</span><span class="p">(</span><span class="n">use_bzr</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">normal</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid center dimension. It must have 3 coordinates&quot;</span>
+            <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_plane</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">normal</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">use_bzr</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">origin</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid center dimension. It must have 3 coordinates&quot;</span>
+        <span class="k">if</span> <span class="n">normal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">normal</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid center dimension. It must have 3 coordinates&quot;</span>
+        <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span>
+            <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_plane</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">normal</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">use_bzr</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_line">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_line">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_line</span><span class="p">(</span>
+    <span class="n">origin</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]],</span>
+    <span class="n">normal</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]],</span>
+    <span class="n">use_bzr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates an implicit line function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        origin (Optional[npt.NDArray[np.float32 | np.float64]]): The origin point of the line.</span>
+<span class="sd">            If None, defaults to [0.0, 0.0].</span>
+<span class="sd">        normal (Optional[npt.NDArray[np.float32 | np.float64]]): The normal vector of the line.</span>
+<span class="sd">          If None, defaults to [1.0, 0.0].</span>
+<span class="sd">        use_bzr (bool, optional): Flag to use Bezier representation. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An implicit function representing the line.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the origin array, if provided, does not have exactly 2 coordinates.</span>
+<span class="sd">        AssertionError: If the normal array, if provided, does not have exactly 2 coordinates.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">origin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">normal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_line</span><span class="p">(</span><span class="n">use_bzr</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">normal</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Invalid center dimension. It must have 2 coordinates&quot;</span>
+            <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_line</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">normal</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">use_bzr</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">origin</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Invalid center dimension. It must have 2 coordinates&quot;</span>
+        <span class="k">if</span> <span class="n">normal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">normal</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Invalid center dimension. It must have 2 coordinates&quot;</span>
+        <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span>
+            <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_line</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">normal</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">use_bzr</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_dim_linear">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_dim_linear">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_dim_linear</span><span class="p">(</span>
+    <span class="n">coefs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">affine_trans</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">AffineTransf_2D</span> <span class="o">|</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">AffineTransf_2D</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a dimensional linear implicit function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        coefs (list[float | np.float32 | np.float64] | npt.NDArray[np.float32 | np.float64]):</span>
+<span class="sd">            Coefficients for the linear function. Must be a list or numpy array of floats.</span>
+<span class="sd">            4 coefficients in 2D and 8 coefficients in 3D.</span>
+<span class="sd">        affine_trans (Optional[qugar.cpp.AffineTransf_2D | qugar.cpp.AffineTransf_2D]):</span>
+<span class="sd">            Optional affine transformation to be applied. If provided, it must be an instance</span>
+<span class="sd">            of `qugar.cpp.AffineTransf_2D` or `qugar.cpp.AffineTransf_2D`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An instance of `ImplicitFunc` representing the created dimensional</span>
+<span class="sd">            linear function.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the size of `coefs` is not 4 or 8, or if the size of `coefs` does</span>
+<span class="sd">            not match the expected dimension based on the optionally provided affine transformation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coefs</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">coefs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coefs</span><span class="p">)</span>
+    <span class="n">coefs</span> <span class="o">=</span> <span class="n">coefs</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">coefs</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">4</span> <span class="ow">or</span> <span class="n">coefs</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">8</span><span class="p">,</span> <span class="p">(</span>
+        <span class="s2">&quot;Invalid coefficients dimension. It must have 4 (for 2D) or 8 (for 3D) coordinates&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">affine_trans</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_dim_linear</span><span class="p">(</span><span class="n">coefs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">affine_trans</span><span class="p">,</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">AffineTransf_2D</span><span class="p">)</span> <span class="k">else</span> <span class="mi">3</span>
+
+        <span class="k">assert</span> <span class="n">coefs</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">2</span><span class="o">**</span><span class="n">dim</span><span class="p">,</span> <span class="p">(</span>
+            <span class="s2">&quot;Invalid coefficients dimension. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;For </span><span class="si">{</span><span class="n">dim</span><span class="si">}</span><span class="s2">D cases (according to the provided affine transformation) the number &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;of coefficients must be </span><span class="si">{</span><span class="mi">2</span><span class="o">**</span><span class="n">dim</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_dim_linear</span><span class="p">(</span><span class="n">coefs</span><span class="p">,</span> <span class="n">affine_trans</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">cpp_obj</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_box">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_box">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_box</span><span class="p">(</span>
+    <span class="n">affine_trans</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">AffineTransf_2D</span> <span class="o">|</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">AffineTransf_2D</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">dim</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a box (square in 2D or cube in 3D) with an optional affine transformation.</span>
+
+<span class="sd">    A box, before transforming it affinely, is a domain [-1,1]^dim.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        affine_trans (Optional[qugar.cpp.AffineTransf_2D | qugar.cpp.AffineTransf_2D]):</span>
+<span class="sd">            An optional affine transformation to apply to the box. If None, a default box</span>
+<span class="sd">            is created.</span>
+<span class="sd">        dim (Optional[int]):</span>
+<span class="sd">            The dimension of the box. Must be either 2 or 3. If affine_trans is provided,</span>
+<span class="sd">            this must match the dimension of the affine transformation. If None, defaults to 2.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An implicit function representing the created box.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the dimension is not 2 or 3, or if the dimension does not match the</span>
+<span class="sd">            affine transformation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">affine_trans</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">assert</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid dimension. It must be 2 or 3&quot;</span>
+
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_square_2D</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_square_3D</span><span class="p">()</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">dim</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">affine_trans</span><span class="p">,</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">AffineTransf_2D</span><span class="p">)</span> <span class="k">else</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span>
+            <span class="s2">&quot;Non-matching affine transformation and dimension&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_square_2D</span><span class="p">(</span><span class="n">affine_trans</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cpp_obj</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_square_3D</span><span class="p">(</span><span class="n">affine_trans</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">cpp_obj</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_negative">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_negative">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_negative</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">ImplicitFunc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a new implicit function that represents the negative of the input function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        func (ImplicitFunc): The input function.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: A new implicit function representing the negative of the input function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_negative</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">cpp_object</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="create_functions_addition">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_functions_addition">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_functions_addition</span><span class="p">(</span><span class="n">lhs_func</span><span class="p">:</span> <span class="n">ImplicitFunc</span><span class="p">,</span> <span class="n">rhs_func</span><span class="p">:</span> <span class="n">ImplicitFunc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a new implicit function that represents the addition of two given implicit functions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lhs_func (ImplicitFunc): The left-hand side implicit function.</span>
+<span class="sd">        rhs_func (ImplicitFunc): The right-hand side implicit function.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: A new implicit function representing the addition of the two input functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span>
+        <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_functions_addition</span><span class="p">(</span><span class="n">lhs_func</span><span class="o">.</span><span class="n">cpp_object</span><span class="p">,</span> <span class="n">rhs_func</span><span class="o">.</span><span class="n">cpp_object</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_functions_subtraction">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_functions_subtraction">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_functions_subtraction</span><span class="p">(</span><span class="n">lhs_func</span><span class="p">:</span> <span class="n">ImplicitFunc</span><span class="p">,</span> <span class="n">rhs_func</span><span class="p">:</span> <span class="n">ImplicitFunc</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a new implicit function that represents the subtraction of two given implicit functions.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        lhs_func (ImplicitFunc): The left-hand side implicit function.</span>
+<span class="sd">        rhs_func (ImplicitFunc): The right-hand side implicit function.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: A new implicit function representing the subtraction of the two input</span>
+<span class="sd">            functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span>
+        <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_functions_subtraction</span><span class="p">(</span><span class="n">lhs_func</span><span class="o">.</span><span class="n">cpp_object</span><span class="p">,</span> <span class="n">rhs_func</span><span class="o">.</span><span class="n">cpp_object</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_affinely_transformed_functions">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_affinely_transformed_functions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_affinely_transformed_functions</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">ImplicitFunc</span><span class="p">,</span> <span class="n">affine_transf</span><span class="p">:</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">AffineTransf_2D</span> <span class="o">|</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">AffineTransf_3D</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a new implicit function that is an affine transformation of the given function.</span>
+
+<span class="sd">    Note that the polynomial nature of `func` (if it is the case) will not be preserved.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        func (ImplicitFunc): The original implicit function to be transformed.</span>
+<span class="sd">        affine_transf (qugar.cpp.AffineTransf_2D | qugar.cpp.AffineTransf_3D):</span>
+<span class="sd">            The affine transformation to apply.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: A new implicit function that represents the affine transformation</span>
+<span class="sd">            of the original function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_affinely_transformed</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">cpp_object</span><span class="p">,</span> <span class="n">affine_transf</span><span class="p">))</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_process_tpms_periods</span><span class="p">(</span>
+    <span class="n">periods</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">periods</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">periods</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span>
+    <span class="n">periods</span> <span class="o">=</span> <span class="n">periods</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">periods</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">periods</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Invalid dimension. It must be 2 or 3&quot;</span>
+    <span class="k">return</span> <span class="n">periods</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_tpms</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+        <span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">ImplicitFunc_2D</span> <span class="o">|</span> <span class="n">ImplicitFunc_3D</span>
+    <span class="p">],</span>
+    <span class="n">periods</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">z</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a TPMS implicit function object.</span>
+
+<span class="sd">    This function generates a TPMS implicit function based on the provided periods</span>
+<span class="sd">    and (optionally) z-coordinate.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        func (Callable[[npt.NDArray[np.float32 | np.float64], Optional[float]], ImplicitFunc_2D | ImplicitFunc_3D]):</span>
+<span class="sd">            The function to create the TPMS implicit function.</span>
+<span class="sd">        periods (list[float  |  np.float32  |  np.float64] | npt.NDArray[np.float32  |  np.float64]):</span>
+<span class="sd">            The periods for the TPMS function. It can be a list of floats or a NumPy array.</span>
+<span class="sd">        z (Optional[float  |  np.float32  |  np.float64], optional):</span>
+<span class="sd">            The constant z-coordinate for 2D cases. 2D cases are</span>
+<span class="sd">            generated by setting the z-coordinate to a constant value</span>
+<span class="sd">            and apply the 3D expression.</span>
+<span class="sd">            If the periods are 3D, and a not None value is provided an</span>
+<span class="sd">            exception is raised. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An implicit function object representing the TPMS function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">periods</span> <span class="o">=</span> <span class="n">_process_tpms_periods</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">periods</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">z</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;No z-coordinate can be set in 3D case.&quot;</span>
+
+    <span class="k">return</span> <span class="n">ImplicitFunc</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span> <span class="k">if</span> <span class="n">z</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">func</span><span class="p">(</span><span class="n">periods</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
+
+
+<div class="viewcode-block" id="create_Schoen">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_Schoen">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_Schoen</span><span class="p">(</span>
+    <span class="n">periods</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">z</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a Schoen gyroid implicit function object.</span>
+
+<span class="sd">    This function generates a Schoen gyroid implicit function based on the provided periods.</span>
+<span class="sd">    The periods can be a list of floats or a NumPy array of float32 or float64 values.</span>
+<span class="sd">    The dimension of the periods must be either 2 or 3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        periods (list[float | np.float32 | np.float64] | npt.NDArray[np.float32 | np.float64]):</span>
+<span class="sd">            The periods for the Schoen function. It can be a list of floats or a NumPy array.</span>
+<span class="sd">        z (Optional[float | np.float32 | np.float64], optional):</span>
+<span class="sd">            The constant z-coordinate for 2D cases. 2D cases are</span>
+<span class="sd">            generated by setting the z-coordinate to a constant value</span>
+<span class="sd">            and apply the 3D expression.</span>
+<span class="sd">            If the periods are 3D, an exception is raised.</span>
+<span class="sd">            Defaults to None.</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An implicit function object representing the Schoen function.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the dimension of the periods is not 2 or 3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_create_tpms</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_Schoen</span><span class="p">,</span> <span class="n">periods</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_Schoen_IWP">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_Schoen_IWP">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_Schoen_IWP</span><span class="p">(</span>
+    <span class="n">periods</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">z</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a Schoen-IWP gyroid implicit function object.</span>
+
+<span class="sd">    This function generates a Schoen-IWP gyroid implicit function based on the provided periods.</span>
+<span class="sd">    The periods can be a list of floats or a NumPy array of float32 or float64 values.</span>
+<span class="sd">    The dimension of the periods must be either 2 or 3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        periods (list[float | np.float32 | np.float64] | npt.NDArray[np.float32 | np.float64]):</span>
+<span class="sd">            The periods for the Schoen-IWP function. It can be a list of floats or a NumPy array.</span>
+<span class="sd">        z (Optional[float | np.float32 | np.float64], optional):</span>
+<span class="sd">            The constant z-coordinate for 2D cases. 2D cases are</span>
+<span class="sd">            generated by setting the z-coordinate to a constant value</span>
+<span class="sd">            and apply the 3D expression.</span>
+<span class="sd">            If the periods are 3D, an exception is raised.</span>
+<span class="sd">            Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An implicit function object representing the Schoen-IWP function.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the dimension of the periods is not 2 or 3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_create_tpms</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_SchoenIWP</span><span class="p">,</span> <span class="n">periods</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_Schoen_FRD">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_Schoen_FRD">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_Schoen_FRD</span><span class="p">(</span>
+    <span class="n">periods</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">z</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a Schoen-FRD gyroid implicit function object.</span>
+
+<span class="sd">    This function generates a Schoen-FRD gyroid implicit function based on the provided periods.</span>
+<span class="sd">    The periods can be a list of floats or a NumPy array of float32 or float64 values.</span>
+<span class="sd">    The dimension of the periods must be either 2 or 3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        periods (list[float | np.float32 | np.float64] | npt.NDArray[np.float32 | np.float64]):</span>
+<span class="sd">            The periods for the Schoen-FRD function. It can be a list of floats or a NumPy array.</span>
+<span class="sd">        z (Optional[float | np.float32 | np.float64], optional):</span>
+<span class="sd">            The constant z-coordinate for 2D cases. 2D cases are</span>
+<span class="sd">            generated by setting the z-coordinate to a constant value</span>
+<span class="sd">            and apply the 3D expression.</span>
+<span class="sd">            If the periods are 3D, an exception is raised.</span>
+<span class="sd">            Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An implicit function object representing the Schoen-FRD function.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the dimension of the periods is not 2 or 3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_create_tpms</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_SchoenFRD</span><span class="p">,</span> <span class="n">periods</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_Fischer_Koch_S">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_Fischer_Koch_S">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_Fischer_Koch_S</span><span class="p">(</span>
+    <span class="n">periods</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">z</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a Fischer-Koch-S gyroid implicit function object.</span>
+
+<span class="sd">    This function generates a Fischer-Koch-S gyroid implicit function based on the provided periods.</span>
+<span class="sd">    The periods can be a list of floats or a NumPy array of float32 or float64 values.</span>
+<span class="sd">    The dimension of the periods must be either 2 or 3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        periods (list[float | np.float32 | np.float64] | npt.NDArray[np.float32 | np.float64]):</span>
+<span class="sd">            The periods for the Fischer-Koch-S function. It can be a list of floats or</span>
+<span class="sd">            a NumPy array.</span>
+<span class="sd">        z (Optional[float | np.float32 | np.float64], optional):</span>
+<span class="sd">            The constant z-coordinate for 2D cases. 2D cases are</span>
+<span class="sd">            generated by setting the z-coordinate to a constant value</span>
+<span class="sd">            and apply the 3D expression.</span>
+<span class="sd">            If the periods are 3D, an exception is raised.</span>
+<span class="sd">            Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An implicit function object representing the Fischer-Koch-S function.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the dimension of the periods is not 2 or 3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_create_tpms</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_FischerKochS</span><span class="p">,</span> <span class="n">periods</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_Schwarz_Primitive">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_Schwarz_Primitive">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_Schwarz_Primitive</span><span class="p">(</span>
+    <span class="n">periods</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">z</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a Schwarz Primitive gyroid implicit function object.</span>
+
+<span class="sd">    This function generates a Schwarz Primitive gyroid implicit function based on the</span>
+<span class="sd">    provided periods. The periods can be a list of floats or a NumPy array of float32 or</span>
+<span class="sd">    float64 values. The dimension of the periods must be either 2 or 3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        periods (list[float | np.float32 | np.float64] | npt.NDArray[np.float32 | np.float64]):</span>
+<span class="sd">            The periods for the Schwarz Primitive function. It can be a list of floats or</span>
+<span class="sd">            a NumPy array.</span>
+<span class="sd">        z (Optional[float | np.float32 | np.float64], optional):</span>
+<span class="sd">            The constant z-coordinate for 2D cases. 2D cases are</span>
+<span class="sd">            generated by setting the z-coordinate to a constant value</span>
+<span class="sd">            and apply the 3D expression.</span>
+<span class="sd">            If the periods are 3D, an exception is raised.</span>
+<span class="sd">            Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An implicit function object representing the Schwarz Primitive function.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the dimension of the periods is not 2 or 3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_create_tpms</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_SchwarzPrimitive</span><span class="p">,</span> <span class="n">periods</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_Schwarz_Diamond">
+<a class="viewcode-back" href="../../../generated/qugar.impl.html#qugar.impl.create_Schwarz_Diamond">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_Schwarz_Diamond</span><span class="p">(</span>
+    <span class="n">periods</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">|</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">z</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ImplicitFunc</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a Schwarz Diamond gyroid implicit function object.</span>
+
+<span class="sd">    This function generates a Schwarz Diamond gyroid implicit function based on the</span>
+<span class="sd">    provided periods. The periods can be a list of floats or a NumPy array of float32 or</span>
+<span class="sd">    float64 values. The dimension of the periods must be either 2 or 3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        periods (list[float | np.float32 | np.float64] | npt.NDArray[np.float32 | np.float64]):</span>
+<span class="sd">            The periods for the Schwarz Diamond function. It can be a list of floats or</span>
+<span class="sd">            a NumPy array.</span>
+<span class="sd">        z (Optional[float | np.float32 | np.float64], optional):</span>
+<span class="sd">            The constant z-coordinate for 2D cases. 2D cases are</span>
+<span class="sd">            generated by setting the z-coordinate to a constant value</span>
+<span class="sd">            and apply the 3D expression.</span>
+<span class="sd">            If the periods are 3D, an exception is raised.</span>
+<span class="sd">            Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImplicitFunc: An implicit function object representing the Schwarz Diamond function.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If the dimension of the periods is not 2 or 3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_create_tpms</span><span class="p">(</span><span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_SchwarzDiamond</span><span class="p">,</span> <span class="n">periods</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

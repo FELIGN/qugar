@@ -1,0 +1,15 @@
+<map id="qugar::impl::funcs::TorusBase::center" name="qugar::impl::funcs::TorusBase::center">
+<area shape="rect" id="Node000001" title="Gets the center of the plane." alt="" coords="268,165,413,205"/>
+<area shape="rect" id="Node000002" href="$d0/dc9/classqugar_1_1impl_1_1funcs_1_1TorusBzr.html#a7df0c67d420a5c1a12adae9bbaf4071c" title="Creates a polynomial representation based on monomials for the given radii, center,..." alt="" coords="5,5,220,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="315,155,274,106,248,81,219,60,195,48,198,43,221,55,251,77,278,102,320,152"/>
+<area shape="rect" id="Node000003" href="$db/d99/classqugar_1_1impl_1_1funcs_1_1Torus.html#aa42295f237f9a41f3ed17ff564e103ff" title="Constructor." alt="" coords="43,69,182,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="293,161,219,124,182,110,183,105,221,119,296,156"/>
+<area shape="rect" id="Node000004" href="$db/d99/classqugar_1_1impl_1_1funcs_1_1Torus.html#a07b3d75e8236880e28c722af245dee54" title="Constructor." alt="" coords="43,133,182,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="253,176,182,166,183,160,254,171"/>
+<area shape="rect" id="Node000005" href="$db/dc8/classqugar_1_1impl_1_1funcs_1_1TorusBase.html#a2c4cc38a701bfb4ee5404be84e102ece" title="Constructor." alt="" coords="27,197,198,237"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="254,200,199,208,198,203,253,195"/>
+<area shape="rect" id="Node000006" href="$d0/dc9/classqugar_1_1impl_1_1funcs_1_1TorusBzr.html#abd650830f833a3e3631ffa9699d1bbff" title="Constructor." alt="" coords="39,261,187,301"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="296,214,221,252,188,264,186,259,219,247,293,210"/>
+<area shape="rect" id="Node000007" href="$d0/dc9/classqugar_1_1impl_1_1funcs_1_1TorusBzr.html#a84feae4b3db326df5ba7a9ee64df6080" title="Constructor." alt="" coords="39,325,187,365"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="320,219,278,268,251,294,221,316,188,331,186,326,219,311,248,290,274,265,315,215"/>
+</map>

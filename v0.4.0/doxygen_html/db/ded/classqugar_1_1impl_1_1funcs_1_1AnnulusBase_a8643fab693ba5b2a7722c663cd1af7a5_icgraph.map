@@ -1,0 +1,11 @@
+<map id="qugar::impl::funcs::AnnulusBase::center" name="qugar::impl::funcs::AnnulusBase::center">
+<area shape="rect" id="Node000001" title="Gets the center of the annulus." alt="" coords="260,101,423,141"/>
+<area shape="rect" id="Node000002" href="$da/dd6/classqugar_1_1impl_1_1funcs_1_1Annulus.html#a6520321a3f3149830ae56e72234d583e" title="Constructor." alt="" coords="37,5,180,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="291,97,211,60,178,48,180,43,213,55,293,93"/>
+<area shape="rect" id="Node000003" href="$db/ded/classqugar_1_1impl_1_1funcs_1_1AnnulusBase.html#ac261b2d15f203aaa9795ff619f5ca78b" title="Constructor." alt="" coords="5,69,212,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="246,111,212,106,213,101,246,106"/>
+<area shape="rect" id="Node000004" href="$dc/d68/classqugar_1_1impl_1_1funcs_1_1AnnulusBzr.html#ab192aa425538fec597d22cac45fe1091" title="Constructor." alt="" coords="17,133,201,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="246,137,201,143,201,138,246,132"/>
+<area shape="rect" id="Node000005" href="$dc/d68/classqugar_1_1impl_1_1funcs_1_1AnnulusBzr.html#afc905d92474b9c606014d4735adad21f" title="Creates a polynomial representation based on monomials for the given radii and center." alt="" coords="33,198,185,253"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="291,150,213,188,183,200,181,195,211,183,288,146"/>
+</map>

@@ -1,0 +1,46 @@
+<map id="/__w/qugar/qugar/cpp/include/qugar/tolerance.hpp" name="/__w/qugar/qugar/cpp/include/qugar/tolerance.hpp">
+<area shape="rect" id="Node000001" title="Definition of tolerance related functionalities." alt="" coords="767,5,974,45"/>
+<area shape="rect" id="Node000002" href="$d6/d49/cart__grid__tp_8hpp.html" title="Definition of Cartesian grid class." alt="" coords="466,93,641,148"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="794,52,642,96,640,91,792,47"/>
+<area shape="rect" id="Node000006" href="$d3/d42/impl__reparam__mesh_8hpp.html" title="Declaration of reparameterization class." alt="" coords="735,504,945,559"/>
+<area shape="poly" id="edge27_Node000001_Node000006" title=" " alt="" coords="882,58,897,133,905,222,905,327,900,393,880,457,858,505,853,503,875,455,894,392,900,327,900,222,892,133,877,59"/>
+<area shape="rect" id="Node000011" href="$d8/ddc/reparam__mesh_8hpp.html" title="Declaration of reparameterization class." alt="" coords="692,401,865,456"/>
+<area shape="poly" id="edge29_Node000001_Node000011" title=" " alt="" coords="866,59,787,402,782,400,861,58"/>
+<area shape="rect" id="Node000015" href="$df/dc4/impl__utils_8hpp.html" title="Declaration of utility functions for implicit geometries." alt="" coords="940,101,1151,141"/>
+<area shape="poly" id="edge28_Node000001_Node000015" title=" " alt="" coords="919,49,1011,98,1009,103,917,54"/>
+<area shape="rect" id="Node000003" href="$d0/d6f/demo__quad__sphere_2main_8cpp.html" title=" " alt="" coords="68,607,263,661"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="452,136,330,158,264,176,201,199,130,221,68,239,43,251,24,268,12,292,8,325,8,430,11,458,20,484,33,509,49,533,88,573,127,604,123,609,84,577,45,536,28,512,15,486,6,459,3,430,3,324,7,290,20,265,40,247,66,234,128,216,199,193,263,171,329,153,452,130"/>
+<area shape="rect" id="Node000004" href="$d2/d66/demo__reparam__gyroid_2main_8cpp.html" title=" " alt="" coords="497,709,711,764"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="572,160,595,235,603,280,607,325,607,533,607,709,601,709,601,533,601,325,598,281,590,237,567,162"/>
+<area shape="rect" id="Node000005" href="$d6/dc8/impl__quadrature_8hpp.html" title="Declaration of quadratures for general implicit functions on grids." alt="" coords="120,511,373,551"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="453,142,375,164,336,180,299,198,224,241,168,280,144,302,123,329,103,362,84,402,75,430,77,441,84,455,98,473,117,487,160,509,157,514,114,492,95,476,79,457,72,443,70,429,79,400,99,359,119,326,140,298,164,276,221,237,296,194,334,175,373,159,451,137"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="597,156,625,195,640,233,647,268,647,331,646,361,650,391,661,421,682,454,712,482,748,502,745,506,709,486,678,458,656,424,645,392,641,361,642,331,642,268,635,234,620,197,592,160"/>
+<area shape="rect" id="Node000010" href="$d6/d03/impl__unfitted__domain_8hpp.html" title="Declaration of of UnfittedImplDomain class." alt="" coords="362,401,566,456"/>
+<area shape="poly" id="edge11_Node000002_Node000010" title=" " alt="" coords="453,130,415,138,379,151,346,171,320,198,307,224,306,252,315,280,332,307,378,359,428,399,424,403,375,363,328,311,311,282,301,252,302,223,315,194,343,167,377,146,414,133,451,124"/>
+<area shape="poly" id="edge16_Node000002_Node000011" title=" " alt="" coords="624,153,651,172,675,194,713,247,741,304,762,358,775,401,770,402,757,360,736,306,708,249,671,198,648,176,621,157"/>
+<area shape="rect" id="Node000012" href="$d2/dfd/unfitted__domain_8hpp.html" title="Declaration of of UnfittedDomain class." alt="" coords="399,299,567,353"/>
+<area shape="poly" id="edge18_Node000002_Node000012" title=" " alt="" coords="552,162,544,206,530,252,504,300,500,297,526,250,539,205,547,161"/>
+<area shape="rect" id="Node000014" href="$d8/daf/unfitted__domain__binary__part_8hpp.html" title="Declaration of of UnfittedDomain class." alt="" coords="329,196,516,251"/>
+<area shape="poly" id="edge24_Node000002_Node000014" title=" " alt="" coords="510,158,459,198,455,194,507,154"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="225,564,189,608,185,605,221,560"/>
+<area shape="rect" id="Node000007" href="$d0/d4c/impl__reparam_8hpp.html" title="Declaration of reparameterization generization tools implicit functions on grids." alt="" coords="641,614,879,654"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="813,571,777,615,773,612,808,568"/>
+<area shape="rect" id="Node000008" href="$d6/d87/impl__reparam__bezier_8hpp.html" title="Declaration of tools for creating Bezier reparameterizations." alt="" coords="903,607,1113,661"/>
+<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="897,564,965,604,963,609,894,568"/>
+<area shape="rect" id="Node000009" href="$d5/da9/impl__reparam__general_8hpp.html" title="Declaration of tools for creating reparameterizations of general functions." alt="" coords="1137,607,1346,661"/>
+<area shape="poly" id="edge10_Node000006_Node000009" title=" " alt="" coords="958,559,1137,604,1136,609,957,565"/>
+<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="721,664,646,711,644,707,718,659"/>
+<area shape="poly" id="edge12_Node000010_Node000003" title=" " alt="" coords="451,470,426,517,408,541,387,561,359,580,327,596,264,618,262,613,325,591,356,575,384,557,404,537,421,514,447,468"/>
+<area shape="poly" id="edge13_Node000010_Node000004" title=" " alt="" coords="484,467,594,708,589,710,479,470"/>
+<area shape="poly" id="edge14_Node000010_Node000005" title=" " alt="" coords="396,464,289,514,286,509,394,459"/>
+<area shape="poly" id="edge15_Node000010_Node000007" title=" " alt="" coords="515,462,734,612,731,616,512,466"/>
+<area shape="poly" id="edge17_Node000011_Node000006" title=" " alt="" coords="804,466,826,503,822,505,800,469"/>
+<area shape="poly" id="edge22_Node000012_Node000010" title=" " alt="" coords="478,368,471,402,466,401,473,367"/>
+<area shape="poly" id="edge23_Node000012_Node000011" title=" " alt="" coords="574,355,702,399,701,404,572,360"/>
+<area shape="rect" id="Node000013" href="$d1/daf/cut__quadrature_8hpp.html" title="Definition of cut quadrature for unfitted domains." alt="" coords="94,409,338,449"/>
+<area shape="poly" id="edge19_Node000012_Node000013" title=" " alt="" coords="401,361,267,411,265,406,400,356"/>
+<area shape="poly" id="edge20_Node000013_Node000003" title=" " alt="" coords="159,458,132,478,110,505,105,519,103,531,110,558,123,583,140,605,136,608,119,586,106,560,98,531,100,518,106,503,128,475,156,453"/>
+<area shape="poly" id="edge21_Node000013_Node000005" title=" " alt="" coords="228,461,243,510,238,512,223,462"/>
+<area shape="poly" id="edge25_Node000014_Node000010" title=" " alt="" coords="401,264,386,307,384,330,389,352,406,378,427,399,424,403,401,381,384,354,379,331,380,306,396,262"/>
+<area shape="poly" id="edge26_Node000014_Node000012" title=" " alt="" coords="448,261,469,297,465,300,443,264"/>
+</map>

@@ -1,0 +1,416 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poisson problem &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+      <script src="../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Poisson Convergence Study: Unit Square with Circular Hole" href="demo_poisson_convergence.html" />
+    <link rel="prev" title="\(L^2\) projection" href="demo_L2_projection.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../demos.html">Demos</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../demos.html#list-of-all-demos">List of all demos</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="demo_div_thm.html">Divergence theorem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_div_thm_no_fenicsx.html">Divergence theorem (without FEniCSx)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_impl_funcs.html">Creation of unfitted implicit domains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_plot.html">PyVista visualization capabilities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_L2_projection.html"><span class="math notranslate nohighlight">\(L^2\)</span> projection</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Poisson problem</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#problem-definition">Problem definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="demo_poisson_convergence.html">Poisson Convergence Study: Unit Square with Circular Hole</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_elasticity.html">Linear elasticity problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_elasticity_convergence.html">Linear Elasticity Convergence Study: Unit Square with Circular Hole</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_hyperelasticity.html">Hyperelasticity problem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../demos.html">Demos</a></li>
+      <li class="breadcrumb-item active">Poisson problem</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/generated/demos/demo_poisson.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="poisson-problem">
+<h1>Poisson problem<a class="headerlink" href="#poisson-problem" title="Link to this heading"></a></h1>
+<p>This demo is implemented in <a class="reference download internal" download="" href="../../_downloads/125e51683aafb977dce6de804a25524f/demo_poisson.py"><code class="xref download docutils literal notranslate"><span class="pre">demo_poisson.py</span></code></a>. It
+illustrates:</p>
+<ul class="simple">
+<li><p>How to solve a simple PDE using QUGaR and FEniCSx.</p></li>
+<li><p>How to impose Dirichlet conditions in a strong way.</p></li>
+<li><p>How to impose Neumann condition on an unfitted boundary.</p></li>
+</ul>
+<section id="problem-definition">
+<h2>Problem definition<a class="headerlink" href="#problem-definition" title="Link to this heading"></a></h2>
+<p>Let us consider the domain <span class="math notranslate nohighlight">\(\Omega \subset \mathbb{R}^n\)</span>,
+immersed in a mesh <span class="math notranslate nohighlight">\(\mathcal{T}(\Omega)\)</span> (see
+<a class="reference internal" href="demo_div_thm.html"><span class="std std-doc">Divergence theorem demo</span></a> first for further details
+about the immersed setting), and the finite element space <span class="math notranslate nohighlight">\(V\)</span> defined
+over the mesh <span class="math notranslate nohighlight">\(\mathcal{T}(\Omega)\)</span>. The Poisson problem reads:
+Finding <span class="math notranslate nohighlight">\(u \in V\)</span> such that</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+  - \nabla^{2} u &amp;= f \quad {\rm in} \ \Omega, \\
+  u &amp;= 0 \quad {\rm on} \ \Gamma_{D}, \\
+  \nabla u \cdot n &amp;= g \quad {\rm on} \ \Gamma_{N}.
+\end{align}
+\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(f\)</span> and <span class="math notranslate nohighlight">\(g\)</span> are input data and <span class="math notranslate nohighlight">\(n\)</span> denotes the outward directed
+boundary normal. The variational problem reads: find <span class="math notranslate nohighlight">\(u \in V_D\)</span> such
+that</p>
+<div class="math notranslate nohighlight">
+\[
+a(u, v) = L(v) \quad \forall \ v \in V_0,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(V_D\)</span> is the space of functions that satisfy the Dirichlet
+boundary conditions, <span class="math notranslate nohighlight">\(V_0\)</span> is the space of test functions that
+vanish on the Dirichlet boundary <span class="math notranslate nohighlight">\(\Gamma_D\)</span>, and <span class="math notranslate nohighlight">\(a(u, v)\)</span> and
+<span class="math notranslate nohighlight">\(L(v)\)</span> are the bilinear and linear forms defined as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+  a(u, v) &amp;:= \int_{\Omega} \nabla u \cdot \nabla v \, {\rm d} x, \\
+  L(v)    &amp;:= \int_{\Omega} f v \, {\rm d} x + \int_{\Gamma_{N}} g v \, {\rm d} s.
+\end{align}
+\end{split}\]</div>
+<p>In this demo we consider a domain <span class="math notranslate nohighlight">\(\Omega\)</span> that is the <em>classical</em>
+plate with hole defined as a square domain <span class="math notranslate nohighlight">\([0,1]^2\)</span> and the hole has
+radius <span class="math notranslate nohighlight">\(R=0.3\)</span> and it is centered at <span class="math notranslate nohighlight">\((0,0)\)</span> (see the figure below).
+We consider that the Neumann boundary <span class="math notranslate nohighlight">\(\Gamma_N\)</span> correponds to the
+circular section of the boundary, while the Dirichlet boundary is its
+complement <span class="math notranslate nohighlight">\(\Gamma_D=\partial\Omega\setminus\Gamma_N\)</span>.</p>
+<p>For the Poisson problem we consider the following a manufactured
+solution (see figure below):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{align}
+  u(x,y) &amp;= \sin(\pi x) \sin(\pi y), \\
+  f(x,y) &amp;= -\Delta u, \\
+  g(x,y) &amp;= \nabla u \cdot n.
+\end{align}
+\end{split}\]</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Plate with hole unfitted domain</p></th>
+<th class="head text-center"><p>Manufactured solution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img alt="Plate with hole unfitted domain" src="../../_images/demo_poisson_geom.png" /></p></td>
+<td class="text-center"><p><img alt="Manufactured solution" src="../../_images/demo_poisson_uex.png" /></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<section id="modules-import">
+<h3>Modules import<a class="headerlink" href="#modules-import" title="Link to this heading"></a></h3>
+<p>First we add the needed modules and functions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_FEniCSx</span><span class="p">,</span> <span class="n">has_PETSc</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">has_FEniCSx</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;FEniCSx installation not found is required.&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">has_PETSc</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;petsc4py installation not found is required.&quot;</span><span class="p">)</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.fem</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.fem.petsc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ufl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_scalar_type</span> <span class="k">as</span> <span class="n">dtype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.fem.petsc</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearProblem</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.impl</span>
+
+<span class="c1"># Importing qugar.dolfinx (here via dsu / UnfittedNormal) patches DOLFINx so the</span>
+<span class="c1"># stock LinearProblem above assembles unfitted forms transparently.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">dsu</span><span class="p">,</span> <span class="n">UnfittedNormal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_unfitted_impl_Cartesian_mesh</span>
+</pre></div>
+</div>
+</section>
+<section id="geometry-and-mesh">
+<h3>Geometry and mesh<a class="headerlink" href="#geometry-and-mesh" title="Link to this heading"></a></h3>
+<p>We define the plate with hole geometry as the the negative part
+of a disk of radius <span class="math notranslate nohighlight">\(R=0.3\)</span> centered at the origin.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">radius</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="n">disk</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_disk</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="p">))</span>
+<span class="n">impl_func</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">create_negative</span><span class="p">(</span><span class="n">disk</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We create an <a class="reference internal" href="../qugar.mesh.html#qugar.mesh.UnfittedCartMesh" title="qugar.mesh.UnfittedCartMesh"><code class="xref py py-class docutils literal notranslate"><span class="pre">unfitted</span> <span class="pre">Cartesian</span> <span class="pre">mesh</span></code></a>
+(corresponding to <span class="math notranslate nohighlight">\(\mathcal{T}\)</span>) in which we embed the domain <span class="math notranslate nohighlight">\(\Omega\)</span>.
+This is a Cartesian mesh corresponding to the domain <span class="math notranslate nohighlight">\([0,1]^2\)</span> and
+with <code class="docutils literal notranslate"><span class="pre">n_cells</span></code> cells per direction.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n_cells</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="n">unf_mesh</span> <span class="o">=</span> <span class="n">create_unfitted_impl_Cartesian_mesh</span><span class="p">(</span>
+    <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">,</span> <span class="n">impl_func</span><span class="p">,</span> <span class="n">n_cells</span><span class="p">,</span> <span class="n">exclude_empty_cells</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="spaces-and-functions">
+<h3>Spaces and functions<a class="headerlink" href="#spaces-and-functions" title="Link to this heading"></a></h3>
+<p>We create the manufactured solution, its gradient, and source term:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">SpatialCoordinate</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">)</span>
+<span class="n">uex</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">grad_uex</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">uex</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="o">-</span><span class="n">ufl</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">grad_uex</span><span class="p">)</span>  <span class="c1"># -np.pi * np.pi * uex</span>
+</pre></div>
+</div>
+<p>and the finite element space <span class="math notranslate nohighlight">\(V\)</span> over the unfitted mesh
+(corresponding to the mesh <span class="math notranslate nohighlight">\(\mathcal{T}\)</span>) needed to define the test
+and trial functions <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(v\)</span>.
+The finite element space is defined as a Lagrange space of the given
+<code class="docutils literal notranslate"><span class="pre">degree</span></code> (2 in this case).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">degree</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">V</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Lagrange&quot;</span><span class="p">,</span> <span class="n">degree</span><span class="p">))</span>
+<span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">TrialFunction</span><span class="p">(</span><span class="n">V</span><span class="p">),</span> <span class="n">ufl</span><span class="o">.</span><span class="n">TestFunction</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+
+<span class="n">facets</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">locate_entities_boundary</span><span class="p">(</span>
+    <span class="n">unf_mesh</span><span class="p">,</span>
+    <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="n">unf_mesh</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">marker</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mf">1.0</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>We now find the degrees-of-freedom that are associated with the
+boundary facets using <code class="xref py py-func docutils literal notranslate"><span class="pre">locate_dofs_topological</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dofs</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">locate_dofs_topological</span><span class="p">(</span><span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">,</span> <span class="n">entity_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="n">facets</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and use <code class="xref py py-func docutils literal notranslate"><span class="pre">dirichletbc</span></code> to create a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">DirichletBC</span></code> class that
+represents the boundary condition:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bc</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">dirichletbc</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">dtype</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">dofs</span><span class="o">=</span><span class="n">dofs</span><span class="p">,</span> <span class="n">V</span><span class="o">=</span><span class="n">V</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that for this particular solution, the exact condition is
+zero on <span class="math notranslate nohighlight">\(\Gamma_D\)</span>.</p>
+</section>
+<section id="linear-forms">
+<h3>Linear forms<a class="headerlink" href="#linear-forms" title="Link to this heading"></a></h3>
+<p>We define the variational problem to be solved, which is
+equivalent to the <span class="math notranslate nohighlight">\(L^2\)</span> projection of <span class="math notranslate nohighlight">\(f\)</span> onto <span class="math notranslate nohighlight">\(V\)</span>, and generate
+the corresponding bilinear and linear forms <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">L</span></code> using
+QUGaR’s custom form functions.
+The number of quadrature points per cell (or integration cell
+in the case of cut cells) is set to <code class="docutils literal notranslate"><span class="pre">degree</span> <span class="pre">+</span> <span class="pre">1</span></code> to
+prevent DOLFINx from using a higher-order quadrature rule
+(because of the trigonometric right-hand side expression).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n_quad_pts</span> <span class="o">=</span> <span class="n">degree</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">quad_degree</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_quad_pts</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">ds_unf</span> <span class="o">=</span> <span class="n">dsu</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="n">quad_degree</span><span class="p">)</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">grad_uex</span><span class="p">,</span> <span class="n">UnfittedNormal</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">))</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dx</span><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="n">quad_degree</span><span class="p">)</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">f</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dx</span><span class="p">(</span><span class="n">degree</span><span class="o">=</span><span class="n">quad_degree</span><span class="p">)</span> <span class="o">+</span> <span class="n">g</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">ds_unf</span>
+</pre></div>
+</div>
+</section>
+<section id="linear-system-solution">
+<h3>Linear system solution<a class="headerlink" href="#linear-system-solution" title="Link to this heading"></a></h3>
+<p>We solve the associated linear system
+<span class="math notranslate nohighlight">\(A\mathbf{u} = \mathbf{b}\)</span>, where <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> is the
+solution of the problem. The solution is stored in a
+a finite element function <code class="docutils literal notranslate"><span class="pre">uh</span></code> defined over the same finite
+element space <span class="math notranslate nohighlight">\(V\)</span> as the trial functions.</p>
+<p>In this case we use a direct solver (Cholesky) to solve the
+linear system. However, due to the potentially ill-conditioning
+of the matrix, we use a (symmetric) Jacobi preconditioner.
+It is known that Jacobi preconditioners are not very effective
+for Lagrange elements, but still help.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">petsc_options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;preonly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pc_type&quot;</span><span class="p">:</span> <span class="s2">&quot;cholesky&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ksp_diagonal_scale&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># Jacobi</span>
+    <span class="c1"># &quot;ksp_diagonal_scale_fix&quot;: True, # transformsa back A an b after Jacobi</span>
+<span class="p">}</span>
+
+
+<span class="n">problem</span> <span class="o">=</span> <span class="n">LinearProblem</span><span class="p">(</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">bcs</span><span class="o">=</span><span class="p">[</span><span class="n">bc</span><span class="p">],</span> <span class="n">petsc_options</span><span class="o">=</span><span class="n">petsc_options</span><span class="p">,</span> <span class="n">petsc_options_prefix</span><span class="o">=</span><span class="s2">&quot;demo_poisson_&quot;</span>
+<span class="p">)</span>
+<span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+
+<span class="n">uh</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">u</span>
+</pre></div>
+</div>
+</section>
+<section id="visualization">
+<h3>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h3>
+<p>Finally, we visualize the obtained solution by generating reparameterization
+meshes and interpolating the solution into them.
+For further details check the
+<a class="reference internal" href="demo_L2_projection.html#visualization"><span class="std std-ref">Visualization section</span></a> in the <span class="math notranslate nohighlight">\(L^2\)</span> projection demo.
+an auxiliar mesh that reparameterizes the unfitted domain.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rep_degree</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">reparam</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_reparam_mesh</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="n">rep_degree</span><span class="p">,</span> <span class="n">levelset</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">rep_mesh</span> <span class="o">=</span> <span class="n">reparam</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">()</span>
+<span class="n">rep_mesh_wb</span> <span class="o">=</span> <span class="n">reparam</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">(</span><span class="n">wirebasket</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">Vrep</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">rep_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;CG&quot;</span><span class="p">,</span> <span class="n">rep_degree</span><span class="p">))</span>
+<span class="n">interp_data</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_interpolation_data</span><span class="p">(</span><span class="n">Vrep</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+<span class="n">uh_rep</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">Vrep</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">uh_rep</span><span class="o">.</span><span class="n">interpolate_nonmatching</span><span class="p">(</span><span class="n">uh</span><span class="p">,</span> <span class="o">*</span><span class="n">interp_data</span><span class="p">)</span>
+<span class="n">uh_rep</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;uh&quot;</span>
+
+<span class="n">Vrep_wb</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">rep_mesh_wb</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;CG&quot;</span><span class="p">,</span> <span class="n">rep_degree</span><span class="p">))</span>
+<span class="n">interp_data_wb</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">reparam</span><span class="o">.</span><span class="n">create_interpolation_data</span><span class="p">(</span><span class="n">Vrep_wb</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+<span class="n">uh_rep_wb</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">Vrep_wb</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">uh_rep_wb</span><span class="o">.</span><span class="n">interpolate_nonmatching</span><span class="p">(</span><span class="n">uh</span><span class="p">,</span> <span class="o">*</span><span class="n">interp_data_wb</span><span class="p">)</span>
+<span class="n">uh_rep_wb</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;uh&quot;</span>
+</pre></div>
+</div>
+<p>Together with the approximate solution <code class="docutils literal notranslate"><span class="pre">uh_rep</span></code>, we also
+interpolate the exact solution <code class="docutils literal notranslate"><span class="pre">uex_rep</span></code> into the reparameterization
+mesh.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">uex_rep</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">Vrep</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">uex_expression</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">uex</span><span class="p">,</span> <span class="n">Vrep</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">interpolation_points</span><span class="p">)</span>
+<span class="n">uex_rep</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">uex_expression</span><span class="p">)</span>
+<span class="n">uex_rep</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;uex&quot;</span>
+</pre></div>
+</div>
+<p>Finally, we export the meshes to VTK files and visualize them
+using ParaView (see the figures below).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">)</span>
+<span class="n">results_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">results_folder</span> <span class="o">/</span> <span class="s2">&quot;demo_poisson&quot;</span>
+
+<span class="k">with</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">VTKFile</span><span class="p">(</span><span class="n">rep_mesh</span><span class="o">.</span><span class="n">comm</span><span class="p">,</span> <span class="n">filename</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.pvd&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">vtk</span><span class="p">:</span>
+    <span class="n">vtk</span><span class="o">.</span><span class="n">write_function</span><span class="p">(</span><span class="n">uh_rep</span><span class="p">)</span>
+    <span class="n">vtk</span><span class="o">.</span><span class="n">write_function</span><span class="p">(</span><span class="n">uh_rep_wb</span><span class="p">)</span>
+    <span class="n">vtk</span><span class="o">.</span><span class="n">write_function</span><span class="p">(</span><span class="n">uex_rep</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Approximate solution</p></th>
+<th class="head text-center"><p>Exact (manufactured) solution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><img alt="Approximate solution" src="../../_images/demo_poisson_uh.png" /></p></td>
+<td class="text-center"><p><img alt="Exact solution" src="../../_images/demo_poisson_uex.png" /></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="demo_L2_projection.html" class="btn btn-neutral float-left" title="\(L^2\) projection" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="demo_poisson_convergence.html" class="btn btn-neutral float-right" title="Poisson Convergence Study: Unit Square with Circular Hole" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

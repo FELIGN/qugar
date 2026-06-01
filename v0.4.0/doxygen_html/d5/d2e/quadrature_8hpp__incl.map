@@ -1,0 +1,33 @@
+<map id="/__w/qugar/qugar/cpp/include/qugar/quadrature.hpp" name="/__w/qugar/qugar/cpp/include/qugar/quadrature.hpp">
+<area shape="rect" id="Node000001" title="Definition of quadrature related functionalities." alt="" coords="447,5,665,45"/>
+<area shape="rect" id="Node000002" href="$d5/d90/bbox_8hpp.html" title="Definition of Cartesian bounding box class." alt="" coords="445,93,568,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="546,47,523,83,519,80,542,44"/>
+<area shape="rect" id="Node000004" href="$d0/de4/point_8hpp.html" title="Definition and implementation of Point class." alt="" coords="158,167,282,192"/>
+<area shape="poly" id="edge14_Node000001_Node000004" title=" " alt="" coords="448,44,374,64,337,78,303,96,266,125,238,157,234,154,262,121,300,91,335,73,372,59,446,39"/>
+<area shape="rect" id="Node000005" href="$dd/de3/types_8hpp.html" title="Declaration of types." alt="" coords="307,240,434,265"/>
+<area shape="poly" id="edge15_Node000001_Node000005" title=" " alt="" coords="513,48,473,69,435,95,400,127,389,144,379,168,372,198,371,227,366,226,367,197,373,166,384,141,396,124,432,91,470,64,510,43"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="853,167,909,192"/>
+<area shape="poly" id="edge16_Node000001_Node000011" title=" " alt="" coords="568,44,594,82,612,101,632,116,684,141,729,150,776,154,835,164,840,165,839,170,834,169,775,160,728,156,682,147,629,121,608,104,590,85,564,47"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="643,93,720,119"/>
+<area shape="poly" id="edge17_Node000001_Node000012" title=" " alt="" coords="588,43,653,84,650,88,585,48"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="745,93,837,119"/>
+<area shape="poly" id="edge18_Node000001_Node000013" title=" " alt="" coords="613,43,744,87,743,92,611,48"/>
+<area shape="rect" id="Node000003" href="$d7/dd8/concepts_8hpp.html" title="Declaration of concepts." alt="" coords="629,167,779,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="539,116,660,159,658,164,537,121"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="461,121,280,166,279,161,460,116"/>
+<area shape="poly" id="edge10_Node000002_Node000005" title=" " alt="" coords="471,121,432,140,414,153,398,168,383,197,376,227,370,225,378,195,394,165,410,149,430,135,469,116"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="335,313,406,339"/>
+<area shape="poly" id="edge13_Node000002_Node000006" title=" " alt="" coords="569,113,704,137,762,151,793,165,798,179,793,194,768,216,729,237,681,256,627,273,514,301,420,319,419,314,513,296,625,268,679,251,727,232,765,212,788,190,793,179,789,169,760,156,703,142,568,119"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="408,167,605,192"/>
+<area shape="poly" id="edge11_Node000002_Node000010" title=" " alt="" coords="509,119,509,153,504,153,504,119"/>
+<area shape="poly" id="edge12_Node000002_Node000011" title=" " alt="" coords="569,115,835,164,840,165,839,170,834,169,568,120"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="245,190,335,232,332,236,243,194"/>
+<area shape="poly" id="edge8_Node000004_Node000006" title=" " alt="" coords="231,191,259,224,296,263,345,303,341,307,293,267,255,228,227,194"/>
+<area shape="rect" id="Node000007" href="$da/d16/vector_8hpp.html" title=" " alt="" coords="13,240,144,265"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="198,194,115,236,113,231,196,190"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="169,240,231,265"/>
+<area shape="poly" id="edge9_Node000004_Node000009" title=" " alt="" coords="219,193,209,228,204,226,214,192"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="373,266,373,300,368,300,368,266"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="5,313,152,339"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="81,266,81,300,76,300,76,266"/>
+</map>

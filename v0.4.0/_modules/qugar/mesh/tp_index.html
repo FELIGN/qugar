@@ -1,0 +1,525 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qugar.mesh.tp_index &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos.html">Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">qugar.mesh.tp_index</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for qugar.mesh.tp_index</h1><div class="highlight"><pre>
+<span></span><span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2025-present by Pablo Antolin</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of the QUGaR library.</span>
+<span class="c1">#</span>
+<span class="c1"># SPDX-License-Identifier:    MIT</span>
+<span class="c1">#</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot;Tensor product indices.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">lexicg_to_DOLFINx_edges</span><span class="p">,</span> <span class="n">lexicg_to_DOLFINx_faces</span>
+
+
+<div class="viewcode-block" id="TensorProdIndex">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.TensorProdIndex">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TensorProdIndex</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class for accessing indices in arbitrary dimensions</span>
+<span class="sd">    tensor-product structures.</span>
+
+<span class="sd">    The indices in the tensor product structure follow the</span>
+<span class="sd">    lexicographical order, I.e., the direction 0 iterates the fastest,</span>
+<span class="sd">    i.e., is the inner-most, and the direction dim-1 iterates the</span>
+<span class="sd">    slowest, i.e., the outer-most. Where dim is the number of</span>
+<span class="sd">    dimensions.</span>
+
+<span class="sd">    I.e., in 2D this would be</span>
+
+<span class="sd">        ^ y</span>
+<span class="sd">        |</span>
+<span class="sd">        8 --- 9 ---10 --- 11</span>
+<span class="sd">        |     |     |     |</span>
+<span class="sd">        4 --- 5 --- 6 --- 7</span>
+<span class="sd">        |     |     |     |</span>
+<span class="sd">        0 --- 1 --- 2 --- 3 --&gt; x</span>
+
+<span class="sd">    When requested for specific corner, face, or edge indices,</span>
+<span class="sd">    the local index of the corresponding entity (corner, face, edge)</span>
+<span class="sd">    can be specified in lexicographical ordering or following</span>
+<span class="sd">    DOLFINx ordering.</span>
+<span class="sd">    See https://github.com/FEniCS/basix/#supported-elements</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TensorProdIndex.get_all_corners">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.TensorProdIndex.get_all_corners">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_corners</span><span class="p">(</span><span class="n">n_inds</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts the indices of the 2^dim corners of the hypercube.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_inds (npt.NDArray[np.int32]): Number of indices per</span>
+<span class="sd">                dimension.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            npt.NDArray[np.int64]: Array storing the sorted indices of</span>
+<span class="sd">            the corners.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_inds</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">corners_1D</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_all_corners</span><span class="p">(</span><span class="n">n_inds</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">corners_1D</span><span class="p">,</span> <span class="n">corners_1D</span> <span class="o">+</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">int64</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># if dim == 3:</span>
+            <span class="n">corners_2D</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_all_corners</span><span class="p">(</span><span class="n">n_inds</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">corners_2D</span><span class="p">,</span> <span class="n">corners_2D</span> <span class="o">+</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TensorProdIndex.get_all_internal">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.TensorProdIndex.get_all_internal">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_internal</span><span class="p">(</span><span class="n">n_inds</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts the internal indices of the hypercube.</span>
+
+<span class="sd">        The internal indices are those that are not on the boundaries.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_inds (npt.NDArray[np.int32]): Number of indices per</span>
+<span class="sd">                dimension.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            npt.NDArray[np.int64]: Array storing the sorted internal</span>
+<span class="sd">            indices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_inds</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">internals_1D</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_all_internal</span><span class="p">(</span><span class="n">n_inds</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">internals_1D</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
+                <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># if dim == 3:</span>
+            <span class="n">internals_2D</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_all_internal</span><span class="p">(</span><span class="n">n_inds</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">internals_2D</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
+                <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TensorProdIndex.get_all_faces">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.TensorProdIndex.get_all_faces">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_faces</span><span class="p">(</span><span class="n">n_inds</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts the face indices of the hypercube.</span>
+
+<span class="sd">        The face indices are those that are on the boundaries.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_inds (npt.NDArray[np.int32]): Number of indices per</span>
+<span class="sd">                dimension.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            npt.NDArray[np.int64]: Array storing the sorted boundary</span>
+<span class="sd">            indices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_inds</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">faces</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_all_corners</span><span class="p">(</span><span class="n">n_inds</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">n_tot</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">4</span>
+            <span class="n">faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_tot</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+            <span class="n">faces</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_face</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="n">face_id</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">lexicg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">faces</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">faces</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+            <span class="n">faces</span><span class="p">[</span><span class="o">-</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_face</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="n">face_id</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">lexicg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># if dim == 3:</span>
+            <span class="n">n_tot</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_tot</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+            <span class="n">n01</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+
+            <span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n01</span><span class="p">]</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_face</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="n">face_id</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">lexicg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">i</span> <span class="o">=</span> <span class="n">n01</span>
+            <span class="n">bounds_2d</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_all_faces</span><span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bounds_2d</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">n01</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">faces</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">bounds_2d</span> <span class="o">+</span> <span class="n">k</span> <span class="o">*</span> <span class="n">n01</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="n">m</span>
+
+            <span class="n">faces</span><span class="p">[</span><span class="o">-</span><span class="n">n01</span><span class="p">:]</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_face</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="n">face_id</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">lexicg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">faces</span></div>
+
+
+<div class="viewcode-block" id="TensorProdIndex.get_all_edges">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.TensorProdIndex.get_all_edges">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_edges</span><span class="p">(</span><span class="n">n_inds</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts the edge indices of the hypercube.</span>
+
+<span class="sd">        In 3D the edge indices are those that correspond to the</span>
+<span class="sd">        intersection of two faces. In 1D and 2D, they are the same</span>
+<span class="sd">        as the face indices.</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">            This method is not implemented yet for 3D.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_inds (npt.NDArray[np.int32]): Number of indices per</span>
+<span class="sd">                dimension.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            npt.NDArray[np.int64]: Array storing the sorted edge</span>
+<span class="sd">            indices.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_inds</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_all_faces</span><span class="p">(</span><span class="n">n_inds</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># if dim == 3:</span>
+            <span class="k">assert</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="TensorProdIndex.get_corner">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.TensorProdIndex.get_corner">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_corner</span><span class="p">(</span><span class="n">n_inds</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="n">local_corner_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the index associated to the given corner.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            The local ordering of corners in DOLFINx coincides</span>
+<span class="sd">            with the lexicographical ordering.</span>
+<span class="sd">            See https://github.com/FEniCS/basix/#supported-elements</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_inds (npt.NDArray[np.int32]): Number of indices per</span>
+<span class="sd">                dimension.</span>
+<span class="sd">            local_corner_id (int | np.int32): Corner whose index is</span>
+<span class="sd">                extracted. It must be a value in the range `[0,2^dim[`</span>
+<span class="sd">                following the lexicographical ordering.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.int64: Index of the corner.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_inds</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">local_corner_id</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">**</span><span class="n">dim</span>
+
+        <span class="k">return</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_all_corners</span><span class="p">(</span><span class="n">n_inds</span><span class="p">)[</span><span class="n">local_corner_id</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="TensorProdIndex.get_face">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.TensorProdIndex.get_face">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_face</span><span class="p">(</span>
+        <span class="n">n_inds</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="n">face_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">lexicg</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the indices associated to the given face.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_inds (npt.NDArray[np.int32]): Number of indices per</span>
+<span class="sd">                dimension.</span>
+<span class="sd">            face_id (int | np.int32): Face whose indices is extracted.</span>
+<span class="sd">                It must be a value in the range [0, 2 * dim[, where</span>
+<span class="sd">                `dim` is the dimension of the domain.</span>
+<span class="sd">            lexicg (bool): If ``True``, the given `face_id` is referred</span>
+<span class="sd">                to the lexicographical ordering, otherwise, to the</span>
+<span class="sd">                DOLFINx one.</span>
+<span class="sd">                See https://github.com/FEniCS/basix/#supported-elements</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            npt.NDArray[np.int64]: Indices associated to the face.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_inds</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">face_id</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">dim</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">lexicg</span><span class="p">:</span>
+            <span class="n">face_id</span> <span class="o">=</span> <span class="n">lexicg_to_DOLFINx_faces</span><span class="p">(</span><span class="n">dim</span><span class="p">)[</span><span class="n">face_id</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_corner</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="n">face_id</span><span class="p">)],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">face_id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">n_inds</span><span class="p">),</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">face_id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_face</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lexicg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">face_id</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># if face_id == 3:</span>
+                <span class="k">return</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_face</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">lexicg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># if dim == 3:</span>
+            <span class="k">if</span> <span class="n">face_id</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">n_inds</span><span class="p">),</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">face_id</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_face</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lexicg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">face_id</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+                    <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
+                        <span class="mi">0</span><span class="p">,</span>
+                        <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                        <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                        <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">face_id</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_face</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">lexicg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">face_id</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># if face_id == 5:</span>
+                <span class="n">face</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_face</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">lexicg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">face</span> <span class="o">+=</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_inds</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">face</span></div>
+
+
+<div class="viewcode-block" id="TensorProdIndex.get_edge">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.TensorProdIndex.get_edge">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_edge</span><span class="p">(</span>
+        <span class="n">n_inds</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="n">edge_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">lexicg</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the indices associated to the given edge.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_inds (npt.NDArray[np.int32]): Number of indices per</span>
+<span class="sd">                dimension.</span>
+<span class="sd">            edge_id (int | np.int32): Local edge id whose indices are</span>
+<span class="sd">                extracted.</span>
+<span class="sd">            lexicg: If ``True``, the given `edge_id` is referred to</span>
+<span class="sd">                the lexicographical ordering, otherwise, to the DOLFINx</span>
+<span class="sd">                one.</span>
+<span class="sd">                See https://github.com/FEniCS/basix/#supported-elements</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            npt.NDArray[np.int64]: Indices associated to the edge.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_inds</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">dim</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">lexicg</span><span class="p">:</span>
+            <span class="n">edge_id</span> <span class="o">=</span> <span class="n">lexicg_to_DOLFINx_edges</span><span class="p">(</span><span class="n">dim</span><span class="p">)[</span><span class="n">edge_id</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">dim</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_face</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="n">edge_id</span><span class="p">,</span> <span class="n">lexicg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># dim == 3:</span>
+            <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">edge_id</span> <span class="o">&lt;</span> <span class="mi">12</span>
+
+            <span class="k">if</span> <span class="n">edge_id</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">i0</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_corner</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="n">edge_id</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">i0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">n_inds</span><span class="p">),</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">edge_id</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span>
+                <span class="n">corner_id</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">][</span><span class="n">edge_id</span> <span class="o">-</span> <span class="mi">4</span><span class="p">]</span>
+                <span class="n">i0</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_corner</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="n">corner_id</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">i0</span><span class="p">,</span> <span class="n">i0</span> <span class="o">+</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># if edge_id &lt; 12:</span>
+                <span class="n">corner_id</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">][</span><span class="n">edge_id</span> <span class="o">-</span> <span class="mi">8</span><span class="p">]</span>
+                <span class="n">i0</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">get_corner</span><span class="p">(</span><span class="n">n_inds</span><span class="p">,</span> <span class="n">corner_id</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">i0</span><span class="p">,</span> <span class="n">i0</span> <span class="o">+</span> <span class="n">n_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__create_dims_accumulation</span><span class="p">(</span>
+        <span class="n">n_inds</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates the array of dimensions accumulation for transforming</span>
+<span class="sd">        an id from tensor indices (according to the tensor-product</span>
+<span class="sd">        directions) to the corresponding flat index (following the</span>
+<span class="sd">        lexicographical convention), and viceversa.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_inds (npt.NDArray[np.int32]): Number of indices per</span>
+<span class="sd">                dimension.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            npt.NDArray[np.int64]: Array of dimension accumulations. See</span>
+<span class="sd">            the functions `get_tensor_index` and `get_flat_index` for an</span>
+<span class="sd">            example of use.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dim</span> <span class="o">=</span> <span class="n">n_inds</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">accum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+        <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="p">):</span>
+            <span class="n">accum</span><span class="p">[</span><span class="nb">dir</span><span class="p">]</span> <span class="o">=</span> <span class="n">accum</span><span class="p">[</span><span class="nb">dir</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_inds</span><span class="p">[</span><span class="nb">dir</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">accum</span>
+
+<div class="viewcode-block" id="TensorProdIndex.get_flat_index">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.TensorProdIndex.get_flat_index">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_flat_index</span><span class="p">(</span><span class="n">n_inds</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="n">tid</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform a given tensor index to a flat one considering</span>
+<span class="sd">        `n_inds` indices per direction.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_inds (npt.NDArray[np.int32]): Number of indices per</span>
+<span class="sd">                dimension.</span>
+<span class="sd">            tid (npt.NDArray[np.int32]): Tensor indices to be</span>
+<span class="sd">                transformed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.int64: Computed flat index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">accum</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">__create_dims_accumulation</span><span class="p">(</span><span class="n">n_inds</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">accum</span><span class="p">,</span> <span class="n">tid</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TensorProdIndex.get_tensor_index">
+<a class="viewcode-back" href="../../../generated/qugar.mesh.html#qugar.mesh.TensorProdIndex.get_tensor_index">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_tensor_index</span><span class="p">(</span>
+        <span class="n">n_inds</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform a given index to a tensor one considering</span>
+<span class="sd">        `n_inds` indices per direction.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_inds (npt.NDArray[np.int32]): Number of indices per</span>
+<span class="sd">                dimension.</span>
+<span class="sd">            id (int | np.int32 | np.int64): Flat index to be</span>
+<span class="sd">                transformed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            npt.NDArray[np.int32]: Computed tensor index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">accum</span> <span class="o">=</span> <span class="n">TensorProdIndex</span><span class="o">.</span><span class="n">__create_dims_accumulation</span><span class="p">(</span><span class="n">n_inds</span><span class="p">)</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="n">accum</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="n">tid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+        <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">tid</span><span class="p">[</span><span class="nb">dir</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">((</span><span class="nb">id</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">accum</span><span class="p">))</span> <span class="o">//</span> <span class="n">accum</span><span class="p">[</span><span class="nb">dir</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">tid</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

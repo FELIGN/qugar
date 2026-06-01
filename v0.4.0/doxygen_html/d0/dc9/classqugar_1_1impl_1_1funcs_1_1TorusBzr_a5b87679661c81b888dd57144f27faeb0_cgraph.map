@@ -1,0 +1,7 @@
+<map id="qugar::impl::funcs::TorusBzr::TorusBzr" name="qugar::impl::funcs::TorusBzr::TorusBzr">
+<area shape="rect" id="Node000001" title="Constructor." alt="" coords="5,37,153,77"/>
+<area shape="rect" id="Node000002" href="$db/dc8/classqugar_1_1impl_1_1funcs_1_1TorusBase.html#a07d898d07b21b70d9d3615f49cb45dd9" title="Gets the major radius of the torus." alt="" coords="201,5,391,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,44,187,39,188,44,154,49"/>
+<area shape="rect" id="Node000003" href="$db/dc8/classqugar_1_1impl_1_1funcs_1_1TorusBase.html#ac3bc8990d1ef8e5336df983c33cbee12" title="Gets the minor radius of the torus." alt="" coords="201,69,391,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="154,66,188,71,187,76,153,71"/>
+</map>

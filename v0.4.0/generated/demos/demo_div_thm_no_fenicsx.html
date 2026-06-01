@@ -1,0 +1,549 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Divergence theorem (without FEniCSx) &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+      <script src="../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Creation of unfitted implicit domains" href="demo_impl_funcs.html" />
+    <link rel="prev" title="Divergence theorem" href="demo_div_thm.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../demos.html">Demos</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../demos.html#list-of-all-demos">List of all demos</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="demo_div_thm.html">Divergence theorem</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Divergence theorem (without FEniCSx)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#theorem-and-problem-definition">Theorem and problem definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="demo_impl_funcs.html">Creation of unfitted implicit domains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_plot.html">PyVista visualization capabilities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_L2_projection.html"><span class="math notranslate nohighlight">\(L^2\)</span> projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_poisson.html">Poisson problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_poisson_convergence.html">Poisson Convergence Study: Unit Square with Circular Hole</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_elasticity.html">Linear elasticity problem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_elasticity_convergence.html">Linear Elasticity Convergence Study: Unit Square with Circular Hole</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demo_hyperelasticity.html">Hyperelasticity problem</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../demos.html">Demos</a></li>
+      <li class="breadcrumb-item active">Divergence theorem (without FEniCSx)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/generated/demos/demo_div_thm_no_fenicsx.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="divergence-theorem-without-fenicsx">
+<h1>Divergence theorem (without FEniCSx)<a class="headerlink" href="#divergence-theorem-without-fenicsx" title="Link to this heading"></a></h1>
+<p>This demo is implemented in <a class="reference download internal" download="" href="../../_downloads/9542abf9e13842d72d67ac71aed66b3e/demo_div_thm_no_fenicsx.py"><code class="xref download docutils literal notranslate"><span class="pre">demo_div_thm_no_fenicsx.py</span></code></a> and
+solves the same problem as the <a class="reference internal" href="demo_div_thm.html"><span class="std std-doc">Divergence theorem demo</span></a>
+but without using <a class="reference external" href="https://fenicsproject.org">FEniCSx</a> features.
+It uses only low-level interfaces to the C++ component of QUGaR.</p>
+<p>This demo covers:</p>
+<ul class="simple">
+<li><p>How to create an unfitted domain described by an implicit function.</p></li>
+<li><p>How to generate custom quadrature rules for cells, facets, and
+unfitted boundaries, and access the generated points, weights, and normals.</p></li>
+</ul>
+<p>all of them using only the C++ component of QUGaR.</p>
+<section id="theorem-and-problem-definition">
+<h2>Theorem and problem definition<a class="headerlink" href="#theorem-and-problem-definition" title="Link to this heading"></a></h2>
+<p>This demo follows closely the problem in <a class="reference internal" href="demo_div_thm.html"><span class="std std-doc">Divergence theorem demo</span></a>:
+to compute and verify the volumetric and surface integrals of the divergence theorem
+for an immersed domain.
+So, be sure to first read the <code class="docutils literal notranslate"><span class="pre">Theorem</span> <span class="pre">and</span> <span class="pre">problem</span> <span class="pre">definition</span></code> section of that demo
+for a detailed explanation of the problem and the basic concepts of unfitted domains.</p>
+<p>The problem setup is also the same as the one in the <a class="reference internal" href="demo_div_thm.html"><span class="std std-doc">Divergence theorem demo</span></a>.
+Namely:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\Omega^\ast = [0,1]^d\)</span> (with <span class="math notranslate nohighlight">\(d=2,3\)</span>) (a square in 2D, a cube in 3D)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathcal{T}\)</span> is created with <span class="math notranslate nohighlight">\(16\times16\)</span> quadrangles in 2D, and
+and <span class="math notranslate nohighlight">\(16\times16\times16\)</span> hexahedra in 3D.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\Omega=\left\lbrace x\in\Omega^\ast: \lVert x-x_0\rVert &lt; R\right\rbrace\)</span> (a disk in 2D,
+a sphere in 3D), with</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\(x_0 = (-0.25, 0.15)\)</span> in 2D, and <span class="math notranslate nohighlight">\(x_0 = (0.25, 0.35, 0.45)\)</span> in 3D</p></li>
+<li><p><span class="math notranslate nohighlight">\(R=0.6\)</span> in 2D, and <span class="math notranslate nohighlight">\(R=0.7\)</span> in 3D</p></li>
+</ul>
+</li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{F} = \left(\sin(x),\cos(y)\right)\)</span> in 2D, and
+<span class="math notranslate nohighlight">\(\mathbf{F} = \left(\sin(x),\cos(y),\sin(z)\right)\)</span> in 3D.</p></li>
+</ul>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<p>First we import the needed modules and functions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">TypeAlias</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.cpp</span>
+</pre></div>
+</div>
+<p>and declare some handy type aliases.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ImplicitFunc</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">ImplicitFunc_2D</span> <span class="o">|</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">ImplicitFunc_3D</span>
+<span class="n">UnfittedDomain</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">UnfittedImplDomain_2D</span> <span class="o">|</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">UnfittedImplDomain_3D</span>
+<span class="n">ReparamMesh</span><span class="p">:</span> <span class="n">TypeAlias</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">ReparamMesh_1_2</span>
+    <span class="o">|</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">ReparamMesh_2_2</span>
+    <span class="o">|</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">ReparamMesh_2_3</span>
+    <span class="o">|</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">ReparamMesh_3_3</span>
+<span class="p">)</span>
+<span class="n">Func</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span>
+<span class="n">DivFunc</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>We define the floating point type to be used in the computations.
+Be aware that the C++ component of QUGaR exclusively uses 64 bits floating point types (doubles).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span>
+</pre></div>
+</div>
+<p>We define the geometry to be considered: a disk in 2D and a sphere in 3D.
+Uncomment the one you want to use.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># radius_2D = dtype(0.6)</span>
+<span class="c1"># center_2D = np.array([-0.25, 0.15], dtype=dtype)</span>
+<span class="c1"># impl_func = qugar.cpp.create_disk(center=center_2D, radius=radius_2D)</span>
+<span class="c1"># name = &quot;disk&quot;</span>
+
+<span class="n">radius_3D</span> <span class="o">=</span> <span class="n">dtype</span><span class="p">(</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">center_3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+<span class="n">impl_func</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_sphere</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="n">center_3D</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius_3D</span><span class="p">)</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;sphere&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2"> - divergence theorem verification&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and also the number of quadrature points per direction to be used in
+each integration.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">n_quad_pts</span> <span class="o">=</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<p>We create a Cartesian grid (corresponding to <span class="math notranslate nohighlight">\(\mathcal{T}\)</span>) in which
+we will embed the domain <span class="math notranslate nohighlight">\(\Omega\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dim</span> <span class="o">=</span> <span class="n">impl_func</span><span class="o">.</span><span class="n">dim</span>
+<span class="n">n_cells</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span>
+<span class="n">cell_breaks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">n_cells</span><span class="p">[</span><span class="nb">dir</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span> <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">)]</span>
+
+<span class="n">grid</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_cart_grid</span><span class="p">(</span><span class="n">cell_breaks</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and then create an unfitted domain that stores the partition
+<span class="math notranslate nohighlight">\(\mathcal{T}=\mathcal{T}_{\text{cut}}\cup\mathcal{T}_{\text{full}}\cup\mathcal{T}_{\text{empty}}\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">unf_domain</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_unfitted_impl_domain</span><span class="p">(</span><span class="n">impl_func</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We create functions for evaluating the vector function <span class="math notranslate nohighlight">\(\mathbf{F}\)</span> and <span class="math notranslate nohighlight">\(\text{div}\mathbf{F}\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">F_func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">]:</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">vals</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">vals</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">divF_func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">]:</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">vals</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">vals</span>
+</pre></div>
+</div>
+<section id="auxiliar-functions">
+<h3>Auxiliar functions.<a class="headerlink" href="#auxiliar-functions" title="Link to this heading"></a></h3>
+<p>Before computing the integrals, we define some auxiliar functions to help us.
+Check their docstrings for more information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">scale_points_from_01</span><span class="p">(</span>
+    <span class="n">domain</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">],</span> <span class="n">points</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Scales points from the unit interval [0, 1] to a specified domain.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        domain (npt.NDArray[dtype]): A 2D array where each row represents the</span>
+<span class="sd">            [min, max] range for each dimension.</span>
+<span class="sd">        points (npt.NDArray[dtype]): A 2D array of points to be scaled, where</span>
+<span class="sd">            each row is a point and each column corresponds to a dimension.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[dtype]: A 2D array of scaled points.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">scaled_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+        <span class="n">scaled_points</span><span class="p">[:,</span> <span class="nb">dir</span><span class="p">]</span> <span class="o">=</span> <span class="n">domain</span><span class="p">[</span><span class="nb">dir</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">points</span><span class="p">[:,</span> <span class="nb">dir</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">domain</span><span class="p">[</span><span class="nb">dir</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">domain</span><span class="p">[</span><span class="nb">dir</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">scaled_points</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">find_facets_on_boundary</span><span class="p">(</span>
+    <span class="n">unf_domain</span><span class="p">:</span> <span class="n">UnfittedDomain</span><span class="p">,</span>
+    <span class="n">cells</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span>
+    <span class="n">local_faces</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">],</span>
+    <span class="n">local_face_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Among the given cells (and associated faces), finds (and returns) the cells whose</span>
+<span class="sd">    faces are equal to local_face_id.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        unf_domain (UnfittedDomain): The unfitted implicit domain object containing the grid.</span>
+<span class="sd">        cells (npt.NDArray[np.int32]): Array of cell indices.</span>
+<span class="sd">        facets (npt.NDArray[np.int32]): Array of local face indices corresponding to the cells.</span>
+<span class="sd">        local_face_id (int): The ID of the local face to find among the cells.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: Array of cell indices that have have an associated</span>
+<span class="sd">        local face id equal to local_face_id.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cells</span> <span class="o">=</span> <span class="n">cells</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">local_faces</span> <span class="o">==</span> <span class="n">local_face_id</span><span class="p">)]</span>
+
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">unf_domain</span><span class="o">.</span><span class="n">grid</span>
+    <span class="n">bound_cells</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">get_boundary_cells</span><span class="p">(</span><span class="n">local_face_id</span><span class="p">)</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">cells</span><span class="p">,</span> <span class="n">bound_cells</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">cells</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">find_full_facets_on_boundary</span><span class="p">(</span>
+    <span class="n">unf_domain</span><span class="p">:</span> <span class="n">UnfittedDomain</span><span class="p">,</span> <span class="n">local_face_id</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find full facets on the boundary of an unfitted implicit domain that have the</span>
+<span class="sd">    given local facet_id.</span>
+
+<span class="sd">    This function retrieves the full facets from the given unfitted implicit domain</span>
+<span class="sd">    and identifies which of these facets are on the boundary based on the</span>
+<span class="sd">    provided local face ID.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        unf_domain (UnfittedDomain): The unfitted implicit domain object containing</span>
+<span class="sd">            the grid data.</span>
+<span class="sd">        local_face_id (int): The local ID of the face to check for boundary status.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: An array of cell IDs associated to the facets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cells</span><span class="p">,</span> <span class="n">facets</span> <span class="o">=</span> <span class="n">unf_domain</span><span class="o">.</span><span class="n">get_full_facets</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">find_facets_on_boundary</span><span class="p">(</span><span class="n">unf_domain</span><span class="p">,</span> <span class="n">cells</span><span class="p">,</span> <span class="n">facets</span><span class="p">,</span> <span class="n">local_face_id</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">find_cut_facets_on_boundary</span><span class="p">(</span>
+    <span class="n">unf_domain</span><span class="p">:</span> <span class="n">UnfittedDomain</span><span class="p">,</span> <span class="n">local_face_id</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find cut facets on the boundary of an unfitted implicit domain that have the</span>
+<span class="sd">    given local local_face_id.</span>
+
+<span class="sd">    This function retrieves the cut facets from the given unfitted implicit domain</span>
+<span class="sd">    and identifies which of these facets are on the boundary based on the</span>
+<span class="sd">    provided local face ID.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        unf_domain (UnfittedDomain): The unfitted implicit domain object containing</span>
+<span class="sd">            the grid data.</span>
+<span class="sd">        local_face_id (int): The local ID of the face to check for boundary status.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        npt.NDArray[np.int32]: An array of cell IDs associated to the facets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cells</span><span class="p">,</span> <span class="n">facets</span> <span class="o">=</span> <span class="n">unf_domain</span><span class="o">.</span><span class="n">get_cut_facets</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">find_facets_on_boundary</span><span class="p">(</span><span class="n">unf_domain</span><span class="p">,</span> <span class="n">cells</span><span class="p">,</span> <span class="n">facets</span><span class="p">,</span> <span class="n">local_face_id</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">create_facet_quadrature</span><span class="p">(</span>
+    <span class="n">facet_points</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">],</span>
+    <span class="n">facet_weights</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">],</span>
+    <span class="n">local_face_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create quadrature points, weights, and normals for a given local face id.</span>
+
+<span class="sd">    Extends the points from the facet to the higher-dimensional space by adding</span>
+<span class="sd">    the constant coordinate of the face.</span>
+<span class="sd">    It also generated the (constant) normal vectors for the quadrature points.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The weights are not modified.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        facet_points (npt.NDArray[dtype]): Array of points on the facet.</span>
+<span class="sd">        facet_weights (npt.NDArray[dtype]): Array of weights for the quadrature points.</span>
+<span class="sd">        local_face_id (int): Identifier for the facet, used to determine</span>
+<span class="sd">            the constant direction and side.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tuple[npt.NDArray[dtype], npt.NDArray[dtype], npt.NDArray[dtype]]:</span>
+<span class="sd">            - points: Array of quadrature points in the higher-dimensional space.</span>
+<span class="sd">            - facet_weights: Array of weights for the quadrature points.</span>
+<span class="sd">            - normals: Array of normal vectors for the quadrature points.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">facet_dim</span> <span class="o">=</span> <span class="n">facet_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">facet_dim</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">facet_points</span><span class="o">.</span><span class="n">dtype</span>
+
+    <span class="n">const_dir</span> <span class="o">=</span> <span class="n">local_face_id</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">side</span> <span class="o">=</span> <span class="n">local_face_id</span> <span class="o">%</span> <span class="mi">2</span>
+
+    <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">facet_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dim</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="n">points</span><span class="p">[:,</span> <span class="n">const_dir</span><span class="p">]</span> <span class="o">=</span> <span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">side</span><span class="p">)</span>
+    <span class="n">local_dir</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">dir</span> <span class="o">!=</span> <span class="n">const_dir</span><span class="p">:</span>
+            <span class="n">points</span><span class="p">[:,</span> <span class="nb">dir</span><span class="p">]</span> <span class="o">=</span> <span class="n">facet_points</span><span class="p">[:,</span> <span class="n">local_dir</span><span class="p">]</span>
+            <span class="n">local_dir</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">normals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+    <span class="n">normals</span><span class="p">[:,</span> <span class="n">const_dir</span><span class="p">]</span> <span class="o">=</span> <span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">side</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">points</span><span class="p">,</span> <span class="n">facet_weights</span><span class="p">,</span> <span class="n">normals</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">create_full_facet_quadrature</span><span class="p">(</span>
+    <span class="n">dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">local_face_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">n_quad_pts</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">dtype</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a full facet quadrature for a given dimension and local face.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dim (int): The dimension of the space.</span>
+<span class="sd">        local_face_id (int): The identifier of the local face.</span>
+<span class="sd">        n_quad_pts (int): The number of quadrature points per direction.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tuple[npt.NDArray[dtype], npt.NDArray[dtype], npt.NDArray[dtype]]:</span>
+<span class="sd">            - points: Array of quadrature points in the higher-dimensional space.</span>
+<span class="sd">            - facet_weights: Array of weights for the quadrature points.</span>
+<span class="sd">            - normals: Array of normal vectors for the quadrature points.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">quad</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_Gauss_quad_01</span><span class="p">([</span><span class="n">n_quad_pts</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">create_facet_quadrature</span><span class="p">(</span><span class="n">quad</span><span class="o">.</span><span class="n">points</span><span class="p">,</span> <span class="n">quad</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">local_face_id</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="computing-the-volumetric-integral">
+<h3>Computing the volumetric integral<a class="headerlink" href="#computing-the-volumetric-integral" title="Link to this heading"></a></h3>
+<p>We compute now the volumetric integral for the cut and full cells.</p>
+<p>So, first, we create a custom quadrature for the cut cells.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cut_cells_quad</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_quadrature</span><span class="p">(</span><span class="n">unf_domain</span><span class="p">,</span> <span class="n">unf_domain</span><span class="o">.</span><span class="n">get_cut_cells</span><span class="p">(),</span> <span class="n">n_quad_pts</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and for the full cells we use the standard quadrature rule.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">quad_01</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_Gauss_quad_01</span><span class="p">([</span><span class="n">n_quad_pts</span><span class="p">]</span> <span class="o">*</span> <span class="n">dim</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We define a function for computing the contribution of a single
+cell, either cut or full.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_cell_integr</span><span class="p">(</span><span class="n">points_01</span><span class="p">,</span> <span class="n">weights_01</span><span class="p">,</span> <span class="n">cell_id</span><span class="p">):</span>
+    <span class="n">domain</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">get_cell_domain</span><span class="p">(</span><span class="n">cell_id</span><span class="p">)</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">weights_01</span> <span class="o">*</span> <span class="n">domain</span><span class="o">.</span><span class="n">volume</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">divF_func</span><span class="p">(</span><span class="n">scale_points_from_01</span><span class="p">(</span><span class="n">domain</span><span class="o">.</span><span class="n">as_array</span><span class="p">(),</span> <span class="n">points_01</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Loop over the full cells and compute their contributions</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vol_intgr</span> <span class="o">=</span> <span class="n">dtype</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">cell_id</span> <span class="ow">in</span> <span class="n">unf_domain</span><span class="o">.</span><span class="n">get_full_cells</span><span class="p">():</span>
+    <span class="n">vol_intgr</span> <span class="o">+=</span> <span class="n">compute_cell_integr</span><span class="p">(</span><span class="n">quad_01</span><span class="o">.</span><span class="n">points</span><span class="p">,</span> <span class="n">quad_01</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">cell_id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and the same for the cut cells (retrieving the associated custom quadrature points
+and weights for every cell)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pt_id</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">cell_id</span><span class="p">,</span> <span class="n">n_pts</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cut_cells_quad</span><span class="o">.</span><span class="n">cells</span><span class="p">,</span> <span class="n">cut_cells_quad</span><span class="o">.</span><span class="n">n_pts_per_entity</span><span class="p">):</span>
+    <span class="n">pt_id_1</span> <span class="o">=</span> <span class="n">pt_id</span> <span class="o">+</span> <span class="n">n_pts</span>
+
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">cut_cells_quad</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">pt_id</span><span class="p">:</span><span class="n">pt_id_1</span><span class="p">]</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">cut_cells_quad</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">pt_id</span><span class="p">:</span><span class="n">pt_id_1</span><span class="p">]</span>
+    <span class="n">vol_intgr</span> <span class="o">+=</span> <span class="n">compute_cell_integr</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">cell_id</span><span class="p">)</span>
+
+    <span class="n">pt_id</span> <span class="o">=</span> <span class="n">pt_id_1</span>
+</pre></div>
+</div>
+</section>
+<section id="computing-the-surface-integral">
+<h3>Computing the surface integral<a class="headerlink" href="#computing-the-surface-integral" title="Link to this heading"></a></h3>
+<p>We compute now the surface integral for the unfitted boundaries (for <span class="math notranslate nohighlight">\(\Gamma_{\text{unf}}\)</span>)
+and the cut (for <span class="math notranslate nohighlight">\(\mathcal{F}_{\text{cut}}\)</span>) and full facets (for <span class="math notranslate nohighlight">\(\mathcal{F}_{\text{full}}\)</span>).</p>
+<p>We define a function for computing the contribution of a single
+cell (containing an unfitted boundary) or (cut or full) facet.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">compute_srf_integral</span><span class="p">(</span><span class="n">points_01</span><span class="p">,</span> <span class="n">weights_01</span><span class="p">,</span> <span class="n">normals</span><span class="p">,</span> <span class="n">cell_id</span><span class="p">):</span>
+    <span class="n">cell_domain</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">get_cell_domain</span><span class="p">(</span><span class="n">cell_id</span><span class="p">)</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">F_func</span><span class="p">(</span><span class="n">scale_points_from_01</span><span class="p">(</span><span class="n">cell_domain</span><span class="o">.</span><span class="n">as_array</span><span class="p">(),</span> <span class="n">points_01</span><span class="p">))</span>
+
+    <span class="n">mapped_normals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">normals</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span><span class="p">):</span>
+        <span class="n">mapped_normals</span><span class="p">[:,</span> <span class="nb">dir</span><span class="p">]</span> <span class="o">=</span> <span class="n">normals</span><span class="p">[:,</span> <span class="nb">dir</span><span class="p">]</span> <span class="o">/</span> <span class="n">cell_domain</span><span class="o">.</span><span class="n">length</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+    <span class="n">scaled_weights</span> <span class="o">=</span> <span class="n">weights_01</span> <span class="o">*</span> <span class="n">cell_domain</span><span class="o">.</span><span class="n">volume</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">mapped_normals</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vals</span> <span class="o">*</span> <span class="n">normals</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">scaled_weights</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We first compute the contribution of the external facets (i.e., <span class="math notranslate nohighlight">\(\Gamma_{\text{ext}}\)</span>).
+For that purpose we iterate along the <code class="docutils literal notranslate"><span class="pre">dim</span> <span class="pre">*</span> <span class="pre">2</span></code> faces of the
+hypercube <span class="math notranslate nohighlight">\(\Omega^\ast\)</span> and compute first the contribution of <span class="math notranslate nohighlight">\(\mathcal{F}_{\text{full}}\)</span></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">srf_intgr</span> <span class="o">=</span> <span class="n">dtype</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">face_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span> <span class="o">*</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="n">full_facets</span> <span class="o">=</span> <span class="n">find_full_facets_on_boundary</span><span class="p">(</span><span class="n">unf_domain</span><span class="p">,</span> <span class="n">face_id</span><span class="p">)</span>
+    <span class="n">points</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">normals</span> <span class="o">=</span> <span class="n">create_full_facet_quadrature</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">face_id</span><span class="p">,</span> <span class="n">n_quad_pts</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">cell_id</span> <span class="ow">in</span> <span class="n">full_facets</span><span class="p">:</span>
+        <span class="n">srf_intgr</span> <span class="o">+=</span> <span class="n">compute_srf_integral</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">normals</span><span class="p">,</span> <span class="n">cell_id</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and then for <span class="math notranslate nohighlight">\(\mathcal{F}_{\text{cut}}\)</span> (that requires a custom quadrature).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">face_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dim</span> <span class="o">*</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="n">cells</span> <span class="o">=</span> <span class="n">find_cut_facets_on_boundary</span><span class="p">(</span><span class="n">unf_domain</span><span class="p">,</span> <span class="n">face_id</span><span class="p">)</span>
+    <span class="n">facets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">cells</span><span class="p">,</span> <span class="n">face_id</span><span class="p">)</span>
+    <span class="n">facet_quad</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_facets_quadrature_exterior_integral</span><span class="p">(</span>
+        <span class="n">unf_domain</span><span class="p">,</span> <span class="n">cells</span><span class="p">,</span> <span class="n">facets</span><span class="p">,</span> <span class="n">n_quad_pts</span>
+    <span class="p">)</span>
+
+    <span class="n">pt_id</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">cell_id</span><span class="p">,</span> <span class="n">n_pts</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">facet_quad</span><span class="o">.</span><span class="n">cells</span><span class="p">,</span> <span class="n">facet_quad</span><span class="o">.</span><span class="n">n_pts_per_entity</span><span class="p">):</span>
+        <span class="n">pt_id_1</span> <span class="o">=</span> <span class="n">pt_id</span> <span class="o">+</span> <span class="n">n_pts</span>
+
+        <span class="n">facet_points</span> <span class="o">=</span> <span class="n">facet_quad</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">pt_id</span><span class="p">:</span><span class="n">pt_id_1</span><span class="p">]</span>
+        <span class="n">facet_weights</span> <span class="o">=</span> <span class="n">facet_quad</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">pt_id</span><span class="p">:</span><span class="n">pt_id_1</span><span class="p">]</span>
+        <span class="n">points</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">normals</span> <span class="o">=</span> <span class="n">create_facet_quadrature</span><span class="p">(</span><span class="n">facet_points</span><span class="p">,</span> <span class="n">facet_weights</span><span class="p">,</span> <span class="n">face_id</span><span class="p">)</span>
+        <span class="n">srf_intgr</span> <span class="o">+=</span> <span class="n">compute_srf_integral</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">normals</span><span class="p">,</span> <span class="n">cell_id</span><span class="p">)</span>
+
+        <span class="n">pt_id</span> <span class="o">=</span> <span class="n">pt_id_1</span>
+</pre></div>
+</div>
+<p>Finally, we compute the contribution of the unfitted boundaries (for <span class="math notranslate nohighlight">\(\Gamma_{\text{unf}}\)</span>).</p>
+<p>We compute the needed custom quadrature.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">include_facet_unf_bry</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">exclude_ext_bdry</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">unf_bdry_quad</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">create_unfitted_bound_quadrature</span><span class="p">(</span>
+    <span class="n">unf_domain</span><span class="p">,</span>
+    <span class="n">unf_domain</span><span class="o">.</span><span class="n">get_cut_cells</span><span class="p">(),</span>
+    <span class="n">n_quad_pts</span><span class="p">,</span>
+    <span class="n">include_facet_unf_bry</span><span class="p">,</span>
+    <span class="n">exclude_ext_bdry</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>and then iterate along the cells that contain unfitted boundaries
+(retrieving the associated custom quadrature points, weights, and
+normals for every cell).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pt_id</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">cell_id</span><span class="p">,</span> <span class="n">n_pts</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unf_bdry_quad</span><span class="o">.</span><span class="n">cells</span><span class="p">,</span> <span class="n">unf_bdry_quad</span><span class="o">.</span><span class="n">n_pts_per_entity</span><span class="p">):</span>
+    <span class="n">pt_id_1</span> <span class="o">=</span> <span class="n">pt_id</span> <span class="o">+</span> <span class="n">n_pts</span>
+
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">unf_bdry_quad</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">pt_id</span><span class="p">:</span><span class="n">pt_id_1</span><span class="p">]</span>
+    <span class="n">normals</span> <span class="o">=</span> <span class="n">unf_bdry_quad</span><span class="o">.</span><span class="n">normals</span><span class="p">[</span><span class="n">pt_id</span><span class="p">:</span><span class="n">pt_id_1</span><span class="p">]</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">unf_bdry_quad</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">pt_id</span><span class="p">:</span><span class="n">pt_id_1</span><span class="p">]</span>
+    <span class="n">srf_intgr</span> <span class="o">+=</span> <span class="n">compute_srf_integral</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">normals</span><span class="p">,</span> <span class="n">cell_id</span><span class="p">)</span>
+
+    <span class="n">pt_id</span> <span class="o">=</span> <span class="n">pt_id_1</span>
+</pre></div>
+</div>
+<p>Finally, we compare both integrals</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Volumetric integral: </span><span class="si">{</span><span class="n">vol_intgr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Surface integral: </span><span class="si">{</span><span class="n">srf_intgr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="demo_div_thm.html" class="btn btn-neutral float-left" title="Divergence theorem" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="demo_impl_funcs.html" class="btn btn-neutral float-right" title="Creation of unfitted implicit domains" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

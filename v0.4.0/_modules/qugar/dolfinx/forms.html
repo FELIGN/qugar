@@ -1,0 +1,504 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>qugar.dolfinx.forms &mdash; QUGaR 0.4.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css?v=c0a7eb24" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/dark.css?v=70edf1c7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
+      <script src="../../../_static/dark_mode_js/theme_switcher.js?v=358d3910"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            QUGaR
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../demos.html">Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer.html">Developer resources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">QUGaR</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">qugar.dolfinx.forms</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for qugar.dolfinx.forms</h1><div class="highlight"><pre>
+<span></span><span class="c1"># --------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2025-present by Pablo Antolin</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of the QUGaR library.</span>
+<span class="c1">#</span>
+<span class="c1"># SPDX-License-Identifier:    MIT</span>
+<span class="c1">#</span>
+<span class="c1"># This file is a modification of the original ``dolfinx/python/dolfinx/fem/forms.py`` file.</span>
+<span class="c1"># See copyright below.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (C) 2017-2024 Chris N. Richardson, Garth N. Wells, Michal Habera and Jørgen S. Dokken</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of DOLFINx (https://www.fenicsproject.org)</span>
+<span class="c1">#</span>
+<span class="c1"># SPDX-License-Identifier:    LGPL-3.0-or-later</span>
+<span class="c1">#</span>
+<span class="c1"># --------------------------------------------------------------------------</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">collections.abc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_FEniCSx</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">has_FEniCSx</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;FEniCSx installation not found is required.&quot;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ufl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ufl.algorithms.analysis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">cpp</span> <span class="k">as</span> <span class="n">_cpp</span>  <span class="c1"># type: ignore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_scalar_type</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.fem</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntegralType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.fem.forms</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Form</span><span class="p">,</span>
+    <span class="n">_ufl_to_dolfinx_domain</span><span class="p">,</span>
+    <span class="n">form_cpp_class</span><span class="p">,</span>
+    <span class="n">get_integration_domains</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.dolfinx.custom_coefficients</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomCoeffsPacker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.dolfinx.integral_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntegralData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.dolfinx.jit</span><span class="w"> </span><span class="kn">import</span> <span class="n">ffcx_jit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh.unfitted_domain_abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">UnfittedDomainABC</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mesh</span>
+
+
+<div class="viewcode-block" id="CustomForm">
+<a class="viewcode-back" href="../../../generated/qugar.dolfinx.html#qugar.dolfinx.CustomForm">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomForm</span><span class="p">(</span><span class="n">Form</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Form for custom integrals.</span>
+
+<span class="sd">    It derives from dolfinx.forms.Form just adding an extra</span>
+<span class="sd">    functionality for computing the required custom coefficients at</span>
+<span class="sd">    runtime (the method ``pack_coefficients``).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">form</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
+            <span class="n">_cpp</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Form_complex64</span><span class="p">,</span>
+            <span class="n">_cpp</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Form_complex128</span><span class="p">,</span>
+            <span class="n">_cpp</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Form_float32</span><span class="p">,</span>
+            <span class="n">_cpp</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">Form_float64</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">domain</span><span class="p">:</span> <span class="n">UnfittedDomainABC</span><span class="p">,</span>
+        <span class="n">itg_data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">IntegralData</span><span class="p">],</span>
+        <span class="n">ufcx_form</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">module</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">types</span><span class="o">.</span><span class="n">ModuleType</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A custom finite element form.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            CustomForms should normally be constructed using</span>
+<span class="sd">            :func:`form_custom` and not using this class initialiser.</span>
+<span class="sd">            This class is combined with different base classes that</span>
+<span class="sd">            depend on the scalar type used in the Form.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            form: Compiled form object.</span>
+<span class="sd">            ufcx_form: UFCx form.</span>
+<span class="sd">            code: Form C++ code.</span>
+<span class="sd">            module: CFFI module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">ufcx_form</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_coeffs_packer</span> <span class="o">=</span> <span class="n">CustomCoeffsPacker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">itg_data</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CustomForm.pack_coefficients">
+<a class="viewcode-back" href="../../../generated/qugar.dolfinx.html#qugar.dolfinx.CustomForm.pack_coefficients">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pack_coefficients</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">IntegralType</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function for generating the coefficients needed for computing</span>
+<span class="sd">        custom integrals at runtime.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This function mimics the behaviour of</span>
+<span class="sd">            ``dolfinx.cpp.fem.pack_coefficients``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict[tuple[IntegralType, int], npt.NDArray]:</span>
+<span class="sd">            Generated custom coefficients.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coeffs_packer</span><span class="o">.</span><span class="n">pack_coefficients</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="CustomForm.update_coefficients">
+<a class="viewcode-back" href="../../../generated/qugar.dolfinx.html#qugar.dolfinx.CustomForm.update_coefficients">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_coefficients</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">old_coeffs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">IntegralType</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">IntegralType</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function for updating the coefficients needed for computing</span>
+<span class="sd">        custom integrals at runtime.</span>
+
+<span class="sd">        It updated coefficients previously generated by just recomputing</span>
+<span class="sd">        the part of the coefficients associated to the DOLFINx coefficients</span>
+<span class="sd">        and keeping the part of the coefficients associated to the</span>
+<span class="sd">        custom integrals.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict[tuple[IntegralType, int], npt.NDArray]:</span>
+<span class="sd">            Generated custom coefficients.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coeffs_packer</span><span class="o">.</span><span class="n">update_coefficients</span><span class="p">(</span><span class="n">old_coeffs</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_modify_everywhere_exterior_facet_integrals</span><span class="p">(</span><span class="n">form</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Modify exterior facet integrals defined everywhere.</span>
+
+<span class="sd">    Finds exterior facet integrals defined on the whole boundary</span>
+<span class="sd">    (subdomain_id is &quot;everywhere&quot; or -1) and assigns them a unique</span>
+<span class="sd">    integer ID greater than any existing exterior facet subdomain ID.</span>
+<span class="sd">    It also adds metadata to mark these integrals.</span>
+
+<span class="sd">    This is necessary because by default DOLFINx defines exterior</span>
+<span class="sd">    facet integrals over the exterior facets only. However, in the</span>
+<span class="sd">    case of unfitted meshes, exterior facets integral may need to be</span>
+<span class="sd">    computed over non exterior facets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        form: The dolfinx form object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The modified dolfinx form object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_max_subdomain_id</span><span class="p">():</span>
+        <span class="n">subdomain_id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">for</span> <span class="n">integral</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">integrals</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">integral</span><span class="o">.</span><span class="n">integral_type</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;exterior_facet&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">integral</span><span class="o">.</span><span class="n">subdomain_id</span><span class="p">(),</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="n">subdomain_id</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">subdomain_id</span><span class="p">,</span> <span class="n">integral</span><span class="o">.</span><span class="n">subdomain_id</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">subdomain_id</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">old_integrals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">integrals</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">integral</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">integrals</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">integral</span><span class="o">.</span><span class="n">integral_type</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;exterior_facet&quot;</span><span class="p">:</span>
+            <span class="c1"># Check if the integral is over the whole domain</span>
+            <span class="k">if</span> <span class="n">integral</span><span class="o">.</span><span class="n">subdomain_id</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;everywhere&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">old_integrals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">integral</span><span class="o">.</span><span class="n">reconstruct</span><span class="p">(</span>
+                    <span class="n">integral</span><span class="o">.</span><span class="n">integrand</span><span class="p">(),</span>
+                    <span class="n">integral</span><span class="o">.</span><span class="n">integral_type</span><span class="p">(),</span>
+                    <span class="n">integral</span><span class="o">.</span><span class="n">ufl_domain</span><span class="p">(),</span>
+                    <span class="n">integral</span><span class="o">.</span><span class="n">subdomain_id</span><span class="p">(),</span>
+                    <span class="n">integral</span><span class="o">.</span><span class="n">metadata</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+                    <span class="n">integral</span><span class="o">.</span><span class="n">subdomain_id</span><span class="p">(),</span>
+                <span class="p">)</span>
+
+                <span class="n">integral</span><span class="o">.</span><span class="n">_subdomain_data</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">integral</span><span class="o">.</span><span class="n">_subdomain_id</span> <span class="o">=</span> <span class="n">_get_max_subdomain_id</span><span class="p">()</span>
+                <span class="n">integral</span><span class="o">.</span><span class="n">_metadata</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;ext_facet_everywhere&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">form</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">old_integrals</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="form_custom">
+<a class="viewcode-back" href="../../../generated/qugar.dolfinx.html#qugar.dolfinx.form_custom">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">form_custom</span><span class="p">(</span>
+    <span class="n">form</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">ufl</span><span class="o">.</span><span class="n">Form</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterable</span><span class="p">[</span><span class="n">ufl</span><span class="o">.</span><span class="n">Form</span><span class="p">]],</span>
+    <span class="n">dtype</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">DTypeLike</span> <span class="o">=</span> <span class="n">default_scalar_type</span><span class="p">,</span>
+    <span class="n">form_compiler_options</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">jit_options</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">entity_maps</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="n">Mesh</span><span class="p">,</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomForm</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">CustomForm</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a CustomForm or a list of CustomForm to be integrated</span>
+<span class="sd">    over custom domains.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This function is just a copy of</span>
+<span class="sd">        ``dolfinx.fem.forms.form`` with some small</span>
+<span class="sd">        modifications. Namely:</span>
+
+<span class="sd">        - replacing ``dolfinx.jit.ffcx_jit`` with</span>
+<span class="sd">          ``qugar.dolfinx.jit.ffcx_jit``.</span>
+<span class="sd">        - creating a new form class ``CustomForm`` (that derives from</span>
+<span class="sd">          ``dolfinx.forms.Form`` and adds a new functionalitiy for</span>
+<span class="sd">          computing the required custom coefficients at runtime).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        form: A UFL form or list(s) of UFL forms.</span>
+<span class="sd">        domain (UnfittedDomainABC): The unfitted domain to integrate over.</span>
+<span class="sd">        dtype: Scalar type to use for the compiled form.</span>
+<span class="sd">        form_compiler_options: See :func:`ffcx_jit &lt;dolfinx.jit.ffcx_jit&gt;`</span>
+<span class="sd">        jit_options: See :func:`ffcx_jit &lt;dolfinx.jit.ffcx_jit&gt;`.</span>
+<span class="sd">        entity_maps: If any trial functions, test functions, or</span>
+<span class="sd">            coefficients in the form are not defined over the same mesh</span>
+<span class="sd">            as the integration domain, `entity_maps` must be supplied.</span>
+<span class="sd">            For each key (a mesh, different to the integration domain</span>
+<span class="sd">            mesh) a map should be provided relating the entities in the</span>
+<span class="sd">            integration domain mesh to the entities in the key mesh e.g.</span>
+<span class="sd">            for a key-value pair (msh, emap) in `entity_maps`, `emap[i]`</span>
+<span class="sd">            is the entity in `msh` corresponding to entity `i` in the</span>
+<span class="sd">            integration domain mesh.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        CustomForm | list[CustomForm]: Compiled finite element `CustomForm`.</span>
+<span class="sd">        It can be a single form or a list of forms if the input</span>
+<span class="sd">        `form` is a list of forms. If the provided form is empty,</span>
+<span class="sd">        it returns `None`.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This function is responsible for the compilation of a UFL form</span>
+<span class="sd">        (using FFCx) and attaching coefficients and domains specific</span>
+<span class="sd">        data to the underlying C++ form. It dynamically create a</span>
+<span class="sd">        :class:`Form` instance with an appropriate base class for the</span>
+<span class="sd">        scalar type, e.g. :func:`_cpp.fem.Form_float64`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">form_compiler_options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">form_compiler_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="n">form_compiler_options</span><span class="p">[</span><span class="s2">&quot;scalar_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dtype</span>
+    <span class="n">ftype</span> <span class="o">=</span> <span class="n">form_cpp_class</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_form</span><span class="p">(</span><span class="n">form</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomForm</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compile a single UFL form.&quot;&quot;&quot;</span>
+
+        <span class="c1"># In the case of exterior facets integrals everywhere in the</span>
+        <span class="c1"># domain, the default exterior facets generated by DOLFINx</span>
+        <span class="c1"># must be modified: for unfitted meshes &quot;everywhere&quot; needs to</span>
+        <span class="c1"># include the unfitted boundary, not just the mesh&#39;s external</span>
+        <span class="c1"># facets. ``_modify_everywhere_exterior_facet_integrals``</span>
+        <span class="c1"># replaces the ``&quot;everywhere&quot;`` subdomain id with a fresh</span>
+        <span class="c1"># numerical one and tags the integral with a metadata flag so</span>
+        <span class="c1"># the unfitted facets can be attached later.</span>
+        <span class="n">form</span><span class="p">,</span> <span class="n">old_integrals</span> <span class="o">=</span> <span class="n">_modify_everywhere_exterior_facet_integrals</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+
+        <span class="c1"># Extract subdomain data from UFL form</span>
+        <span class="n">sd</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">subdomain_data</span><span class="p">()</span>
+        <span class="p">(</span><span class="n">domain</span><span class="p">,)</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sd</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>  <span class="c1"># Assuming single domain</span>
+
+        <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="s2">&quot;unf_domain&quot;</span><span class="p">)</span>
+        <span class="n">unf_domain</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">unf_domain</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">unf_domain</span><span class="p">,</span> <span class="n">UnfittedDomainABC</span><span class="p">)</span>
+
+        <span class="c1"># Check that subdomain data for each integral type is the same</span>
+        <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">sd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">d</span> <span class="ow">is</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])</span>
+
+        <span class="n">msh</span> <span class="o">=</span> <span class="n">domain</span><span class="o">.</span><span class="n">ufl_cargo</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">msh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Expecting to find a Mesh in the form.&quot;</span><span class="p">)</span>
+        <span class="n">itg_data</span><span class="p">,</span> <span class="n">ufcx_form</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">code</span> <span class="o">=</span> <span class="n">ffcx_jit</span><span class="p">(</span>
+            <span class="n">msh</span><span class="o">.</span><span class="n">comm</span><span class="p">,</span>
+            <span class="n">form</span><span class="p">,</span>
+            <span class="n">form_compiler_options</span><span class="o">=</span><span class="n">form_compiler_options</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+            <span class="n">jit_options</span><span class="o">=</span><span class="n">jit_options</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># For each argument in form extract its function space</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">ufl_function_space</span><span class="p">()</span><span class="o">.</span><span class="n">_cpp_object</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">arguments</span><span class="p">()]</span>
+        <span class="n">part</span> <span class="o">=</span> <span class="n">form_compiler_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;part&quot;</span><span class="p">,</span> <span class="s2">&quot;full&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">part</span> <span class="o">==</span> <span class="s2">&quot;diagonal&quot;</span><span class="p">:</span>
+            <span class="n">V</span> <span class="o">=</span> <span class="p">[</span><span class="n">V</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+
+        <span class="c1"># Prepare coefficients data. For every coefficient in form take</span>
+        <span class="c1"># its C++ object.</span>
+        <span class="n">original_coeffs</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">coefficients</span><span class="p">()</span>
+        <span class="n">coeffs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">original_coeffs</span><span class="p">[</span><span class="n">ufcx_form</span><span class="o">.</span><span class="n">original_coefficient_positions</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">_cpp_object</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ufcx_form</span><span class="o">.</span><span class="n">num_coefficients</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">constants</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">_cpp_object</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">constants</span><span class="p">()]</span>
+
+        <span class="c1"># Build the per-integral-type subdomain id list. DOLFINx 0.10.0</span>
+        <span class="c1"># reads these directly out of ``ufcx_form.form_integral_ids``,</span>
+        <span class="c1"># but qugar must reconstruct them from the UFL integrals: the</span>
+        <span class="c1"># synthetic subdomain ids generated by</span>
+        <span class="c1"># ``_modify_everywhere_exterior_facet_integrals`` for unfitted</span>
+        <span class="c1"># everywhere-boundary integrals only exist on the UFL form,</span>
+        <span class="c1"># and the unfitted-facet ranges appended below to</span>
+        <span class="c1"># ``subdomains[IntegralType.exterior_facet]`` complete the</span>
+        <span class="c1"># picture.</span>
+        <span class="n">subdomain_ids</span> <span class="o">=</span> <span class="p">{</span><span class="nb">type</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="nb">type</span> <span class="ow">in</span> <span class="n">sd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="n">everywhere_ext_facet_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">integral</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">integrals</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">integral</span><span class="o">.</span><span class="n">subdomain_data</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Subdomain ids can be strings, its or tuples with</span>
+                <span class="c1"># strings and ints</span>
+                <span class="k">if</span> <span class="n">integral</span><span class="o">.</span><span class="n">subdomain_id</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;everywhere&quot;</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">sid</span> <span class="k">for</span> <span class="n">sid</span> <span class="ow">in</span> <span class="n">integral</span><span class="o">.</span><span class="n">subdomain_id</span><span class="p">()</span> <span class="k">if</span> <span class="n">sid</span> <span class="o">!=</span> <span class="s2">&quot;everywhere&quot;</span><span class="p">]</span>
+                    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                        <span class="c1"># If not tuple, but single integer id</span>
+                        <span class="n">ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">integral</span><span class="o">.</span><span class="n">subdomain_id</span><span class="p">()]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">subdomain_ids</span><span class="p">[</span><span class="n">integral</span><span class="o">.</span><span class="n">integral_type</span><span class="p">()]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">integral</span><span class="o">.</span><span class="n">integral_type</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;exterior_facet&quot;</span><span class="p">:</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">integral</span><span class="o">.</span><span class="n">metadata</span><span class="p">()</span>
+                <span class="k">if</span> <span class="s2">&quot;ext_facet_everywhere&quot;</span> <span class="ow">in</span> <span class="n">metadata</span> <span class="ow">and</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;ext_facet_everywhere&quot;</span><span class="p">]:</span>
+                    <span class="k">assert</span> <span class="n">integral</span><span class="o">.</span><span class="n">subdomain_id</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;everywhere&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">everywhere_ext_facet_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">integral</span><span class="o">.</span><span class="n">subdomain_id</span><span class="p">())</span>
+
+        <span class="c1"># Chain and sort subdomain ids</span>
+        <span class="k">for</span> <span class="n">itg_type</span><span class="p">,</span> <span class="n">marker_ids</span> <span class="ow">in</span> <span class="n">subdomain_ids</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">flattened_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">marker_ids</span><span class="p">))</span>
+            <span class="n">flattened_ids</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+            <span class="n">subdomain_ids</span><span class="p">[</span><span class="n">itg_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">flattened_ids</span>
+
+        <span class="c1"># Subdomain markers (possibly empty list for some integral</span>
+        <span class="c1"># types)</span>
+        <span class="n">subdomains</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">_ufl_to_dolfinx_domain</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span> <span class="n">get_integration_domains</span><span class="p">(</span>
+                <span class="n">_ufl_to_dolfinx_domain</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">subdomain_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">subdomain_ids</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">subdomain_data</span><span class="p">)</span> <span class="ow">in</span> <span class="n">sd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">subdomain_id</span> <span class="ow">in</span> <span class="n">everywhere_ext_facet_ids</span><span class="p">:</span>
+            <span class="n">ext_facets</span> <span class="o">=</span> <span class="n">unf_domain</span><span class="o">.</span><span class="n">get_all_facets</span><span class="p">(</span><span class="n">ext_integral</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">as_array</span><span class="p">()</span>
+            <span class="n">subdomains</span><span class="p">[</span><span class="n">IntegralType</span><span class="o">.</span><span class="n">exterior_facet</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">subdomain_id</span><span class="p">,</span> <span class="n">ext_facets</span><span class="p">))</span>
+
+        <span class="c1"># Reverting modified exterior integrals</span>
+        <span class="n">form</span><span class="o">.</span><span class="n">_integrals</span> <span class="o">=</span> <span class="n">old_integrals</span>
+
+        <span class="k">if</span> <span class="n">entity_maps</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_entity_maps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_entity_maps</span> <span class="o">=</span> <span class="p">[</span><span class="n">entity_map</span><span class="o">.</span><span class="n">_cpp_object</span> <span class="k">for</span> <span class="n">entity_map</span> <span class="ow">in</span> <span class="n">entity_maps</span><span class="p">]</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="n">ftype</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">module</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;uintptr_t&quot;</span><span class="p">,</span> <span class="n">module</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">addressof</span><span class="p">(</span><span class="n">ufcx_form</span><span class="p">))],</span>
+            <span class="n">V</span><span class="p">,</span>
+            <span class="n">coeffs</span><span class="p">,</span>
+            <span class="n">constants</span><span class="p">,</span>
+            <span class="n">subdomains</span><span class="p">,</span>
+            <span class="n">_entity_maps</span><span class="p">,</span>
+            <span class="n">msh</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">CustomForm</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">unf_domain</span><span class="p">,</span> <span class="n">itg_data</span><span class="p">,</span> <span class="n">ufcx_form</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_flatten_list</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
+        <span class="n">new_lst</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">new_lst</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_flatten_list</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">new_lst</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_form</span><span class="p">(</span><span class="n">form</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomForm</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">CustomForm</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Recursively convert ufl.Forms to dolfinx.fem.Form.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            form: UFL form or list of UFL forms to extract DOLFINx forms</span>
+<span class="sd">                from.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ``dolfinx.fem.Form`` or a list of ``dolfinx.fem.Form``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">ufl</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">_form</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">abc</span><span class="o">.</span><span class="n">Iterable</span><span class="p">):</span>
+            <span class="n">forms</span> <span class="o">=</span> <span class="n">_flatten_list</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">sub_form</span><span class="p">:</span> <span class="n">_create_form</span><span class="p">(</span><span class="n">sub_form</span><span class="p">),</span> <span class="n">form</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="n">forms</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not implemented case.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_create_form</span><span class="p">(</span><span class="n">form</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Pablo Antolin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
