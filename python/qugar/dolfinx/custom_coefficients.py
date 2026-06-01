@@ -26,13 +26,10 @@ from dolfinx.fem.forms import Form
 from qugar.dolfinx.custom_quad_utils import map_facets_points, permute_facet_points
 from qugar.dolfinx.integral_data import IntegralData
 from qugar.dolfinx.quadrature_data import QuadratureData
+from qugar.dolfinx.quadrature_store import FloatingArray, QuadratureStore
 from qugar.mesh.mesh_facets import MeshFacets
 from qugar.mesh.unfitted_domain_abc import UnfittedDomainABC
 from qugar.quad import CustomQuad, CustomQuadFacet, CustomQuadUnfBoundary
-
-"""Type defining all the possible array types for the integrals
-coefficients."""
-FloatingArray = npt.NDArray[np.float32 | np.float64 | np.complex64 | np.complex128]
 
 
 def _find_common_rows(A: npt.NDArray[np.int32], B: npt.NDArray[np.int32]) -> npt.NDArray[np.intp]:
@@ -63,7 +60,16 @@ def _find_common_rows(A: npt.NDArray[np.int32], B: npt.NDArray[np.int32]) -> npt
 
 
 class _CustomCoeffsPackerIntegral:
-    """Class for computing coefficients for a single custom integral.
+    """Builder of the value-independent :class:`QuadratureStore` for a
+    single custom integral.
+
+    It classifies the domain entities (cut / empty), generates (or reuses,
+    via the domain-level cache) the custom quadratures, and assembles a
+    ``new_coeffs`` *template* with the smuggled geometry and the relative
+    offsets already written and the standard-coefficient block left zeroed.
+    The result is exposed via :meth:`build_store`; the cheap per-assembly
+    overlay of the standard coefficients happens in
+    :meth:`QuadratureStore.pack`.
 
     Parameters:
         _unf_domain (UnfittedDomainABC): The unfitted domain in which the
@@ -90,10 +96,11 @@ class _CustomCoeffsPackerIntegral:
         _mesh (dolfinx.mesh.Mesh): DOLFINx associated to the integral.
         _old_coeffs (FloatingArray): Original (standard) compute
             coefficients for non custom integrals.
-        _new_coeffs (FloatingArray): New coefficients for custom
-            integrals. See the documentation of the function
-            `self._compute_new_coeffs` for a more detailed discussion of
-            the structure of this array.
+        _new_coeffs (FloatingArray): The ``new_coeffs`` template for the
+            custom integral (geometry + offsets written, standard block
+            zeroed). See the documentation of the method
+            `self._build_template` for a more detailed discussion of the
+            structure of this array.
         _dtype (type[np.float32 | np.float64]): `numpy` scalar type of the
             integral quantities.
         _coeffs_dtype (FloatingArray): `numpy` scalar type of the
@@ -162,25 +169,38 @@ class _CustomCoeffsPackerIntegral:
         self._subdomain_id = subdomain_id
         self._domain = domain
         self._mesh = mesh
+        # ``old_coeffs`` is used only for its shape (number of standard
+        # coefficient columns) and dtype; its values are not baked into the
+        # template — they are overlaid on every assembly by
+        # ``QuadratureStore.pack``.
         self._old_coeffs = old_coeffs
         self._custom_entity_ids = self._get_custom_entities_ids()
+        self._empty_entity_ids = self._get_empty_entities_ids()
 
         self._set_dtypes()
         self._create_quadratures()
-        self._compute_new_coeffs()
+        self._build_template()
 
         return
 
-    @property
-    def new_coeffs(
-        self,
-    ) -> npt.NDArray[np.float32 | np.float64 | np.complex64 | np.complex128]:
-        """Returns the generated new coefficients.
+    def build_store(self) -> QuadratureStore:
+        """Returns the :class:`QuadratureStore` for this integral.
 
         Returns:
-            New generated coefficients.
+            QuadratureStore: The value-independent runtime geometry
+            (prebuilt ``new_coeffs`` template + entity classification +
+            generated quadratures + offsets).
         """
-        return self._new_coeffs
+        return QuadratureStore(
+            template=self._new_coeffs,
+            old_rows=int(self._old_coeffs.shape[0]),
+            old_cols=int(self._old_coeffs.shape[1]),
+            custom_entity_ids=self._custom_entity_ids,
+            empty_entity_ids=self._empty_entity_ids,
+            custom_quads=self._custom_quads,
+            n_vals_per_entity=self._n_vals_per_entity,
+            offsets=self._offsets,
+        )
 
     def _set_dtypes(self) -> None:
         """Sets the `numpy` types associated to the integral, the
@@ -419,7 +439,7 @@ class _CustomCoeffsPackerIntegral:
         else:
             all_rel_offsets[self._custom_entity_ids] = rel_offsets
         # And finally for the empty entities we set the offset to 0.
-        all_rel_offsets[self._get_empty_entities_ids()] = 0
+        all_rel_offsets[self._empty_entity_ids] = 0
 
         # Copy intp offsets into the trailing coeff cells via a byte view.
         # For coeffs whose cell is smaller-or-equal to intp (float32, float64,
@@ -536,10 +556,8 @@ class _CustomCoeffsPackerIntegral:
 
         custom_cells = all_cells[self._custom_entity_ids]
 
-        if quad_data.unfitted_boundary:
-            return self._unf_domain.create_quad_unf_boundaries(degree, custom_cells)
-        else:
-            return self._unf_domain.create_quad_custom_cells(degree, custom_cells)
+        flavor = "unf_boundary" if quad_data.unfitted_boundary else "cell"
+        return self._unf_domain.get_cached_custom_quadrature(flavor, degree, custom_cells)
 
     def _create_quadrature_facet(
         self, quad_data: QuadratureData
@@ -573,8 +591,8 @@ class _CustomCoeffsPackerIntegral:
             all_facets.local_facet_ids[self._custom_entity_ids],
         )
 
-        quad_facet = self._unf_domain.create_quad_custom_facets(
-            degree, custom_facets, self._is_exterior_facet()
+        quad_facet = self._unf_domain.get_cached_custom_quadrature(
+            "facet", degree, custom_facets, ext_integral=self._is_exterior_facet()
         )
 
         quad = self._map_facet_quadrature(quad_facet, custom_facets)
@@ -774,45 +792,38 @@ class _CustomCoeffsPackerIntegral:
 
         return vals_all_quads
 
-    def _compute_new_coeffs(self) -> None:
-        """Creates the custom coefficients for the integral and stores
-        them in `self._new_coeffs`. This new array also contains the
-        coefficients of the (original) non-custom integral.
+    def _build_template(self) -> None:
+        """Builds the ``new_coeffs`` *template* and stores it in
+        `self._new_coeffs`.
 
-        After including the `self._old_coeffs` (the coefficients for the
-        non-custom integral), this function appends all the extra
-        coefficients for the custom integrals.
+        The template holds all the parts of the custom coefficients that
+        do *not* depend on the form's coefficient values: the smuggled
+        per-entity geometry (points, weights, normals, ...) and the
+        relative offset columns. The standard-coefficient block (the
+        top-left ``[:old_rows, :old_cols]`` region) is left zeroed; it is
+        overlaid with the freshly packed DOLFINx coefficients on every
+        assembly by :meth:`QuadratureStore.pack`.
 
-        In addition, it also appends one (or two, depending on the
-        coefficients type) extra columns for including the coefficients
-        relative offsets for every entity (cell or facet).
-
-        If the offset is zero it means that the cell does not have a
-        custom integration, but a standard one, and then the standard
-        (old) coefficients should be used. Otherwise, that value
-        indicates the relative position (respect to the first entry of
-        the current row) where the extra custom coefficients for the
-        integral of the current entity start.
+        The offset columns work as follows: if an entity's relative offset
+        is ``-1`` it is a full (standard) entity using only the standard
+        coefficients; if it is ``0`` the entity is empty; otherwise the
+        value is the position (relative to the start of the entity's row)
+        where that entity's smuggled custom data starts.
         """
 
         self._allocate_new_coeffs()
-
-        # Copying old coefficients to the new array.
-        old_shape = self._old_coeffs.shape
-        self._new_coeffs[: old_shape[0], : old_shape[1]] = self._old_coeffs
-
         self._compute_offsets()
         self._copy_vals(self._compute_new_vals())
 
 
-def _compute_custom_coeffs(
+def _build_quadrature_store(
     form: Form,
     unf_domain: UnfittedDomainABC,
     itg_data: IntegralData,
     itg_info: tuple[IntegralType, int],
     old_coeffs: FloatingArray,
-) -> FloatingArray:
-    """Generates the custom coefficients for an integral.
+) -> QuadratureStore:
+    """Builds the :class:`QuadratureStore` for an integral.
 
     Args:
         form (Form): DOLFINx form associated to the integral whose
@@ -821,21 +832,25 @@ def _compute_custom_coeffs(
             integrals are computed.
         itg_data (IntegralData): Data of the integral whose custom
             coefficients are computed.
+        itg_info (tuple[IntegralType, int]): Integral type and position
+            identifying the integral within the form.
         old_coeffs (FloatingArray): `Standard` coefficients associated
-            to the non-custom integral.
+            to the non-custom integral, used only for their shape and
+            dtype.
 
     Returns:
-        FloatingArray: Computed coefficients for the custom integral.
+        QuadratureStore: The value-independent runtime geometry for the
+        integral.
     """
 
     domain = form._cpp_object.domains(*itg_info)
     mesh = form._cpp_object.mesh
 
-    generator = _CustomCoeffsPackerIntegral(
+    builder = _CustomCoeffsPackerIntegral(
         unf_domain, itg_data, itg_info[1], domain, mesh, old_coeffs
     )
 
-    return generator.new_coeffs
+    return builder.build_store()
 
 
 class CustomCoeffsPacker:
@@ -851,6 +866,11 @@ class CustomCoeffsPacker:
             integrals are computed.
         _itg_data (list[IntegralData]): Data of all the integrals
             contained in the `form`.
+        _stores (dict[tuple[IntegralType, int], QuadratureStore] | None):
+            Cache of the per-integral quadrature stores. Built lazily on
+            the first ``pack_coefficients`` call (when the standard
+            coefficient shape/dtype become known) and reused afterwards so
+            the runtime quadrature is generated only once.
     """
 
     def __init__(self, form: Form, domain: UnfittedDomainABC, itg_data: list[IntegralData]) -> None:
@@ -867,6 +887,7 @@ class CustomCoeffsPacker:
         self._form = form
         self._domain = domain
         self._itg_data = itg_data
+        self._stores: dict[tuple[IntegralType, int], QuadratureStore] = {}
         return
 
     def _get_itg_data(self, itg_info: tuple[IntegralType, int]) -> IntegralData:
@@ -954,11 +975,14 @@ class CustomCoeffsPacker:
         ] = {}
 
         for itg_info, old_coeffs in coeffs.items():
-            itg_data = self._get_itg_data(itg_info)
-            new_coeffs = _compute_custom_coeffs(
-                self._form, self._domain, itg_data, itg_info, old_coeffs
-            )
-            new_pack_coeffs[itg_info] = new_coeffs
+            store = self._stores.get(itg_info)
+            if store is None:
+                itg_data = self._get_itg_data(itg_info)
+                store = _build_quadrature_store(
+                    self._form, self._domain, itg_data, itg_info, old_coeffs
+                )
+                self._stores[itg_info] = store
+            new_pack_coeffs[itg_info] = store.pack(old_coeffs)
 
         return new_pack_coeffs
 
