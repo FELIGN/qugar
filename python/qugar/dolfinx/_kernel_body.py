@@ -341,6 +341,35 @@ class KernelBody:
                 loop.body = "break;\n" + loop.body
         return self
 
+    def null_unfitted_normals(self) -> "KernelBody":
+        """Replace every ``normals_<quad>[...]`` access belonging to an
+        unfitted-boundary quadrature with ``0.0``, across all loop bodies.
+
+        This is needed for the ``_original`` kernel variant. FFCx (via the
+        backend patch in :mod:`qugar.dolfinx._ffcx_patches`) emits
+        ``normals_<quad>[tdim * iq + i]`` accesses unconditionally —
+        including in the ``_original`` kernel where the array is never
+        declared. Even though the unfitted loops are dead-code-eliminated
+        by ``break_unfitted_loops``, the C compiler still type-checks the
+        unreachable body. Replacing the accesses with ``0.0`` makes the
+        original kernel compile cleanly.
+
+        Must be called after :meth:`inline_pre_loop_into_loops` (the
+        normals expression is in the inlined pre-loop text, which ends up
+        in every loop's body).
+        """
+        unfitted_names = {
+            name for name, qd in self.quad_by_name.items() if qd.unfitted_boundary
+        }
+        if not unfitted_names:
+            return self
+        for loop in self.loops:
+            for qname in unfitted_names:
+                loop.body = re.sub(
+                    rf"normals_{qname}\[[^\]]*\]", "0.0", loop.body
+                )
+        return self
+
     def erase_static_declarations(self) -> "KernelBody":
         """Strip FFCx's ``// Quadrature rules`` weights block and the
         ``static const ... FE..._Q...[][][][] = {...};`` table

@@ -159,7 +159,7 @@ import ufl
 
 import qugar
 import qugar.impl
-from qugar.dolfinx import CustomForm, ds_bdry_unf, form_custom, mapped_normal
+from qugar.dolfinx import CustomForm, dsu, dsu_normal, form_custom
 from qugar.mesh import create_unfitted_impl_Cartesian_mesh
 
 # -
@@ -236,19 +236,19 @@ ufl_form_vol = div_F * dx
 
 # While in the case of the surface integrals, the procedure is twofold:
 # for $\Gamma_{\text{unf}}$ we use the
-# {py:class}`ds_bdry_unf<qugar.dolfinx.ds_bdry_unf>` measure introduced in QUGaR
+# {py:class}`dsu<qugar.dolfinx.dsu>` measure introduced in QUGaR
 # (note that we integrate over the cut cells only)
 
-ds_unf = ds_bdry_unf(subdomain_id=0, domain=unf_mesh, subdomain_data=cell_tags)
+ds_unf = dsu(subdomain_id=0, domain=unf_mesh, subdomain_data=cell_tags)
 
 # and the standard UFL external facet measure for (both parts of) $\Gamma_{\text{ext}}$.
 
 ds = ufl.ds(subdomain_id=0, domain=unf_mesh, subdomain_data=facet_tags)
 
 # In the same way, the unit outward normal vector at the boundary $\Gamma_{\text{unf}}$  requires
-# the {py:class}`mapped_normal<qugar.dolfinx.mapped_normal>` function introduced in QUGaR.
+# the {py:class}`dsu_normal<qugar.dolfinx.dsu_normal>` function introduced in QUGaR.
 
-bound_normal = mapped_normal(unf_mesh)
+bound_normal = dsu_normal(unf_mesh)
 
 # while the normal at the external facets is defined using the standard UFL function.
 

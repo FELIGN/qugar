@@ -43,7 +43,7 @@ import ufl
 from utils import check_vals, dtypes  # type: ignore
 
 import qugar.impl
-from qugar.dolfinx import ds_bdry_unf, form_custom
+from qugar.dolfinx import dsu, form_custom
 from qugar.mesh import create_unfitted_impl_Cartesian_mesh
 
 
@@ -82,14 +82,14 @@ def test_empty_domain_volume_is_zero(dtype):
 @pytest.mark.parametrize("dtype", dtypes)
 def test_empty_domain_unfitted_surface_is_zero(dtype):
     """No unfitted boundary inside the bounding box -- the
-    ``ds_bdry_unf`` integral must be exactly zero."""
+    ``dsu`` integral must be exactly zero."""
     impl = qugar.impl.create_disk(
         radius=dtype(0.05), center=np.array([-5.0, -5.0], dtype=dtype)
     )
     unf = _build_mesh(impl, 8, dtype)
 
     one = dolfinx.fem.Constant(unf, dtype(1.0))
-    form = form_custom(one * ds_bdry_unf(domain=unf, degree=2), dtype=dtype)
+    form = form_custom(one * dsu(domain=unf, degree=2), dtype=dtype)
     perim = dolfinx.fem.assemble_scalar(form, coeffs=form.pack_coefficients())
     assert np.isclose(perim, 0.0, atol=1.0e-12), (
         f"Empty domain unfitted-boundary integral must be 0, got {perim!r}"
@@ -117,14 +117,14 @@ def test_full_domain_volume_equals_box(dtype):
 def test_full_domain_unfitted_surface_is_zero(dtype):
     """The implicit boundary lies entirely outside the bounding box
     so there is no unfitted boundary inside it -- the
-    ``ds_bdry_unf`` integral must be zero."""
+    ``dsu`` integral must be zero."""
     impl = qugar.impl.create_disk(
         radius=dtype(10.0), center=np.array([0.5, 0.5], dtype=dtype)
     )
     unf = _build_mesh(impl, 8, dtype)
 
     one = dolfinx.fem.Constant(unf, dtype(1.0))
-    form = form_custom(one * ds_bdry_unf(domain=unf, degree=2), dtype=dtype)
+    form = form_custom(one * dsu(domain=unf, degree=2), dtype=dtype)
     perim = dolfinx.fem.assemble_scalar(form, coeffs=form.pack_coefficients())
     assert np.isclose(perim, 0.0, atol=1.0e-12), (
         f"Full domain unfitted-boundary integral must be 0, got {perim!r}"

@@ -42,7 +42,7 @@ import ufl
 from utils import check_vals, dtypes  # type: ignore
 
 import qugar.impl
-from qugar.dolfinx import form_custom, ds_bdry_unf
+from qugar.dolfinx import dsu, form_custom
 from qugar.mesh import create_unfitted_impl_Cartesian_mesh
 
 
@@ -125,12 +125,12 @@ def test_sphere_volume(dtype):
 
 @pytest.mark.parametrize("dtype", dtypes)
 def test_disk_unfitted_surface(dtype):
-    """Assembling ``1 * ds_bdry_unf`` on the cut implicit domain must
+    """Assembling ``1 * dsu`` on the cut implicit domain must
     recover the analytic perimeter (2D disk)."""
     unf = _make_disk_mesh(16, dtype)
     one = dolfinx.fem.Constant(unf, dtype(1.0))
     form = form_custom(
-        one * ds_bdry_unf(domain=unf, degree=4), dtype=dtype
+        one * dsu(domain=unf, degree=4), dtype=dtype
     )
     coeffs = form.pack_coefficients()
     perim = dolfinx.fem.assemble_scalar(form, coeffs=coeffs)

@@ -17,6 +17,7 @@
 
 #include <array>
 #include <cstddef>
+#include <deque>
 #include <exception>
 #include <map>
 #include <span>
@@ -108,14 +109,30 @@ int tabulate_impl(int handle, int nd, const T *x, int npts, int gdim, T *basis, 
     return -2;
   }
 }
-// Thread-local scratch buffer used by the generated kernel for basix
-// blocks and per-table repack buffers. Lives for the thread's lifetime
-// and grows on demand, so the kernel doesn't have to put large VLAs on
+// Thread-local scratch buffers used by the generated kernel for basix
+// blocks and per-table repack buffers. Live for the thread's lifetime
+// and grow on demand, so the kernel doesn't have to put large VLAs on
 // the stack -- which on macOS overflows the (smaller) worker-thread
 // stack for higher-degree 3D forms.
-template<typename T> T *get_scratch_impl(long n)
+//
+// There is ONE buffer per ``slot``: a kernel that assembles several
+// quadratures (e.g. a combined volume ``dx`` + unfitted-boundary ``dsu``
+// form) tabulates every quadrature's FE tables up front and reads them
+// back in the quadrature loops that follow, so all of them must stay
+// live simultaneously. A single shared buffer would alias them, and a
+// later (larger) request could reallocate it out from under an earlier
+// quadrature's still-held pointer. A ``std::deque`` never relocates its
+// existing elements when a new slot is appended, so pointers handed out
+// for earlier slots remain valid; each slot's own vector is only resized
+// (at most once per kernel call) before its pointer is used.
+template<typename T> T *get_scratch_impl(int slot, long n)
 {
-  thread_local std::vector<T> s;
+  thread_local std::deque<std::vector<T>> pool;
+  if (slot < 0)
+    return nullptr;
+  while (static_cast<std::size_t>(slot) >= pool.size())
+    pool.emplace_back();
+  std::vector<T> &s = pool[static_cast<std::size_t>(slot)];
   try {
     if (s.size() < static_cast<std::size_t>(n))
       s.resize(static_cast<std::size_t>(n));
@@ -156,13 +173,14 @@ int qugar_tabulate_f32(int handle, int nd, const float *x, int npts, int gdim, f
 }
 
 // Thread-local scratch buffer accessors used by the generated kernel.
-double *qugar_get_scratch_f64(long n)
+// ``slot`` selects a per-quadrature buffer (see get_scratch_impl).
+double *qugar_get_scratch_f64(int slot, long n)
 {
-  return get_scratch_impl<double>(n);
+  return get_scratch_impl<double>(slot, n);
 }
-float *qugar_get_scratch_f32(long n)
+float *qugar_get_scratch_f32(int slot, long n)
 {
-  return get_scratch_impl<float>(n);
+  return get_scratch_impl<float>(slot, n);
 }
 
 // Introspection / teardown.

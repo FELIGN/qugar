@@ -28,7 +28,6 @@ from ffcx.codegeneration.codegeneration import CodeBlocks
 from ffcx.ir.representation import DataIR, IntegralIR
 
 from qugar.dolfinx._kernel_body import KernelBody
-from qugar.dolfinx.boundary import ParamNormal
 from qugar.dolfinx.fe_table import FETable
 from qugar.dolfinx.integral_data import IntegralData, extract_integral_data
 from qugar.dolfinx.parsing_utils import dtype_to_C_str
@@ -88,14 +87,10 @@ class _IntegralModifier:
         _data (IntegralData): Data structure containing information
             associated to the quadrature, as integral type, subdomain
             ids, quadratures, and FE tables.
-        _func_signt (str): Block of C code containing the signature of
-            original tabulate tensor function
-        _func_impl (str): Block of C code containing the implementation
-            of original tabulate tensor function
-        _before_func (str): Block of C code before the original tabulate
-            tensor function.
-        _after_func (str): Block of C code after the original tabulate
-            tensor function.
+        _body (KernelBody): Structured representation of the parsed
+            kernel (signature, per-quadrature loops, pre/post bands).
+        _integral_name (str): FFCx-generated hash part of the integral
+            function name.
         _coeffs_dtype (type[np.float32 | np.float64 | np.complex64 |
             np.complex128]): Type of the function's coefficients and
             constants.
@@ -242,25 +237,6 @@ class _IntegralModifier:
         else:
             assert False
 
-    def _get_constant_normal_offsets(self) -> tuple[np.int64, ...]:
-        """Finds the indices of the (fake) constants associated to
-        unfitted boundary normals.
-
-        Returns:
-            tuple[np.int64, ...]: Offsets of the constants associated
-            to unfitted boundary normals.
-        """
-
-        constant_offsets = self._ir.expression.original_constant_offsets
-
-        offsets = tuple(
-            np.int64(offset)
-            for constant, offset in constant_offsets.items()
-            if isinstance(constant, ParamNormal)
-        )
-        return offsets
-
-
     def _shim_suffix(self) -> str:
         """Returns the shim entry-point suffix for the real dtype."""
         return "f64" if self._data.dtype == np.float64 else "f32"
@@ -275,7 +251,7 @@ class _IntegralModifier:
             "(int, int, int, int, int, int);\n"
             f"extern int qugar_tabulate_{suffix}"
             f"(int, int, const {dtype_str}*, int, int, {dtype_str}*, long);\n"
-            f"extern {dtype_str}* qugar_get_scratch_{suffix}(long);\n\n"
+            f"extern {dtype_str}* qugar_get_scratch_{suffix}(int, long);\n\n"
         )
 
     @staticmethod
@@ -429,7 +405,9 @@ class _IntegralModifier:
         is_interior_facet = self._data.integral_type == "interior_facet"
 
         call_code = ""
-        for quad_data, FE_tables in self._data.quad_data_FE_tables.items():
+        for quad_slot, (quad_data, FE_tables) in enumerate(
+            self._data.quad_data_FE_tables.items()
+        ):
             quad_name = quad_data.name
 
             has_normals = quad_data.unfitted_boundary
@@ -522,9 +500,13 @@ class _IntegralModifier:
             scratch_var = f"scratch_{quad_name}"
             if scratch_terms:
                 total = " + ".join(scratch_terms)
+                # Each quadrature gets its own scratch slot so that, in a
+                # multi-quadrature kernel, one quadrature's buffer is never
+                # reallocated/aliased while another's tables are still in
+                # use (see qugar_get_scratch in the shim).
                 call_code += (
                     f"{dtype_str}* {scratch_var} = "
-                    f"qugar_get_scratch_{suffix}((long)({total}));\n\n"
+                    f"qugar_get_scratch_{suffix}({quad_slot}, (long)({total}));\n\n"
                 )
 
             # Running offset (sum of size expressions already consumed).
@@ -671,6 +653,7 @@ class _IntegralModifier:
             return (
                 self._body.copy()
                 .inline_pre_loop_into_loops()
+                .null_unfitted_normals()
                 .break_unfitted_loops()
                 .render(suffix="_original")
             )
@@ -682,13 +665,13 @@ class _IntegralModifier:
         tables are replaced by values dynamically loaded from the
         coefficients array ``w_custom``.
 
-        The accesses to FE tables are transformed from accesses to a 4D
-        (static) array, 1D array accesses.
-        The upper bounds of the quadrature points loops are modified to
-        accomodate the number of quadrature points for every
-        particular cell. And, in the case of unfitted custom boundaries,
-        the used (fake) constants are replaced by their corresponding
-        boundary normals.
+        The accesses to FE tables are transformed from 4D static-array
+        accesses to 1D dynamic-buffer accesses. The upper bounds of the
+        quadrature loops are rewritten to use the runtime point count.
+        For unfitted boundaries the boundary normal is emitted by FFCx
+        (via the :mod:`qugar.dolfinx._ffcx_patches` backend handler); the
+        pre-loop band is inlined into every loop so ``iq`` is in scope at
+        every ``normals_<quad>`` access site.
 
         Returns:
             str: New generated code.
@@ -704,14 +687,15 @@ class _IntegralModifier:
         # Apply the custom-variant transformation pipeline on the
         # structured body. Order matters:
         #   erase_static -> rewrite_table_accesses -> dynamic_loop_bounds
-        #   -> inline_pre_loop_into_loops -> substitute_normals.
+        #   -> inline_pre_loop_into_loops.
+        # The normal is lowered structurally by FFCx (via _ffcx_patches),
+        # so no substitute_normals step is needed.
         body = (
             self._body.copy()
             .erase_static_declarations()
             .rewrite_table_accesses()
             .dynamic_loop_bounds()
             .inline_pre_loop_into_loops()
-            .substitute_normals(self._get_constant_normal_offsets())
         )
 
         # Recover w_custom from custom_data (interim, while dolfinx still

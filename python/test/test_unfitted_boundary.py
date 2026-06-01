@@ -25,7 +25,7 @@ import pytest
 import ufl
 from utils import clean_cache, create_mock_unfitted_mesh, dtypes  # type: ignore
 
-from qugar.dolfinx import CustomForm, ds_bdry_unf, form_custom, mapped_normal
+from qugar.dolfinx import CustomForm, dsu, dsu_normal, form_custom
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -79,7 +79,7 @@ def test_unfitted_normal(N, dim, p, simplex_cell, dtype, nnz, max_quad_sets):
     V0 = dolfinx.fem.functionspace(unf_mesh, ("Lagrange", p))
     V1 = dolfinx.fem.functionspace(unf_mesh, ("Lagrange", p + 1))
 
-    n = mapped_normal(unf_mesh)
+    n = dsu_normal(unf_mesh)
     c = dolfinx.fem.Constant(unf_mesh, np.ones(dim, dtype=dtype))
     c2 = dolfinx.fem.Constant(unf_mesh, dtype(1.0))
 
@@ -92,12 +92,12 @@ def test_unfitted_normal(N, dim, p, simplex_cell, dtype, nnz, max_quad_sets):
         ufl.dot(c, n)
         * e  # type: ignore
         * v
-        * ds_bdry_unf(domain=unf_mesh, subdomain_data=cell_tags, subdomain_id=bdry_tag)
+        * dsu(domain=unf_mesh, subdomain_data=cell_tags, subdomain_id=bdry_tag)
     )
     ufl_form_1 = (
         e
         * v  # type: ignore
-        * ds_bdry_unf(domain=unf_mesh, subdomain_data=cell_tags, subdomain_id=bdry_tag)
+        * dsu(domain=unf_mesh, subdomain_data=cell_tags, subdomain_id=bdry_tag)
     )
 
     ufl_form_2 = (

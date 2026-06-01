@@ -34,7 +34,7 @@ from utils import (
 
 import qugar.cpp
 import qugar.impl
-from qugar.dolfinx import CustomForm, ds_bdry_unf, form_custom
+from qugar.dolfinx import CustomForm, dsu, form_custom
 from qugar.impl import ImplicitFunc
 from qugar.mesh import UnfittedDomain, create_unfitted_impl_Cartesian_mesh
 
@@ -99,7 +99,7 @@ def compute_boundary_area(
     one = dolfinx.fem.Constant(unf_mesh, dtype(1.0))
 
     quad_degree = get_Gauss_quad_degree(n_quad_pts)
-    ds = ds_bdry_unf(
+    ds = dsu(
         domain=unf_mesh,
         subdomain_data=cell_tags,
         subdomain_id=bdry_tag,

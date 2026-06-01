@@ -139,6 +139,34 @@ def extract_quadrature_data(
         for itg_data in fd.integral_data:
             for itg in itg_data.integrals:
                 quad_data = _extract_single_quadrature_data(itg, fd, ffcx_options)
+
+                # The quadrature name is FFCx's sha1(points) identifier.
+                # Distinct standard rules may legitimately share a name
+                # (e.g. requested degrees 8 and 9 both reduce to the same
+                # 5-point Gauss rule); that is harmless because their
+                # actual rule is identical and `degree` is unused for
+                # non-custom quadratures. For unfitted-boundary measures,
+                # however, the points are placeholders and `degree` drives
+                # the runtime quadrature, so a same-name/different-degree
+                # collision there would silently use the wrong degree. The
+                # points are made unique per (tdim, degree) precisely to
+                # avoid this; when the degree was left unspecified at
+                # construction that disambiguation is impossible, so detect
+                # the residual collision and fail loudly.
+                existing = quads_data.get(quad_data.name)
+                if (
+                    existing is not None
+                    and existing.degree != quad_data.degree
+                    and (existing.unfitted_boundary or quad_data.unfitted_boundary)
+                ):
+                    raise RuntimeError(
+                        f"Unfitted-boundary quadrature name collision: '{quad_data.name}' "
+                        f"maps to both degree {existing.degree} and degree "
+                        f"{quad_data.degree}. This happens with multiple unfitted-boundary "
+                        "(dsu) integrals of different degree when the degree is left "
+                        "unspecified; pass an explicit `degree` to each dsu measure to "
+                        "disambiguate them."
+                    )
                 quads_data[quad_data.name] = quad_data
 
     return quads_data
