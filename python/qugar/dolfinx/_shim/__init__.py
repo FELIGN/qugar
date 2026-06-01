@@ -91,6 +91,62 @@ def _find_cxx() -> Path:
     )
 
 
+def _find_basix_dirs() -> tuple[Path, Path]:
+    """Locate basix's C++ header and library directories.
+
+    The shim ``#include``s ``<basix/finite-element.h>`` and links
+    ``libbasix``; both must come from the *same* basix install, otherwise an
+    ABI / name-mangling mismatch surfaces only at kernel-load time as
+    ``undefined symbol: basix::FiniteElement<...>::tabulate``.
+
+    ``sys.prefix`` happens to hold both under a conda-forge install, which is
+    why that assumption worked there. But in the official FEniCS Docker image
+    the Python venv (``sys.prefix`` = ``/dolfinx-env``) and the C++ basix
+    install (``/usr/local``) are *different* prefixes, so the old code linked
+    a stale/mismatched libbasix. We instead probe a priority-ordered list of
+    candidate prefixes and return the include/lib dirs of the first one that
+    holds *both* the header and the library.
+
+    Returns:
+        ``(include_dir, lib_dir)`` of a self-consistent basix install.
+    """
+    header_rel = Path("include") / "basix" / "finite-element.h"
+
+    candidates: list[Path] = []
+    # CMAKE_PREFIX_PATH is the canonical way an install advertises its
+    # location; the FEniCS Docker image points it at the C++ prefix.
+    for entry in os.environ.get("CMAKE_PREFIX_PATH", "").split(os.pathsep):
+        if entry:
+            candidates.append(Path(entry))
+    conda_prefix = os.environ.get("CONDA_PREFIX")
+    if conda_prefix:
+        candidates.append(Path(conda_prefix))
+    candidates += [
+        Path(sys.prefix),
+        Path(sys.base_prefix),
+        Path("/usr/local"),
+        Path("/usr"),
+    ]
+
+    seen: set[Path] = set()
+    for prefix in candidates:
+        if prefix in seen:
+            continue
+        seen.add(prefix)
+        if not (prefix / header_rel).exists():
+            continue
+        for libdir_name in ("lib", "lib64"):
+            libdir = prefix / libdir_name
+            if any(libdir.glob("libbasix.*")):
+                return prefix / "include", libdir
+
+    raise FileNotFoundError(
+        "could not locate a basix install providing both "
+        "<basix/finite-element.h> and libbasix; looked under "
+        f"{[str(p) for p in seen]}. Set CMAKE_PREFIX_PATH to the basix prefix."
+    )
+
+
 @contextlib.contextmanager
 def _file_lock(path: Path):
     """POSIX advisory exclusive file lock; no-op on platforms without fcntl.
@@ -144,20 +200,29 @@ def ensure_built() -> tuple[Path, str]:
         if lib.exists() and lib.stat().st_mtime >= src_mtime:
             return cache, LIB_NAME
 
-        prefix = Path(sys.prefix)
+        inc_dir, lib_dir = _find_basix_dirs()
+        # Library flags MUST come *after* the source on the command line.
+        # GNU ld defaults to --as-needed, which records a DT_NEEDED for
+        # -lbasix only if it satisfies an as-yet-unresolved symbol at the
+        # point the linker reaches it. With -lbasix before the source, no
+        # basix symbol is pending yet, so the dependency is silently dropped
+        # and the shim ends up with unresolved
+        # basix::FiniteElement<...>::tabulate symbols that only fail at
+        # kernel-load time. macOS's ld does not prune this way, which is why
+        # the bug surfaced solely on the Linux docs build.
         cmd = [
             str(_find_cxx()),
             "-std=c++20",
             "-O2",
             "-fPIC",
             "-shared",
-            f"-I{prefix / 'include'}",
-            f"-L{prefix / 'lib'}",
+            f"-I{inc_dir}",
+            str(SHIM_SRC),
+            f"-L{lib_dir}",
             "-lbasix",
-            f"-Wl,-rpath,{prefix / 'lib'}",
+            f"-Wl,-rpath,{lib_dir}",
             "-o",
             str(lib),
-            str(SHIM_SRC),
         ]
         # Align the shim's macOS deployment target with what cffi will use
         # when it links the kernel (otherwise ld warns "built for newer
