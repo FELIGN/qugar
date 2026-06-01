@@ -30,15 +30,18 @@ from qugar.dolfinx._ffcx_patches import apply_patches as _apply_ffcx_patches
 
 _apply_ffcx_patches()
 
+# Patch DOLFINx so its stock assemblers and high-level solvers
+# (``dolfinx.fem.assemble_*``, ``dolfinx.fem.petsc.LinearProblem`` /
+# ``NonlinearProblem``, ...) transparently use qugar's runtime-quadrature
+# kernels and custom coefficients whenever a form lives on an unfitted
+# mesh. This replaces qugar's previously bespoke ``LinearProblem`` /
+# ``NonlinearProblem`` classes: users now use the stock DOLFINx ones
+# directly. See qugar.dolfinx._assembly_patches.
+from qugar.dolfinx._assembly_patches import apply_patches as _apply_assembly_patches
+
+_apply_assembly_patches()
+
 from qugar.dolfinx.boundary import dsu, dsu_normal
 from qugar.dolfinx.forms import CustomForm, form_custom
 
 __all__ = ["CustomForm", "dsu", "dsu_normal", "form_custom"]
-
-
-from qugar.utils import has_PETSc
-
-if has_PETSc:
-    from qugar.dolfinx.petsc import LinearProblem, NonlinearProblem
-
-    __all__ += ["LinearProblem", "NonlinearProblem"]

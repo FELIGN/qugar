@@ -327,7 +327,13 @@ def solve_elasticity(n_cells, degree=1):
         "ksp_diagonal_scale": True,  # Jacobi preconditioner
     }
 
-    problem = qugar.dolfinx.LinearProblem(a, L, bcs=bcs, petsc_options=petsc_options)
+    problem = dolfinx.fem.petsc.LinearProblem(
+        a,
+        L,
+        bcs=bcs,
+        petsc_options=petsc_options,
+        petsc_options_prefix=f"demo_elasticity_conv_{n_cells}_{degree}_",
+    )
     uh = problem.solve()
 
     return unf_mesh, uh, V

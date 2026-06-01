@@ -8,8 +8,8 @@
 #
 # --------------------------------------------------------------------------
 
-"""End-to-end tests for the Dirichlet-BC + ``apply_lifting`` path of
-``qugar.dolfinx.LinearProblem``.
+"""End-to-end tests for the Dirichlet-BC + ``apply_lifting`` path of the
+stock ``dolfinx.fem.petsc.LinearProblem`` on an unfitted mesh.
 
 The standard ``test_matrix`` / ``test_vector`` suites assemble
 matrices and vectors without any boundary conditions. The actual
@@ -19,10 +19,15 @@ and on the matrix being correctly zeroed (rows / columns + diagonal)
 on constrained DOFs.
 
 This module solves a small Poisson problem with non-homogeneous
-Dirichlet BCs on the mock unfitted mesh (where the custom quadrature
-is constructed to be equivalent to the standard quadrature) and
-checks that the qugar custom-form solve agrees with a plain DOLFINx
-solve of the same problem.
+Dirichlet BCs on the mock unfitted mesh through the stock
+``dolfinx.fem.petsc.LinearProblem`` (which routes through qugar's
+transparent-assembly patches because the mesh is unfitted). The mock's
+custom quadrature is constructed to be equivalent to the standard
+quadrature, so for a manufactured quadratic solution on a degree-2
+space the discrete solution reproduces the exact solution; we use that
+as the regression assertion. This covers the full
+``assemble_matrix(bcs=...) + apply_lifting + set_bc`` pipeline inside
+``LinearProblem.solve``.
 """
 
 from qugar.utils import has_FEniCSx, has_PETSc
@@ -44,9 +49,10 @@ import dolfinx.mesh
 import numpy as np
 import pytest
 import ufl
+from dolfinx.fem.petsc import LinearProblem
 from utils import check_vals, create_mock_unfitted_mesh, dtypes  # type: ignore
 
-from qugar.dolfinx import LinearProblem
+import qugar.dolfinx  # noqa: F401  (import applies the transparent-assembly patches)
 
 _N = 4
 _NNZ = 0.3
@@ -61,11 +67,15 @@ def _build_poisson_problem(unf, dtype):
     V = dolfinx.fem.functionspace(unf, ("Lagrange", 2))
     u, v = ufl.TrialFunction(V), ufl.TestFunction(V)
 
-    # Manufactured source: u_ex = 1 + x^2 + 2y^2 -> -laplace(u_ex) = -6
-    rhs = dolfinx.fem.Constant(unf, dtype(-6.0))
+    # Manufactured solution u_ex = 1 + x^2 + 2y^2, so -laplace(u_ex) = -6.
+    # The weak form is  a(u, v) = inner(grad u, grad v)*dx  and
+    # L(v) = f*v*dx with f = -laplace(u_ex) = -6. With u_ex in the degree-2
+    # space and exact (here: equivalent) quadrature, the discrete solution
+    # reproduces u_ex exactly.
+    f = dolfinx.fem.Constant(unf, dtype(-6.0))
 
     a = ufl.inner(ufl.grad(u), ufl.grad(v)) * ufl.dx(domain=unf)
-    L = -rhs * v * ufl.dx(domain=unf)
+    L = f * v * ufl.dx(domain=unf)
 
     g = dolfinx.fem.Function(V, dtype=dtype)
     g.interpolate(lambda x: 1 + x[0] ** 2 + 2 * x[1] ** 2)  # type: ignore
@@ -84,38 +94,34 @@ def _build_poisson_problem(unf, dtype):
 @pytest.mark.parametrize("simplex_cell", [True, False])
 @pytest.mark.parametrize("dim", [2, 3])
 def test_poisson_dirichlet(dim, simplex_cell, dtype):
-    """Solve Poisson with non-homogeneous Dirichlet BCs through
-    ``qugar.dolfinx.LinearProblem`` and compare against a plain
-    DOLFINx solve of the same problem on the same mesh.
+    """Solve Poisson with non-homogeneous Dirichlet BCs through the stock
+    ``dolfinx.fem.petsc.LinearProblem`` on the unfitted mesh and compare
+    against the manufactured exact solution.
 
     On the mock unfitted mesh the custom quadrature is by construction
-    equivalent to the standard quadrature, so the two solutions must
-    agree up to numerical precision -- this covers the full
-    ``assemble_matrix(bcs=...) + apply_lifting + set_bc`` pipeline
+    equivalent to the standard quadrature, and the manufactured solution
+    is a quadratic that lives in the degree-2 space, so the discrete
+    solution reproduces it up to numerical precision. This covers the
+    full ``assemble_matrix(bcs=...) + apply_lifting + set_bc`` pipeline
     inside ``LinearProblem.solve``.
     """
     unf = create_mock_unfitted_mesh(dim, _N, simplex_cell, _NNZ, _MAX_QUAD, dtype)
     V, a, L, bc = _build_poisson_problem(unf, dtype)
 
     petsc_options = {"ksp_type": "preonly", "pc_type": "lu"}
-    problem = LinearProblem(a, L, bcs=[bc], petsc_options=petsc_options)
-    problem.solve()
-    uh_custom = problem.u
-
-    # Reference: plain DOLFINx solve of the same problem (no qugar
-    # custom path). DOLFINx 0.10.0 requires a mandatory
-    # ``petsc_options_prefix`` kwarg.
-    problem_std = dolfinx.fem.petsc.LinearProblem(
+    problem = LinearProblem(
         a,
         L,
         bcs=[bc],
-        petsc_options_prefix="qugar_test_ref_",
         petsc_options=petsc_options,
+        petsc_options_prefix=f"qugar_dirichlet_{dim}{int(simplex_cell)}_",
     )
-    problem_std.solve()
-    uh_std = problem_std.u
+    problem.solve()
+    uh = problem.u
 
-    check_vals(uh_custom.x.array, uh_std.x.array, dtype=dtype)
+    # The manufactured solution u_ex (= bc.g, interpolated on the whole
+    # space) is exactly reproduced by the degree-2 discrete solution.
+    check_vals(uh.x.array, bc.g.x.array, dtype=dtype)
 
 
 @pytest.mark.parametrize("dtype", _PETSC_DTYPES)
@@ -130,7 +136,11 @@ def test_poisson_dirichlet_bc_honored(dim, simplex_cell, dtype):
     V, a, L, bc = _build_poisson_problem(unf, dtype)
 
     problem = LinearProblem(
-        a, L, bcs=[bc], petsc_options={"ksp_type": "preonly", "pc_type": "lu"}
+        a,
+        L,
+        bcs=[bc],
+        petsc_options={"ksp_type": "preonly", "pc_type": "lu"},
+        petsc_options_prefix=f"qugar_dirichlet_bc_{dim}{int(simplex_cell)}_",
     )
     problem.solve()
     uh = problem.u

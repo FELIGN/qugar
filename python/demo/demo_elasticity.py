@@ -100,10 +100,11 @@ import dolfinx.io
 import numpy as np
 import ufl
 from dolfinx import default_scalar_type as dtype
+from dolfinx.fem.petsc import LinearProblem
 
 import qugar
+import qugar.dolfinx  # noqa: F401  (import patches DOLFINx for transparent unfitted assembly)
 import qugar.impl
-from qugar.dolfinx import LinearProblem
 from qugar.mesh import create_unfitted_impl_Cartesian_mesh
 
 # -
@@ -233,7 +234,9 @@ petsc_options = {
     "ksp_diagonal_scale": True,  # Jacobi preconditioner
 }
 
-problem = LinearProblem(a, L, bcs=bcs, petsc_options=petsc_options)
+problem = LinearProblem(
+    a, L, bcs=bcs, petsc_options=petsc_options, petsc_options_prefix="demo_elasticity_"
+)
 problem.solve()
 
 uh = problem.u

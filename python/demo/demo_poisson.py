@@ -102,10 +102,14 @@ import dolfinx.io
 import numpy as np
 import ufl
 from dolfinx import default_scalar_type as dtype
+from dolfinx.fem.petsc import LinearProblem
 
 import qugar
 import qugar.impl
-from qugar.dolfinx import LinearProblem, dsu, dsu_normal
+
+# Importing qugar.dolfinx (here via dsu / dsu_normal) patches DOLFINx so the
+# stock LinearProblem above assembles unfitted forms transparently.
+from qugar.dolfinx import dsu, dsu_normal
 from qugar.mesh import create_unfitted_impl_Cartesian_mesh
 
 # -
@@ -227,7 +231,9 @@ petsc_options = {
 }
 
 
-problem = LinearProblem(a, L, bcs=[bc], petsc_options=petsc_options)
+problem = LinearProblem(
+    a, L, bcs=[bc], petsc_options=petsc_options, petsc_options_prefix="demo_poisson_"
+)
 problem.solve()
 
 uh = problem.u

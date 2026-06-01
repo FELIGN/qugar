@@ -8,15 +8,15 @@
 #
 # --------------------------------------------------------------------------
 
-"""``NonlinearProblem`` end-to-end on a real implicit-domain mesh.
+"""Nonlinear solve end-to-end on a real implicit-domain mesh.
 
-``test_nonlinear_problem.py`` exercises the Newton-solve path on the
+``test_nonlinear_problem.py`` exercises the SNES-solve path on the
 mock unfitted mesh (where the custom quadrature is by construction
 equivalent to the standard one); ``test_impl_assembly.py`` /
 ``test_impl_poisson.py`` exercise real implicit-domain assembly with
 linear forms. The composition -- a nonlinear solve on a real cut
-domain -- is not tested elsewhere and is the natural Tier-1 gap to
-close before the refactor.
+domain via the stock ``dolfinx.fem.petsc.NonlinearProblem`` -- is not
+tested elsewhere.
 """
 
 from qugar.utils import has_FEniCSx, has_PETSc
@@ -30,19 +30,18 @@ if not has_PETSc:
 
 
 from mpi4py import MPI
-from petsc4py import PETSc  # type: ignore
 from petsc4py.PETSc import ScalarType  # type: ignore
 
 import dolfinx
 import dolfinx.fem
-import dolfinx.nls.petsc
 import numpy as np
 import pytest
 import ufl
+from dolfinx.fem.petsc import NonlinearProblem
 from utils import check_vals, dtypes  # type: ignore
 
+import qugar.dolfinx  # noqa: F401  (import applies the transparent-assembly patches)
 import qugar.impl
-from qugar.dolfinx import NonlinearProblem
 from qugar.mesh import create_unfitted_impl_Cartesian_mesh
 
 _PETSC_DTYPES = [d for d in dtypes if np.dtype(d) == np.dtype(ScalarType)]
@@ -80,21 +79,21 @@ def test_cuberoot_on_implicit_disk(dtype):
     v = ufl.TestFunction(V)
     F_form = (u**3 - f) * v * ufl.dx(domain=unf, degree=6)
 
-    problem = NonlinearProblem(F_form, u)
-    solver = dolfinx.nls.petsc.NewtonSolver(unf.comm, problem)
-    solver.atol = 1.0e-10
-    solver.rtol = 1.0e-10
-    solver.max_it = 30
-    solver.convergence_criterion = "incremental"
-    ksp = solver.krylov_solver
-    opts = PETSc.Options()
-    prefix = ksp.getOptionsPrefix()
-    opts[f"{prefix}ksp_type"] = "preonly"
-    opts[f"{prefix}pc_type"] = "lu"
-    ksp.setFromOptions()
-
-    num_its, converged = solver.solve(u)
-    assert converged, f"Newton did not converge ({num_its} iterations)"
+    problem = NonlinearProblem(
+        F_form,
+        u,
+        petsc_options={
+            "snes_type": "newtonls",
+            "snes_rtol": 1.0e-10,
+            "snes_atol": 1.0e-10,
+            "snes_max_it": 30,
+            "ksp_type": "preonly",
+            "pc_type": "lu",
+        },
+        petsc_options_prefix="qugar_impl_cuberoot_",
+    )
+    problem.solve()
+    assert problem.solver.getConvergedReason() > 0, "SNES did not converge"
     u.x.scatter_forward()
 
     # Inactive DOFs (those not connected to any cell with custom or
