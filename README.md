@@ -17,6 +17,28 @@ Here is a demo of QUGaR being used to reparametrize an unfitted hyperelastic bod
 
 Documentation can be viewed at https://pantolin.github.io/qugar/main/index.html.
 
+# Breaking changes
+
+## v0.4.0
+
+The FEniCSx interface (`qugar.dolfinx`) has undergone several breaking changes with respect to [v0.3.0](https://pantolin.github.io/qugar/v0.3.0/index.html).
+
+**Renamed symbols:**
+
+| v0.3.0 | v0.4.0 |
+|---|---|
+| `ds_bdry_unf` | `dsu` |
+| `dsu_normal(mesh)` | `UnfittedNormal(mesh)` |
+
+**Transparent DOLFINx assembly (replaces qugar-specific wrappers):**
+
+Importing `qugar.dolfinx` now patches the stock DOLFINx API so that unfitted forms are handled transparently:
+
+- `qugar.dolfinx.LinearProblem` and `qugar.dolfinx.NonlinearProblem` have been **removed** — use the stock `dolfinx.fem.petsc.LinearProblem` / `NonlinearProblem` directly.
+- `qugar.dolfinx.form_custom` is no longer required for most workflows — the stock `dolfinx.fem.form` is patched to compile unfitted forms transparently.
+
+Refer to the [v0.3.0 documentation](https://pantolin.github.io/qugar/v0.3.0/index.html) for the previous interface.
+
 # Installation
 
 > [!NOTE]  

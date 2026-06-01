@@ -11,7 +11,7 @@
 cmake_minimum_required(VERSION 3.23)
 
 # Set the project name and language
-set(qugar_VERSION "0.3.0")
+set(qugar_VERSION "0.4.0")
 project(
   qugar 
   VERSION ${qugar_VERSION}
