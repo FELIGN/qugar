@@ -35,27 +35,26 @@ See :mod:`qugar.dolfinx.custom_coefficients` for the builder and
 from qugar.utils import has_FEniCSx
 
 if not has_FEniCSx:
-    raise ValueError("FEniCSx installation not found is required.")
+    raise ValueError("FEniCSx installation not found.")
 
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
 import numpy.typing as npt
 
 from qugar.quad import CustomQuad, CustomQuadUnfBoundary
 
-"""Type alias for all the coefficient array types qugar supports."""
+#: All coefficient array dtypes qugar supports.
 FloatingArray = npt.NDArray[np.float32 | np.float64 | np.complex64 | np.complex128]
 
-"""Type alias for the per-integrand custom quadrature stored in a
-``QuadratureStore``. For cells it is a :class:`CustomQuad`; for unfitted
-boundaries a :class:`CustomQuadUnfBoundary`; for facets a tuple whose first
-item is the cell-mapped quadrature for side 0 and (interior facets only)
-whose second item is the cell-mapped quadrature for side 1."""
+#: Per-integrand quadrature stored in a ``QuadratureStore``: a
+#: :class:`CustomQuad` for cells, :class:`CustomQuadUnfBoundary` for
+#: unfitted boundaries, or a ``(side0, side1)`` tuple for interior facets.
 StoredQuad = CustomQuad | CustomQuadUnfBoundary | tuple[CustomQuad, CustomQuad]
 
 
-@dataclass
+@dataclass(frozen=True)
 class QuadratureStore:
     """Value-independent runtime geometry for a single custom integral.
 
@@ -84,8 +83,8 @@ class QuadratureStore:
             (cut) quadrature.
         empty_entity_ids (npt.NDArray[np.intp]): Indices, into the form's
             domain entity array, of the empty entities.
-        custom_quads (dict): Map from each integrand's quadrature data to its
-            generated :data:`StoredQuad`.
+        custom_quads (dict[Any, StoredQuad]): Map from each integrand's
+            quadrature data to its generated :data:`StoredQuad`.
         n_vals_per_entity (npt.NDArray[np.int32]): Number of real-unit slots
             of smuggled data stored per custom entity.
         offsets (npt.NDArray[np.intp]): Absolute start positions (in real
@@ -97,9 +96,12 @@ class QuadratureStore:
     old_cols: int
     custom_entity_ids: npt.NDArray[np.intp]
     empty_entity_ids: npt.NDArray[np.intp]
-    custom_quads: dict
+    custom_quads: dict[Any, StoredQuad]
     n_vals_per_entity: npt.NDArray[np.int32]
     offsets: npt.NDArray[np.intp]
+
+    def __post_init__(self) -> None:
+        self.template.setflags(write=False)
 
     def pack(self, old_coeffs: FloatingArray) -> FloatingArray:
         """Builds the full custom-coefficient array for one assembly.
@@ -118,6 +120,10 @@ class QuadratureStore:
             FloatingArray: The custom coefficients consumed by the kernel
             (same layout as ``dolfinx.cpp.fem.pack_coefficients``).
         """
+        assert old_coeffs.shape == (self.old_rows, self.old_cols), (
+            f"old_coeffs shape {old_coeffs.shape} does not match store "
+            f"({self.old_rows}, {self.old_cols})"
+        )
         new_coeffs = self.template.copy()
         new_coeffs[: self.old_rows, : self.old_cols] = old_coeffs
         return new_coeffs

@@ -52,17 +52,17 @@ when ``petsc4py`` is unavailable.
 """
 
 import collections.abc
+import functools
 
 from qugar.utils import has_FEniCSx, has_PETSc
 
 if not has_FEniCSx:
-    raise ValueError("FEniCSx installation not found is required.")
+    raise ValueError("FEniCSx installation not found.")
 
 import dolfinx.fem
 import dolfinx.fem.assemble as _assemble_module
 import dolfinx.fem.forms as _forms_module
 import ufl
-from dolfinx import default_scalar_type
 
 from qugar.dolfinx.forms import CustomForm, form_custom
 
@@ -77,7 +77,7 @@ def _ufl_form_is_unfitted(ufl_form: ufl.Form) -> bool:
     """
     try:
         domains = ufl_form.ufl_domains()
-    except Exception:
+    except AttributeError:
         return False
     return any(getattr(domain, "unf_domain", None) is not None for domain in domains)
 
@@ -87,6 +87,8 @@ def _tree_is_unfitted(form) -> bool:
     arbitrarily nested sequence of UFL forms) is unfitted."""
     if isinstance(form, ufl.Form):
         return _ufl_form_is_unfitted(form)
+    if isinstance(form, (str, bytes)):
+        return False
     if isinstance(form, collections.abc.Iterable):
         return any(_tree_is_unfitted(sub_form) for sub_form in form)
     return False
@@ -105,31 +107,12 @@ def _patch_form() -> None:
     if getattr(original_form, "_qugar_patched", False):
         return
 
-    def form(
-        form,
-        dtype=default_scalar_type,
-        form_compiler_options=None,
-        jit_options=None,
-        entity_maps=None,
-    ):
-        if _tree_is_unfitted(form):
-            return form_custom(
-                form,
-                dtype=dtype,
-                form_compiler_options=form_compiler_options,
-                jit_options=jit_options,
-                entity_maps=entity_maps,
-            )
-        return original_form(
-            form,
-            dtype=dtype,
-            form_compiler_options=form_compiler_options,
-            jit_options=jit_options,
-            entity_maps=entity_maps,
-        )
+    @functools.wraps(original_form)
+    def form(ufl_form, **kwargs):
+        if _tree_is_unfitted(ufl_form):
+            return form_custom(ufl_form, **kwargs)
+        return original_form(ufl_form, **kwargs)
 
-    form.__doc__ = original_form.__doc__
-    form.__name__ = original_form.__name__
     form._qugar_patched = True  # type: ignore[attr-defined]
     form._qugar_original = original_form  # type: ignore[attr-defined]
 
