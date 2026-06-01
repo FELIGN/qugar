@@ -59,10 +59,14 @@ import dolfinx.io
 import numpy as np
 import ufl
 from dolfinx import default_real_type as dtype
+from dolfinx.fem.petsc import LinearProblem
 
 import qugar
 import qugar.impl
-from qugar.dolfinx import LinearProblem, form_custom
+
+# Importing qugar.dolfinx (here via form_custom) patches DOLFINx so the
+# stock LinearProblem above assembles unfitted forms transparently.
+from qugar.dolfinx import form_custom
 from qugar.mesh import create_unfitted_impl_Cartesian_mesh
 
 # -
@@ -161,7 +165,12 @@ petsc_options = {
     # "ksp_diagonal_scale_fix": True, # transformsa back A an b after Jacobi
 }
 
-problem = LinearProblem(ufl.lhs(F), ufl.rhs(F), petsc_options=petsc_options)
+problem = LinearProblem(
+    ufl.lhs(F),
+    ufl.rhs(F),
+    petsc_options=petsc_options,
+    petsc_options_prefix="demo_l2_projection_",
+)
 problem.solve()
 
 uh = problem.u

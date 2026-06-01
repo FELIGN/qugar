@@ -76,16 +76,16 @@ from petsc4py import PETSc
 import dolfinx.fem as fem
 import dolfinx.log as log
 import dolfinx.mesh as mesh_dlf
-import dolfinx.nls.petsc as nls_petsc
 import dolfinx.plot as plot_dlf
 import numpy as np
 import pyvista
 import ufl
 from dolfinx import default_scalar_type as dtype
+from dolfinx.fem.petsc import NonlinearProblem
 
 import qugar
+import qugar.dolfinx  # noqa: F401  (import patches DOLFINx for transparent unfitted assembly)
 import qugar.impl
-from qugar.dolfinx import NonlinearProblem
 from qugar.mesh import create_unfitted_impl_Cartesian_mesh
 from qugar.utils import has_FEniCSx, has_PETSc
 
@@ -207,38 +207,35 @@ F_form = ufl.inner(ufl.grad(v), P) * dx
 # -
 
 # ### Nonlinear Solver Setup
-# We set up the nonlinear problem and configure the Newton solver with PETSc options.
+# We set up the stock DOLFINx ``NonlinearProblem`` (PETSc SNES); because
+# ``unf_mesh`` is unfitted, qugar's assembly patches make it assemble the
+# residual and Jacobian with the runtime quadrature transparently.
 
 # +
-# Create the nonlinear problem
-problem = NonlinearProblem(F_form, u, bcs)
-
-# Create a Newton solver instance
-solver = nls_petsc.NewtonSolver(unf_mesh.comm, problem)
-
-# Set Newton solver options
-solver.atol = 1e-8  # Absolute tolerance
-solver.rtol = 1e-8  # Relative tolerance
-solver.convergence_criterion = (
-    "incremental"  # Convergence criterion based on displacement increment
-)
-
-# Customize the linear solver (KSP) used within the Newton solver
-ksp = solver.krylov_solver
-opts = PETSc.Options()  # type: ignore
-option_prefix = ksp.getOptionsPrefix()
-# Use a direct solver (LU factorization) as the preconditioner
-opts[f"{option_prefix}ksp_type"] = "preonly"
-opts[f"{option_prefix}pc_type"] = "lu"
+# Newton line-search via SNES with a direct (LU) linear solve.
+petsc_options = {
+    "snes_type": "newtonls",
+    "snes_atol": 1e-8,  # Absolute tolerance
+    "snes_rtol": 1e-8,  # Relative tolerance
+    "ksp_type": "preonly",
+    "pc_type": "lu",
+}
 sys = PETSc.Sys()  # type: ignore
 # Select preferred factorization package (MUMPS or SuperLU_DIST)
 use_superlu = PETSc.IntType == np.int64  # or PETSc.ScalarType == np.complex64
 if sys.hasExternalPackage("mumps") and not use_superlu:
-    opts[f"{option_prefix}pc_factor_mat_solver_type"] = "mumps"
+    petsc_options["pc_factor_mat_solver_type"] = "mumps"
 elif sys.hasExternalPackage("superlu_dist"):
-    opts[f"{option_prefix}pc_factor_mat_solver_type"] = "superlu_dist"
-# Apply the options to the KSP solver
-ksp.setFromOptions()
+    petsc_options["pc_factor_mat_solver_type"] = "superlu_dist"
+
+# Create the nonlinear problem
+problem = NonlinearProblem(
+    F_form,
+    u,
+    bcs=bcs,
+    petsc_options=petsc_options,
+    petsc_options_prefix="demo_hyperelasticity_",
+)
 # -
 
 # ### Visualization Setup
@@ -339,14 +336,16 @@ for n in range(1, n_steps + 1):
     u_bc_top.value[dim - 1] = n * disp / n_steps
 
     print(f"--- Time step {n} ---")
-    # Solve the nonlinear problem for the current displacement increment
+    # Solve the nonlinear problem for the current displacement increment.
+    # ``problem.solve()`` updates ``u`` in place and uses it as the initial
+    # guess for the next load step.
     try:
-        num_its, converged = solver.solve(u)
-        assert converged
+        problem.solve()
+        assert problem.solver.getConvergedReason() > 0
         u.x.scatter_forward()  # Update the solution vector across processes
-        print(f"Converged in {num_its} iterations.")
+        print(f"Converged in {problem.solver.getIterationNumber()} iterations.")
     except Exception as e:
-        print(f"Newton solver did not converge. Exception: {e}")
+        print(f"SNES solver did not converge. Exception: {e}")
         break  # Stop simulation if solver fails
 
     # Print current step information

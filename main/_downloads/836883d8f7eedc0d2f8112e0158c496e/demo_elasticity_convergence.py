@@ -122,7 +122,7 @@ import ufl
 
 import qugar
 import qugar.impl
-from qugar.dolfinx import ds_bdry_unf, mapped_normal
+from qugar.dolfinx import dsu, UnfittedNormal
 from qugar.mesh import create_unfitted_impl_Cartesian_mesh
 from qugar.utils import has_FEniCSx, has_PETSc
 
@@ -289,8 +289,8 @@ def solve_elasticity(n_cells, degree=1):
     bcs = [dolfinx.fem.dirichletbc(u_D, dofs) for dofs in locate_boundary_dofs(unf_mesh, V)]
 
     dx = ufl.dx(domain=unf_mesh)
-    n_unf = mapped_normal(unf_mesh)
-    ds_unf = ds_bdry_unf(domain=unf_mesh)
+    n_unf = UnfittedNormal(unf_mesh)
+    ds_unf = dsu(domain=unf_mesh)
 
     # Bilinear form: a(u,v) = ∫_Ω σ(u) : ε(v) dx
     a = ufl.inner(sigma_expr(u), epsilon_expr(v)) * dx
@@ -327,7 +327,13 @@ def solve_elasticity(n_cells, degree=1):
         "ksp_diagonal_scale": True,  # Jacobi preconditioner
     }
 
-    problem = qugar.dolfinx.LinearProblem(a, L, bcs=bcs, petsc_options=petsc_options)
+    problem = dolfinx.fem.petsc.LinearProblem(
+        a,
+        L,
+        bcs=bcs,
+        petsc_options=petsc_options,
+        petsc_options_prefix=f"demo_elasticity_conv_{n_cells}_{degree}_",
+    )
     uh = problem.solve()
 
     return unf_mesh, uh, V

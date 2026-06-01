@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>\(L^2\) projection &mdash; QUGaR 0.3.0 documentation</title>
+  <title>\(L^2\) projection &mdash; QUGaR 0.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/general.css?v=c0a7eb24" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/documentation_options.js?v=6c02275b"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -150,10 +150,14 @@ problem:
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">ufl</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_real_type</span> <span class="k">as</span> <span class="n">dtype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.fem.petsc</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearProblem</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">qugar</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">qugar.impl</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearProblem</span><span class="p">,</span> <span class="n">form_custom</span>
+
+<span class="c1"># Importing qugar.dolfinx (here via form_custom) patches DOLFINx so the</span>
+<span class="c1"># stock LinearProblem above assembles unfitted forms transparently.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">form_custom</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_unfitted_impl_Cartesian_mesh</span>
 </pre></div>
 </div>
@@ -239,7 +243,12 @@ for Lagrange elements, but still help.</p>
     <span class="c1"># &quot;ksp_diagonal_scale_fix&quot;: True, # transformsa back A an b after Jacobi</span>
 <span class="p">}</span>
 
-<span class="n">problem</span> <span class="o">=</span> <span class="n">LinearProblem</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">lhs</span><span class="p">(</span><span class="n">F</span><span class="p">),</span> <span class="n">ufl</span><span class="o">.</span><span class="n">rhs</span><span class="p">(</span><span class="n">F</span><span class="p">),</span> <span class="n">petsc_options</span><span class="o">=</span><span class="n">petsc_options</span><span class="p">)</span>
+<span class="n">problem</span> <span class="o">=</span> <span class="n">LinearProblem</span><span class="p">(</span>
+    <span class="n">ufl</span><span class="o">.</span><span class="n">lhs</span><span class="p">(</span><span class="n">F</span><span class="p">),</span>
+    <span class="n">ufl</span><span class="o">.</span><span class="n">rhs</span><span class="p">(</span><span class="n">F</span><span class="p">),</span>
+    <span class="n">petsc_options</span><span class="o">=</span><span class="n">petsc_options</span><span class="p">,</span>
+    <span class="n">petsc_options_prefix</span><span class="o">=</span><span class="s2">&quot;demo_l2_projection_&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
 
 <span class="n">uh</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">u</span>

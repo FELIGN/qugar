@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hyperelasticity problem &mdash; QUGaR 0.3.0 documentation</title>
+  <title>Hyperelasticity problem &mdash; QUGaR 0.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/general.css?v=c0a7eb24" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/documentation_options.js?v=6c02275b"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -161,16 +161,16 @@ the determinant of the deformation gradient.</p>
 <span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.fem</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">fem</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.log</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">log</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.mesh</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mesh_dlf</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.nls.petsc</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nls_petsc</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">dolfinx.plot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plot_dlf</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">ufl</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_scalar_type</span> <span class="k">as</span> <span class="n">dtype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.fem.petsc</span><span class="w"> </span><span class="kn">import</span> <span class="n">NonlinearProblem</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">qugar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qugar.dolfinx</span>  <span class="c1"># noqa: F401  (import patches DOLFINx for transparent unfitted assembly)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">qugar.impl</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">NonlinearProblem</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_unfitted_impl_Cartesian_mesh</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qugar.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_FEniCSx</span><span class="p">,</span> <span class="n">has_PETSc</span>
 
@@ -293,36 +293,33 @@ and the variational form for the hyperelasticity problem.</p>
 </section>
 <section id="nonlinear-solver-setup">
 <h3>Nonlinear Solver Setup<a class="headerlink" href="#nonlinear-solver-setup" title="Link to this heading"></a></h3>
-<p>We set up the nonlinear problem and configure the Newton solver with PETSc options.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create the nonlinear problem</span>
-<span class="n">problem</span> <span class="o">=</span> <span class="n">NonlinearProblem</span><span class="p">(</span><span class="n">F_form</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">bcs</span><span class="p">)</span>
-
-<span class="c1"># Create a Newton solver instance</span>
-<span class="n">solver</span> <span class="o">=</span> <span class="n">nls_petsc</span><span class="o">.</span><span class="n">NewtonSolver</span><span class="p">(</span><span class="n">unf_mesh</span><span class="o">.</span><span class="n">comm</span><span class="p">,</span> <span class="n">problem</span><span class="p">)</span>
-
-<span class="c1"># Set Newton solver options</span>
-<span class="n">solver</span><span class="o">.</span><span class="n">atol</span> <span class="o">=</span> <span class="mf">1e-8</span>  <span class="c1"># Absolute tolerance</span>
-<span class="n">solver</span><span class="o">.</span><span class="n">rtol</span> <span class="o">=</span> <span class="mf">1e-8</span>  <span class="c1"># Relative tolerance</span>
-<span class="n">solver</span><span class="o">.</span><span class="n">convergence_criterion</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;incremental&quot;</span>  <span class="c1"># Convergence criterion based on displacement increment</span>
-<span class="p">)</span>
-
-<span class="c1"># Customize the linear solver (KSP) used within the Newton solver</span>
-<span class="n">ksp</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">krylov_solver</span>
-<span class="n">opts</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">Options</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
-<span class="n">option_prefix</span> <span class="o">=</span> <span class="n">ksp</span><span class="o">.</span><span class="n">getOptionsPrefix</span><span class="p">()</span>
-<span class="c1"># Use a direct solver (LU factorization) as the preconditioner</span>
-<span class="n">opts</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">option_prefix</span><span class="si">}</span><span class="s2">ksp_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;preonly&quot;</span>
-<span class="n">opts</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">option_prefix</span><span class="si">}</span><span class="s2">pc_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;lu&quot;</span>
+<p>We set up the stock DOLFINx <code class="docutils literal notranslate"><span class="pre">NonlinearProblem</span></code> (PETSc SNES); because
+<code class="docutils literal notranslate"><span class="pre">unf_mesh</span></code> is unfitted, qugar’s assembly patches make it assemble the
+residual and Jacobian with the runtime quadrature transparently.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Newton line-search via SNES with a direct (LU) linear solve.</span>
+<span class="n">petsc_options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;snes_type&quot;</span><span class="p">:</span> <span class="s2">&quot;newtonls&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;snes_atol&quot;</span><span class="p">:</span> <span class="mf">1e-8</span><span class="p">,</span>  <span class="c1"># Absolute tolerance</span>
+    <span class="s2">&quot;snes_rtol&quot;</span><span class="p">:</span> <span class="mf">1e-8</span><span class="p">,</span>  <span class="c1"># Relative tolerance</span>
+    <span class="s2">&quot;ksp_type&quot;</span><span class="p">:</span> <span class="s2">&quot;preonly&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pc_type&quot;</span><span class="p">:</span> <span class="s2">&quot;lu&quot;</span><span class="p">,</span>
+<span class="p">}</span>
 <span class="n">sys</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">Sys</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
 <span class="c1"># Select preferred factorization package (MUMPS or SuperLU_DIST)</span>
 <span class="n">use_superlu</span> <span class="o">=</span> <span class="n">PETSc</span><span class="o">.</span><span class="n">IntType</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span>  <span class="c1"># or PETSc.ScalarType == np.complex64</span>
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">hasExternalPackage</span><span class="p">(</span><span class="s2">&quot;mumps&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">use_superlu</span><span class="p">:</span>
-    <span class="n">opts</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">option_prefix</span><span class="si">}</span><span class="s2">pc_factor_mat_solver_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mumps&quot;</span>
+    <span class="n">petsc_options</span><span class="p">[</span><span class="s2">&quot;pc_factor_mat_solver_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mumps&quot;</span>
 <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">hasExternalPackage</span><span class="p">(</span><span class="s2">&quot;superlu_dist&quot;</span><span class="p">):</span>
-    <span class="n">opts</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">option_prefix</span><span class="si">}</span><span class="s2">pc_factor_mat_solver_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;superlu_dist&quot;</span>
-<span class="c1"># Apply the options to the KSP solver</span>
-<span class="n">ksp</span><span class="o">.</span><span class="n">setFromOptions</span><span class="p">()</span>
+    <span class="n">petsc_options</span><span class="p">[</span><span class="s2">&quot;pc_factor_mat_solver_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;superlu_dist&quot;</span>
+
+<span class="c1"># Create the nonlinear problem</span>
+<span class="n">problem</span> <span class="o">=</span> <span class="n">NonlinearProblem</span><span class="p">(</span>
+    <span class="n">F_form</span><span class="p">,</span>
+    <span class="n">u</span><span class="p">,</span>
+    <span class="n">bcs</span><span class="o">=</span><span class="n">bcs</span><span class="p">,</span>
+    <span class="n">petsc_options</span><span class="o">=</span><span class="n">petsc_options</span><span class="p">,</span>
+    <span class="n">petsc_options_prefix</span><span class="o">=</span><span class="s2">&quot;demo_hyperelasticity_&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -423,14 +420,16 @@ the nonlinear problem at each step. The visualization is updated at each step.</
     <span class="n">u_bc_top</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">dim</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="n">disp</span> <span class="o">/</span> <span class="n">n_steps</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- Time step </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> ---&quot;</span><span class="p">)</span>
-    <span class="c1"># Solve the nonlinear problem for the current displacement increment</span>
+    <span class="c1"># Solve the nonlinear problem for the current displacement increment.</span>
+    <span class="c1"># ``problem.solve()`` updates ``u`` in place and uses it as the initial</span>
+    <span class="c1"># guess for the next load step.</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">num_its</span><span class="p">,</span> <span class="n">converged</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">converged</span>
+        <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">problem</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">getConvergedReason</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="n">u</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">scatter_forward</span><span class="p">()</span>  <span class="c1"># Update the solution vector across processes</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Converged in </span><span class="si">{</span><span class="n">num_its</span><span class="si">}</span><span class="s2"> iterations.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Converged in </span><span class="si">{</span><span class="n">problem</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">getIterationNumber</span><span class="p">()</span><span class="si">}</span><span class="s2"> iterations.&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Newton solver did not converge. Exception: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SNES solver did not converge. Exception: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">break</span>  <span class="c1"># Stop simulation if solver fails</span>
 
     <span class="c1"># Print current step information</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Poisson Convergence Study: Unit Square with Circular Hole &mdash; QUGaR 0.3.0 documentation</title>
+  <title>Poisson Convergence Study: Unit Square with Circular Hole &mdash; QUGaR 0.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/dark_mode_css/general.css?v=c0a7eb24" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/documentation_options.js?v=6c02275b"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -210,7 +210,7 @@ solutions when the mesh is sufficiently refined.</p>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">qugar</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">qugar.impl</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">ds_bdry_unf</span><span class="p">,</span> <span class="n">mapped_normal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qugar.dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">dsu</span><span class="p">,</span> <span class="n">UnfittedNormal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qugar.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_unfitted_impl_Cartesian_mesh</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qugar.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">has_FEniCSx</span><span class="p">,</span> <span class="n">has_PETSc</span>
 
@@ -367,8 +367,8 @@ solutions when the mesh is sufficiently refined.</p>
     <span class="n">bcs</span> <span class="o">=</span> <span class="p">[</span><span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">dirichletbc</span><span class="p">(</span><span class="n">u_D</span><span class="p">,</span> <span class="n">dofs</span><span class="p">)</span> <span class="k">for</span> <span class="n">dofs</span> <span class="ow">in</span> <span class="n">locate_boundary_dofs</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">,</span> <span class="n">V</span><span class="p">)]</span>
 
     <span class="n">dx</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">dx</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">unf_mesh</span><span class="p">)</span>
-    <span class="n">n_unf</span> <span class="o">=</span> <span class="n">mapped_normal</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">)</span>
-    <span class="n">ds_unf</span> <span class="o">=</span> <span class="n">ds_bdry_unf</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">unf_mesh</span><span class="p">)</span>
+    <span class="n">n_unf</span> <span class="o">=</span> <span class="n">UnfittedNormal</span><span class="p">(</span><span class="n">unf_mesh</span><span class="p">)</span>
+    <span class="n">ds_unf</span> <span class="o">=</span> <span class="n">dsu</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">unf_mesh</span><span class="p">)</span>
 
     <span class="c1"># Bilinear form: a(u,v) = ∫_Ω ∇u·∇v dx</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">ufl</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">ufl</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="o">*</span> <span class="n">dx</span>
@@ -402,7 +402,13 @@ solutions when the mesh is sufficiently refined.</p>
         <span class="s2">&quot;ksp_diagonal_scale&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># Jacobi preconditioner</span>
     <span class="p">}</span>
 
-    <span class="n">problem</span> <span class="o">=</span> <span class="n">qugar</span><span class="o">.</span><span class="n">dolfinx</span><span class="o">.</span><span class="n">LinearProblem</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">bcs</span><span class="o">=</span><span class="n">bcs</span><span class="p">,</span> <span class="n">petsc_options</span><span class="o">=</span><span class="n">petsc_options</span><span class="p">)</span>
+    <span class="n">problem</span> <span class="o">=</span> <span class="n">dolfinx</span><span class="o">.</span><span class="n">fem</span><span class="o">.</span><span class="n">petsc</span><span class="o">.</span><span class="n">LinearProblem</span><span class="p">(</span>
+        <span class="n">a</span><span class="p">,</span>
+        <span class="n">L</span><span class="p">,</span>
+        <span class="n">bcs</span><span class="o">=</span><span class="n">bcs</span><span class="p">,</span>
+        <span class="n">petsc_options</span><span class="o">=</span><span class="n">petsc_options</span><span class="p">,</span>
+        <span class="n">petsc_options_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;demo_poisson_conv_</span><span class="si">{</span><span class="n">n_cells</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">degree</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">uh</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">unf_mesh</span><span class="p">,</span> <span class="n">uh</span><span class="p">,</span> <span class="n">V</span>
