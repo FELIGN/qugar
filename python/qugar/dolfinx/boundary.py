@@ -33,7 +33,7 @@ class UnfittedReferenceNormal(GeometricCellQuantity):
     """UFL geometric terminal: the reference-domain normal of an unfitted
     boundary, evaluated per quadrature point at runtime.
 
-    This is the primitive runtime input behind :func:`dsu_normal`: the
+    This is the primitive runtime input behind :func:`UnfittedNormal`: the
     physical normal is obtained by mapping it through the cell Jacobian
     (Nanson's formula). It replaces the former ``ParamNormal`` zero-valued
     ``Constant`` placeholder. Modelling the normal as a proper geometric
@@ -73,7 +73,7 @@ def _compute_vector_norm(vec):
     return ufl.sqrt(ufl.inner(vec, vec))
 
 
-def dsu_normal(domain: ufl.AbstractDomain | dolfinx.mesh.Mesh, normalize: bool = True):
+def UnfittedNormal(domain: ufl.AbstractDomain | dolfinx.mesh.Mesh, normalize: bool = True):
     """Physical (mapped) outward normal of an unfitted boundary, for use
     inside a :class:`dsu` integrand.
 
@@ -176,10 +176,10 @@ class dsu(ufl.Measure):
 
         # The dolfinx mesh is needed (rather than ufl_domain(), which is
         # a plain ufl.Mesh) for ``reconstruct`` to rebuild this subclass
-        # and re-run UnfittedReferenceNormal/dsu_normal on subdomain_id changes.
+        # and re-run UnfittedReferenceNormal/UnfittedNormal on subdomain_id changes.
         self._dolfinx_domain = domain
 
-        n = dsu_normal(domain, normalize=False)
+        n = UnfittedNormal(domain, normalize=False)
         # This is the missing term in Nanson's formula (the Jacobian
         # determinant should by already included in dx).
         self._measure_complement = _compute_vector_norm(n)

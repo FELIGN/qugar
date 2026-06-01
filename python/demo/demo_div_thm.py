@@ -159,7 +159,7 @@ import ufl
 
 import qugar
 import qugar.impl
-from qugar.dolfinx import CustomForm, dsu, dsu_normal, form_custom
+from qugar.dolfinx import CustomForm, dsu, UnfittedNormal, form_custom
 from qugar.mesh import create_unfitted_impl_Cartesian_mesh
 
 # -
@@ -246,9 +246,9 @@ ds_unf = dsu(subdomain_id=0, domain=unf_mesh, subdomain_data=cell_tags)
 ds = ufl.ds(subdomain_id=0, domain=unf_mesh, subdomain_data=facet_tags)
 
 # In the same way, the unit outward normal vector at the boundary $\Gamma_{\text{unf}}$  requires
-# the {py:class}`dsu_normal<qugar.dolfinx.dsu_normal>` function introduced in QUGaR.
+# the {py:class}`UnfittedNormal<qugar.dolfinx.UnfittedNormal>` function introduced in QUGaR.
 
-bound_normal = dsu_normal(unf_mesh)
+bound_normal = UnfittedNormal(unf_mesh)
 
 # while the normal at the external facets is defined using the standard UFL function.
 

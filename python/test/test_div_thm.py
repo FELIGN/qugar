@@ -31,7 +31,7 @@ from utils import (
 
 import qugar.cpp
 import qugar.impl
-from qugar.dolfinx import CustomForm, dsu, dsu_normal, form_custom
+from qugar.dolfinx import CustomForm, dsu, UnfittedNormal, form_custom
 from qugar.impl import ImplicitFunc
 from qugar.mesh import UnfittedCartMesh, create_unfitted_impl_Cartesian_mesh
 
@@ -155,7 +155,7 @@ def create_div_thm_surface_ufl_form(domain: UnfittedCartMesh, n_quad_pts: int, u
     # it would be enough to use a single tag for both cut and full facets.
     # and invoke ds_ only once for that tag.
 
-    bound_normal = dsu_normal(domain)
+    bound_normal = UnfittedNormal(domain)
     facet_normal = ufl.FacetNormal(domain)
     func = create_vector_func(domain)
 

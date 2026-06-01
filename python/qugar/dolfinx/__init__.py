@@ -41,7 +41,7 @@ from qugar.dolfinx._assembly_patches import apply_patches as _apply_assembly_pat
 
 _apply_assembly_patches()
 
-from qugar.dolfinx.boundary import dsu, dsu_normal
+from qugar.dolfinx.boundary import UnfittedNormal, dsu
 from qugar.dolfinx.forms import CustomForm, form_custom
 
-__all__ = ["CustomForm", "dsu", "dsu_normal", "form_custom"]
+__all__ = ["CustomForm", "UnfittedNormal", "dsu", "form_custom"]

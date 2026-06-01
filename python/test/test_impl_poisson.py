@@ -18,7 +18,7 @@ the four qugar-specific code paths most relevant to real workflows:
   rather than the mock unfitted mesh)
 * ``qugar.dolfinx.dsu`` (integration on the unfitted
   boundary)
-* ``qugar.dolfinx.dsu_normal`` (the physical normal at the
+* ``qugar.dolfinx.UnfittedNormal`` (the physical normal at the
   unfitted boundary)
 
 A refactor that breaks any one of these combined paths should fail
@@ -59,7 +59,7 @@ from dolfinx.fem.petsc import LinearProblem
 from utils import dtypes  # type: ignore
 
 import qugar.impl
-from qugar.dolfinx import dsu, dsu_normal  # importing qugar.dolfinx applies the assembly patches
+from qugar.dolfinx import dsu, UnfittedNormal  # importing qugar.dolfinx applies the assembly patches
 from qugar.mesh import create_unfitted_impl_Cartesian_mesh
 
 _PETSC_DTYPES = [d for d in dtypes if np.dtype(d) == np.dtype(ScalarType)]
@@ -110,7 +110,7 @@ def test_poisson_neumann_plus_strong_dirichlet(dtype):
 
     # Neumann data g = grad(u_ex) . n on the unfitted boundary.
     u, v = ufl.TrialFunction(V), ufl.TestFunction(V)
-    n_unf = dsu_normal(unf_mesh)
+    n_unf = UnfittedNormal(unf_mesh)
     n_quad = degree + 2
     qd = 2 * n_quad + 1
     ds_unf = dsu(domain=unf_mesh, degree=qd)

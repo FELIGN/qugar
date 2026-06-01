@@ -107,9 +107,9 @@ from dolfinx.fem.petsc import LinearProblem
 import qugar
 import qugar.impl
 
-# Importing qugar.dolfinx (here via dsu / dsu_normal) patches DOLFINx so the
+# Importing qugar.dolfinx (here via dsu / UnfittedNormal) patches DOLFINx so the
 # stock LinearProblem above assembles unfitted forms transparently.
-from qugar.dolfinx import dsu, dsu_normal
+from qugar.dolfinx import dsu, UnfittedNormal
 from qugar.mesh import create_unfitted_impl_Cartesian_mesh
 
 # -
@@ -202,7 +202,7 @@ bc = dolfinx.fem.dirichletbc(value=dtype(0), dofs=dofs, V=V)
 n_quad_pts = degree + 1
 quad_degree = 2 * n_quad_pts + 1
 ds_unf = dsu(domain=unf_mesh, degree=quad_degree)
-g = ufl.dot(grad_uex, dsu_normal(unf_mesh))
+g = ufl.dot(grad_uex, UnfittedNormal(unf_mesh))
 a = ufl.dot(ufl.grad(u), ufl.grad(v)) * ufl.dx(degree=quad_degree)
 L = f * v * ufl.dx(degree=quad_degree) + g * v * ds_unf
 
