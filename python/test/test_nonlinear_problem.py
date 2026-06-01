@@ -8,13 +8,15 @@
 #
 # --------------------------------------------------------------------------
 
-"""End-to-end tests for ``qugar.dolfinx.NonlinearProblem`` + the
-DOLFINx Newton solver.
+"""End-to-end tests for the stock ``dolfinx.fem.petsc.NonlinearProblem``
+(PETSc SNES) on an unfitted mesh.
 
-``NonlinearProblem`` was previously only exercised through
-``demo_hyperelasticity.py``. This module covers the Newton-solve
-path in pytest with a small scalar nonlinear problem so regressions
-caused by a refactor of qugar's coefficient-update / re-assemble path
+qugar no longer ships its own ``NonlinearProblem``; importing
+``qugar.dolfinx`` patches DOLFINx so the *stock* SNES-based
+``dolfinx.fem.petsc.NonlinearProblem`` assembles the unfitted residual
+and Jacobian with qugar's runtime quadrature transparently. This module
+covers that nonlinear-solve path in pytest with a small scalar nonlinear
+problem so regressions in qugar's coefficient packing / re-assemble path
 show up as test failures.
 
 The chosen problem is a simple algebraic nonlinearity solved through
@@ -42,13 +44,13 @@ from petsc4py.PETSc import ScalarType  # type: ignore
 
 import dolfinx
 import dolfinx.fem
-import dolfinx.nls.petsc
 import numpy as np
 import pytest
 import ufl
+from dolfinx.fem.petsc import NonlinearProblem
 from utils import check_vals, create_mock_unfitted_mesh, dtypes  # type: ignore
 
-from qugar.dolfinx import NonlinearProblem
+import qugar.dolfinx  # noqa: F401  (import applies the transparent-assembly patches)
 
 _N = 4
 _NNZ = 0.3
@@ -56,24 +58,15 @@ _MAX_QUAD = 3
 
 _PETSC_DTYPES = [d for d in dtypes if np.dtype(d) == np.dtype(ScalarType)]
 
-
-def _setup_newton_solver(comm, problem):
-    """Configure a Newton solver with an LU linear solve."""
-    solver = dolfinx.nls.petsc.NewtonSolver(comm, problem)
-    solver.atol = 1.0e-10
-    solver.rtol = 1.0e-10
-    solver.max_it = 30
-    solver.convergence_criterion = "incremental"
-
-    from petsc4py import PETSc  # noqa: PLC0415
-
-    ksp = solver.krylov_solver
-    opts = PETSc.Options()
-    prefix = ksp.getOptionsPrefix()
-    opts[f"{prefix}ksp_type"] = "preonly"
-    opts[f"{prefix}pc_type"] = "lu"
-    ksp.setFromOptions()
-    return solver
+# SNES + LU options for a Newton line-search solve with tight tolerances.
+_SNES_OPTIONS = {
+    "snes_type": "newtonls",
+    "snes_rtol": 1.0e-10,
+    "snes_atol": 1.0e-10,
+    "snes_max_it": 30,
+    "ksp_type": "preonly",
+    "pc_type": "lu",
+}
 
 
 @pytest.mark.parametrize("dtype", _PETSC_DTYPES)
@@ -102,11 +95,14 @@ def test_cuberoot_nonlinear(dim, simplex_cell, dtype):
     v = ufl.TestFunction(V)
     F_form = (u**3 - f) * v * ufl.dx(domain=unf)
 
-    problem = NonlinearProblem(F_form, u)
-    solver = _setup_newton_solver(unf.comm, problem)
-
-    num_its, converged = solver.solve(u)
-    assert converged, "Newton solver did not converge"
+    problem = NonlinearProblem(
+        F_form,
+        u,
+        petsc_options=_SNES_OPTIONS,
+        petsc_options_prefix=f"qugar_cuberoot_{dim}{int(simplex_cell)}_",
+    )
+    problem.solve()
+    assert problem.solver.getConvergedReason() > 0, "SNES solver did not converge"
     u.x.scatter_forward()
 
     # Reference: interpolant of (2 + x[0])^(1/3).
@@ -126,13 +122,13 @@ def test_cuberoot_nonlinear(dim, simplex_cell, dtype):
 @pytest.mark.parametrize("dtype", _PETSC_DTYPES)
 @pytest.mark.parametrize("simplex_cell", [True, False])
 def test_nonlinear_resolve(simplex_cell, dtype):
-    """Run two consecutive Newton solves on the same ``NonlinearProblem``
+    """Run two consecutive SNES solves on the same ``NonlinearProblem``
     object, mutating the right-hand-side coefficient between solves.
 
-    This exercises ``NonlinearProblem`` 's coefficient-update path
-    (``_get_b_coeffs`` / ``_get_A_coeffs``): the first solve packs
-    coefficients from scratch; the second must update them and not
-    silently reuse the previous values.
+    This exercises qugar's coefficient re-packing path: each SNES
+    residual/Jacobian assembly re-packs the custom coefficients, so the
+    second solve must reflect the mutated ``f`` and not silently reuse the
+    previous values.
     """
     unf = create_mock_unfitted_mesh(2, _N, simplex_cell, _NNZ, _MAX_QUAD, dtype)
     V = dolfinx.fem.functionspace(unf, ("Lagrange", 2))
@@ -141,20 +137,24 @@ def test_nonlinear_resolve(simplex_cell, dtype):
     v = ufl.TestFunction(V)
     F_form = (u**3 - f) * v * ufl.dx(domain=unf)
 
-    problem = NonlinearProblem(F_form, u)
-    solver = _setup_newton_solver(unf.comm, problem)
+    problem = NonlinearProblem(
+        F_form,
+        u,
+        petsc_options=_SNES_OPTIONS,
+        petsc_options_prefix=f"qugar_cuberoot_resolve_{int(simplex_cell)}_",
+    )
 
     # Solve 1: f = 2 + x[0].
     f.interpolate(lambda x: 2.0 + x[0])  # type: ignore
     u.interpolate(lambda x: np.full_like(x[0], 1.5, dtype=dtype))  # type: ignore
-    solver.solve(u)
+    problem.solve()
     u.x.scatter_forward()
     u1 = np.copy(u.x.array)
 
     # Solve 2: f = 8 + 0*x[0] (uniform; solution should be uniform 2).
     f.interpolate(lambda x: np.full_like(x[0], 8.0, dtype=dtype))  # type: ignore
     u.interpolate(lambda x: np.full_like(x[0], 1.5, dtype=dtype))  # type: ignore
-    solver.solve(u)
+    problem.solve()
     u.x.scatter_forward()
     u2 = u.x.array
 

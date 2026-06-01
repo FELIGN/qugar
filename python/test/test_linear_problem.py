@@ -8,12 +8,15 @@
 #
 # --------------------------------------------------------------------------
 
-"""End-to-end tests for ``qugar.dolfinx.LinearProblem``.
+"""End-to-end tests for the stock ``dolfinx.fem.petsc.LinearProblem`` on
+unfitted meshes.
 
-The only previous coverage of ``LinearProblem`` was via the
-``demo_L2_projection`` and ``demo_poisson`` demos. These tests exercise
-the same public surface inside the pytest suite so regressions show up
-as test failures rather than as silently broken demos.
+qugar no longer ships its own ``LinearProblem``; importing
+``qugar.dolfinx`` patches DOLFINx so the *stock*
+``dolfinx.fem.petsc.LinearProblem`` assembles unfitted forms with qugar's
+runtime quadrature transparently. These tests exercise that path inside
+the pytest suite so regressions show up as test failures rather than as
+silently broken demos.
 
 The mock unfitted mesh -- which on cut cells repeats the standard
 quadrature several times and rescales the weights inversely -- gives
@@ -40,13 +43,14 @@ import dolfinx.fem
 import numpy as np
 import pytest
 import ufl
+from dolfinx.fem.petsc import LinearProblem
 from utils import (  # type: ignore
     check_vals,
     create_mock_unfitted_mesh,
     dtypes,
 )
 
-from qugar.dolfinx import LinearProblem
+import qugar.dolfinx  # noqa: F401  (import applies the transparent-assembly patches)
 
 _N = 4
 _NNZ = 0.3
@@ -85,7 +89,12 @@ def test_L2_projection(dim, simplex_cell, dtype):
     L = target * v * ufl.dx(domain=unf)
 
     petsc_options = {"ksp_type": "preonly", "pc_type": "lu"}
-    problem = LinearProblem(a, L, petsc_options=petsc_options)
+    problem = LinearProblem(
+        a,
+        L,
+        petsc_options=petsc_options,
+        petsc_options_prefix=f"qugar_l2_{dim}{int(simplex_cell)}_",
+    )
     problem.solve()
     uh_custom = problem.u
 
@@ -114,7 +123,12 @@ def test_resolve(dim, simplex_cell, dtype):
     L = target * v * ufl.dx(domain=unf)
 
     petsc_options = {"ksp_type": "preonly", "pc_type": "lu"}
-    problem = LinearProblem(a, L, petsc_options=petsc_options)
+    problem = LinearProblem(
+        a,
+        L,
+        petsc_options=petsc_options,
+        petsc_options_prefix=f"qugar_resolve_{dim}{int(simplex_cell)}_",
+    )
     problem.solve()
     uh1 = np.copy(problem.u.x.array)
 

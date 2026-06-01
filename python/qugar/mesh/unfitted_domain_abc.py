@@ -66,6 +66,14 @@ class UnfittedDomainABC(ABC):
         self._mesh = mesh
         setattr(self._mesh._ufl_domain, "unf_domain", self)
 
+        # Cache of generated custom quadratures, shared across every form
+        # built on this domain. Keyed by (flavor, degree, ...entity bytes)
+        # so that, e.g., the bilinear and linear forms of a problem (or a
+        # Jacobian and a residual) reuse the same cut-cell / cut-facet /
+        # unfitted-boundary quadrature instead of regenerating it. See
+        # `get_cached_custom_quadrature`.
+        self._quad_cache: dict = {}
+
     @abstractmethod
     def get_cut_cells(self) -> npt.NDArray[np.int32]:
         """Gets the ids of the cut cells.
@@ -377,6 +385,69 @@ class UnfittedDomainABC(ABC):
             quadratures.
         """
         pass
+
+    def get_cached_custom_quadrature(
+        self,
+        flavor: str,
+        degree: int,
+        entities: "npt.NDArray[np.int32] | MeshFacets",
+        ext_integral: Optional[bool] = None,
+    ) -> "CustomQuad | CustomQuadUnfBoundary | CustomQuadFacet":
+        """Returns a custom quadrature, generating it on the fly the
+        first time and reusing the cached result afterwards.
+
+        This is a thin memoizing wrapper around the
+        ``create_quad_custom_cells``, ``create_quad_unf_boundaries``, and
+        ``create_quad_custom_facets`` generators. The cache lives on the
+        domain instance, so distinct forms built on the same domain
+        (e.g. a bilinear and a linear form, or a Jacobian and a residual)
+        reuse the same generated quadrature instead of recomputing it,
+        as long as they request the same `entities` at the same `degree`.
+
+        Args:
+            flavor (str): One of ``"cell"``, ``"unf_boundary"``, or
+                ``"facet"``, selecting which generator to call.
+            degree (int): Expected degree of exactness of the quadrature.
+            entities (npt.NDArray[np.int32] | MeshFacets): The cells
+                (for ``"cell"`` / ``"unf_boundary"``) or facets (for
+                ``"facet"``) for which the quadrature is generated.
+            ext_integral (Optional[bool]): For the ``"facet"`` flavor,
+                whether the quadrature is for an exterior integral. Unused
+                for the other flavors.
+
+        Returns:
+            CustomQuad | CustomQuadUnfBoundary | CustomQuadFacet: The
+            generated (or cached) custom quadrature.
+        """
+
+        if flavor in ("cell", "unf_boundary"):
+            # ``entities`` is a 1D array of cell ids; its bytes uniquely
+            # identify the request (no hash collisions).
+            key = (flavor, degree, entities.tobytes())  # type: ignore[union-attr]
+        elif flavor == "facet":
+            key = (
+                flavor,
+                degree,
+                bool(ext_integral),
+                entities.cell_ids.tobytes(),  # type: ignore[union-attr]
+                entities.local_facet_ids.tobytes(),  # type: ignore[union-attr]
+            )
+        else:
+            raise ValueError(f"Unknown quadrature flavor: {flavor!r}.")
+
+        quad = self._quad_cache.get(key)
+        if quad is None:
+            if flavor == "cell":
+                quad = self.create_quad_custom_cells(degree, entities)  # type: ignore[arg-type]
+            elif flavor == "unf_boundary":
+                quad = self.create_quad_unf_boundaries(degree, entities)  # type: ignore[arg-type]
+            else:
+                quad = self.create_quad_custom_facets(
+                    degree, entities, bool(ext_integral)
+                )  # type: ignore[arg-type]
+            self._quad_cache[key] = quad
+
+        return quad
 
     if has_FEniCSx:
 

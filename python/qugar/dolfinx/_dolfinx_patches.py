@@ -55,14 +55,18 @@ def _patch_assemble_scalar() -> None:
     if getattr(_assemble_module.assemble_scalar, "_qugar_patched", False):
         return
 
-    _pack_constants = _assemble_module.pack_constants
-    _pack_coefficients = _assemble_module.pack_coefficients
     _cpp_assemble_scalar = dolfinx.cpp.fem.assemble_scalar
     _original = _assemble_module.assemble_scalar
 
     def assemble_scalar(M, constants=None, coeffs=None):
-        constants = _pack_constants(M) if constants is None else constants
-        coeffs = _pack_coefficients(M) if coeffs is None else coeffs
+        # Resolve ``pack_constants`` / ``pack_coefficients`` from the module
+        # at call time (not capture time) so that qugar's later
+        # ``pack_coefficients`` patch — which dispatches ``CustomForm`` to
+        # its custom packer (see qugar.dolfinx._assembly_patches) — is
+        # honoured here too, making ``assemble_scalar(custom_form)`` correct
+        # without an explicit ``coeffs=`` argument.
+        constants = _assemble_module.pack_constants(M) if constants is None else constants
+        coeffs = _assemble_module.pack_coefficients(M) if coeffs is None else coeffs
         return _cpp_assemble_scalar(M._cpp_object, constants, coeffs)
 
     assemble_scalar.__doc__ = _original.__doc__

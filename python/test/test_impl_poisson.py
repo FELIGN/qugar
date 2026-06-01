@@ -11,7 +11,9 @@
 """End-to-end Poisson solve on a real implicit-domain mesh, combining
 the four qugar-specific code paths most relevant to real workflows:
 
-* ``qugar.dolfinx.LinearProblem`` (solver + apply_lifting + set_bc)
+* the stock ``dolfinx.fem.petsc.LinearProblem`` (solver + apply_lifting +
+  set_bc), working transparently on the unfitted mesh via qugar's
+  assembly patches
 * ``qugar.mesh.create_unfitted_impl_Cartesian_mesh`` (real cut domain
   rather than the mock unfitted mesh)
 * ``qugar.dolfinx.dsu`` (integration on the unfitted
@@ -53,10 +55,11 @@ import dolfinx.mesh
 import numpy as np
 import pytest
 import ufl
+from dolfinx.fem.petsc import LinearProblem
 from utils import dtypes  # type: ignore
 
 import qugar.impl
-from qugar.dolfinx import LinearProblem, dsu, dsu_normal
+from qugar.dolfinx import dsu, dsu_normal  # importing qugar.dolfinx applies the assembly patches
 from qugar.mesh import create_unfitted_impl_Cartesian_mesh
 
 _PETSC_DTYPES = [d for d in dtypes if np.dtype(d) == np.dtype(ScalarType)]
@@ -118,7 +121,11 @@ def test_poisson_neumann_plus_strong_dirichlet(dtype):
     )
 
     problem = LinearProblem(
-        a, L, bcs=[bc], petsc_options={"ksp_type": "preonly", "pc_type": "lu"}
+        a,
+        L,
+        bcs=[bc],
+        petsc_options={"ksp_type": "preonly", "pc_type": "lu"},
+        petsc_options_prefix="qugar_impl_poisson_",
     )
     problem.solve()
     uh = problem.u
