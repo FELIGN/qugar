@@ -251,7 +251,7 @@ class _IntegralModifier:
             "(int, int, int, int, int, int);\n"
             f"extern int qugar_tabulate_{suffix}"
             f"(int, int, const {dtype_str}*, int, int, {dtype_str}*, long);\n"
-            f"extern {dtype_str}* qugar_get_scratch_{suffix}(long);\n\n"
+            f"extern {dtype_str}* qugar_get_scratch_{suffix}(int, long);\n\n"
         )
 
     @staticmethod
@@ -405,7 +405,9 @@ class _IntegralModifier:
         is_interior_facet = self._data.integral_type == "interior_facet"
 
         call_code = ""
-        for quad_data, FE_tables in self._data.quad_data_FE_tables.items():
+        for quad_slot, (quad_data, FE_tables) in enumerate(
+            self._data.quad_data_FE_tables.items()
+        ):
             quad_name = quad_data.name
 
             has_normals = quad_data.unfitted_boundary
@@ -498,9 +500,13 @@ class _IntegralModifier:
             scratch_var = f"scratch_{quad_name}"
             if scratch_terms:
                 total = " + ".join(scratch_terms)
+                # Each quadrature gets its own scratch slot so that, in a
+                # multi-quadrature kernel, one quadrature's buffer is never
+                # reallocated/aliased while another's tables are still in
+                # use (see qugar_get_scratch in the shim).
                 call_code += (
                     f"{dtype_str}* {scratch_var} = "
-                    f"qugar_get_scratch_{suffix}((long)({total}));\n\n"
+                    f"qugar_get_scratch_{suffix}({quad_slot}, (long)({total}));\n\n"
                 )
 
             # Running offset (sum of size expressions already consumed).
