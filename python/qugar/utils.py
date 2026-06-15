@@ -11,42 +11,42 @@
 import importlib.util
 from typing import Tuple, cast
 
-DOLFINX_VERSION_MIN = "0.10.0"
+DOLFINX_VERSION_MIN = "0.11.0"
 """str: Minimum DOLFINx compatible version.
 The imported DOLFINx version must be greater or equal than this version.
 """
 
-DOLFINX_VERSION_MAX = "0.11.0"
+DOLFINX_VERSION_MAX = "0.12.0"
 """str: Maximum DOLFINx non-compatible version.
 The imported DOLFINx version must be smaller than this version.
 """
 
-BASIX_VERSION_MIN = "0.10.0"
+BASIX_VERSION_MIN = "0.11.0"
 """str: Minimum Basix compatible version.
 The imported Basix version must be greater or equal than this version.
 """
 
-BASIX_VERSION_MAX = "0.11.0"
+BASIX_VERSION_MAX = "0.12.0"
 """str: Maximum Basix non-compatible version.
 The imported Basix version must be smaller than this version.
 """
 
-FFCX_VERSION_MIN = "0.10.0"
+FFCX_VERSION_MIN = "0.11.0"
 """str: Minimum FFCx compatible version.
 The imported FFCx version must be greater or equal than this version.
 """
 
-FFCX_VERSION_MAX = "0.11.0"
+FFCX_VERSION_MAX = "0.12.0"
 """str: Maximum FFCx non-compatible version.
 The imported FFCx version must be smaller than this version.
 """
 
-UFL_VERSION_MIN = "2025.2.0"
+UFL_VERSION_MIN = "2026.1.0"
 """str: Minimum UFL compatible version.
 The imported UFL version must be greater or equal than this version.
 """
 
-UFL_VERSION_MAX = "2025.3.0"
+UFL_VERSION_MAX = "2026.2.0"
 """str: Maximum UFL non-compatible version.
 The imported UFL version must be smaller than this version.
 """

@@ -58,7 +58,7 @@ class UnfittedReferenceNormal(GeometricCellQuantity):
     @property
     def ufl_shape(self):
         """Vector shape, one component per topological dimension."""
-        return (self._domain.topological_dimension(),)
+        return (self._domain.topological_dimension,)
 
 
 def _compute_vector_norm(vec):
@@ -273,7 +273,11 @@ class dsu(ufl.Measure):
         domain=None,
         metadata=None,
         subdomain_data=None,
+        intersect_measures=None,
     ):
+        # ``intersect_measures`` was added to ufl.Measure.reconstruct in UFL
+        # 2026.1.0; the unfitted measure has no notion of intersecting
+        # measures, so it is accepted for signature compatibility and ignored.
         # Without this override the syntax ``ds(cut_tag)`` (and the
         # tuple-id branch in ufl.Measure.__rmul__) would return a plain
         # ufl.Measure, silently dropping the Nanson correction.

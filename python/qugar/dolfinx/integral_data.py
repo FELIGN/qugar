@@ -99,7 +99,7 @@ def _get_integral_dimension(
     assert len(cells) == 1
 
     cell = cells.pop()
-    return cell.topological_dimension()
+    return cell.topological_dimension
 
 
 class IntegralData(NamedTuple):

@@ -123,7 +123,7 @@ def _create_permutation_operators(
         and ``ffcx.ir.elementtables.get_ffcx_table_values``.
     """
 
-    cell_name = cell_type.cellname()
+    cell_name = cell_type.cellname
     assert cell_name in ["interval", "triangle", "quadrilateral"]
 
     dtype = np.float64
@@ -215,7 +215,7 @@ def _get_facet_permutations(
     assert cells.size == facets.size
 
     cell = ufl.Cell(mesh.topology.cell_type.name)
-    face_tdim = cell.topological_dimension() - 1
+    face_tdim = cell.topological_dimension - 1
     n_facets_per_cell = cell.num_sub_entities(face_tdim)
 
     mesh.topology.create_entity_permutations()
@@ -249,7 +249,7 @@ def permute_facet_points(
     perms = _get_facet_permutations(mesh, cells, facets)
 
     cell = ufl.Cell(mesh.topology.cell_type.name)
-    face_tdim = cell.topological_dimension() - 1
+    face_tdim = cell.topological_dimension - 1
     facet_cell = cell.sub_entity_types(face_tdim)[0]
 
     return _permute_points(points, perms, facet_cell)

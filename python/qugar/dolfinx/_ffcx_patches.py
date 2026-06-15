@@ -52,7 +52,7 @@ def _unfitted_normal_access(self, mt, tabledata, quadrature_rule):
     ``points_<quad>`` arrays for this integral.
     """
     domain = ufl.domain.extract_unique_domain(mt.terminal)
-    tdim = domain.topological_dimension()
+    tdim = domain.topological_dimension
     component = mt.component[0]
     iq = self.symbols.quadrature_loop_index
 

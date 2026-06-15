@@ -824,7 +824,9 @@ def generate_code(
         runtime by the created integrals.
     """
 
-    code_blocks = ffcx.codegeneration.codegeneration.generate_code(ir, ffcx_options)
+    # FFCx 0.11 changed ``generate_code`` to return ``(CodeBlocks, suffixes)``;
+    # qugar emits C only, so the file suffixes are not needed here.
+    code_blocks, _suffixes = ffcx.codegeneration.codegeneration.generate_code(ir, ffcx_options)
     code_blocks = _modify_header(code_blocks)
 
     # In FEniCSx 0.10.0, ffcx emits one code block per (integral, cell_type)

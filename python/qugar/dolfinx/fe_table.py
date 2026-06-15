@@ -273,7 +273,7 @@ class FETable:
     def element_dim(self) -> int:
         """Returns the dimension of the element associated to the FE
         table."""
-        return self.element.cell.topological_dimension()
+        return self.element.cell.topological_dimension
 
     @property
     def component(self) -> int:
@@ -377,7 +377,7 @@ class FETable:
             element (BasixElement): Element associated to the table.
         """
         self._element = element
-        elem_dim = element.cell.topological_dimension()
+        elem_dim = element.cell.topological_dimension
         self._set_derivatives(elem_dim)
 
     def _set_derivatives(self, elem_dim: int) -> None:
