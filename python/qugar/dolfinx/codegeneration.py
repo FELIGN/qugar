@@ -39,9 +39,11 @@ from qugar.dolfinx.parsing_utils import dtype_to_C_str
 
 def _use_ast_backend() -> bool:
     """Whether to generate the custom kernel body via the FFCx language
-    backend (AST) instead of the legacy text transforms. Toggled by the
-    ``QUGAR_FFCX_BACKEND`` environment variable during the migration."""
-    return os.environ.get("QUGAR_FFCX_BACKEND", "") not in ("", "0", "false", "False")
+    backend (AST) instead of the legacy text transforms.
+
+    The AST backend is the default; set ``QUGAR_FFCX_BACKEND=0`` to fall back
+    to the legacy text-transform path (kept during the migration)."""
+    return os.environ.get("QUGAR_FFCX_BACKEND", "1") not in ("0", "false", "False")
 
 
 def _modify_header(code_blocks: CodeBlocks) -> CodeBlocks:
