@@ -39,10 +39,54 @@ import re
 import basix
 import basix.ufl
 import ffcx.codegeneration.lnodes as L
+import ufl
 from ffcx.codegeneration.integral_generator import IntegralGenerator
+
+from qugar.dolfinx.boundary import UnfittedReferenceNormal
 
 _QUAD_ID_RE = re.compile(r"_Q(\w+)$")
 _WEIGHTS_RE = re.compile(r"^weights_(\w+)$")
+
+
+def _unfitted_normal_access(access, mt, tabledata, quadrature_rule):
+    """FFCx access handler for :class:`UnfittedReferenceNormal`.
+
+    Emits ``normals_<quad>[tdim * iq + component]`` — a read into the per-cell
+    normals array delivered via ``custom_data``. This is the in-backend
+    replacement for the global monkeypatch in
+    :mod:`qugar.dolfinx._ffcx_patches`; it is registered on the backend's own
+    access object by :class:`QugarIntegralGenerator`.
+    """
+    domain = ufl.domain.extract_unique_domain(mt.terminal)
+    tdim = domain.topological_dimension
+    component = mt.component[0]
+    iq = access.symbols.quadrature_loop_index
+    # The terminal is cellwise-constant from FFCx's viewpoint, so it is lowered
+    # in the piecewise partition (quadrature_rule=None there); recover the rule
+    # recorded by the generator's generate_piecewise_partition.
+    rule = quadrature_rule if quadrature_rule is not None else access._qugar_current_rule
+    if rule is None:
+        raise RuntimeError("unfitted normal lowered outside a quadrature context")
+    hash(rule)
+    normals = L.Symbol(f"normals_{rule.id()}", dtype=L.DataType.REAL)
+    return normals[tdim * iq + component]
+
+
+def _zero_normal_access(access, mt, tabledata, quadrature_rule):
+    """Lower the unfitted normal to 0.0 (used by the ``_original`` static
+    kernel, where no per-cell normals are available): full cells contribute
+    nothing to an unfitted-boundary integral."""
+    return L.LiteralFloat(0.0)
+
+
+def _register_unfitted_normal(backend, zero: bool) -> None:
+    """Register the unfitted-normal terminal handlers on ``backend`` (no global
+    monkeypatch). ``zero`` selects the 0.0 lowering for the ``_original``
+    kernel; otherwise the per-cell normals-array access."""
+    handler = _zero_normal_access if zero else _unfitted_normal_access
+    backend.access._qugar_current_rule = None
+    backend.access.call_lookup[UnfittedReferenceNormal] = handler.__get__(backend.access)
+    backend.definitions.handler_lookup[UnfittedReferenceNormal] = backend.definitions.pass_through
 
 
 def _resolve_mixed_component(element, flat_component):
@@ -120,6 +164,18 @@ class QugarIntegralGenerator(IntegralGenerator):
         else:
             self._strip_decl_names = set(self._varying)
         self._has_perms = ir.expression.integral_type == "interior_facet"
+        # Lower the unfitted-boundary normal on this backend (no global patch).
+        _register_unfitted_normal(backend, zero=False)
+
+    def generate_piecewise_partition(self, quadrature_rule, domain):
+        """Record the active quadrature rule so the unfitted-normal handler can
+        resolve it: the cellwise-constant normal is lowered in the piecewise
+        partition, where FFCx passes ``quadrature_rule=None`` to the access."""
+        self.backend.access._qugar_current_rule = quadrature_rule
+        try:
+            return super().generate_piecewise_partition(quadrature_rule, domain)
+        finally:
+            self.backend.access._qugar_current_rule = None
 
     def generate(self, domain: basix.CellType):
         """Generate the runtime-quadrature ``tabulate_tensor`` body AST."""

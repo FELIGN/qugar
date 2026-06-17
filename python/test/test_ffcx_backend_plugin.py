@@ -41,15 +41,21 @@ def _generate(language):
     return code_blocks, suffixes
 
 
-def test_backend_is_selectable():
-    """FFCx resolves the qugar backend module and generates C code through it.
-
-    (Cross-checking byte-for-byte against the stock C backend is intentionally
-    avoided: FFCx advances global naming state between successive generate_code
-    calls in a process, so a same-process comparison is not robust.)
-    """
+def test_backend_generates_runtime_quadrature_dual_kernel():
+    """FFCx resolves the qugar backend and its integral generator emits the
+    runtime-quadrature dual kernel (static _original + runtime _custom +
+    dispatch wrapper + shim/loader prologue)."""
     q_blocks, q_suffixes = _generate(_QUGAR_BACKEND)
 
     assert q_suffixes == (".h", ".c")
-    assert "tabulate_tensor_integral" in q_blocks.integrals[0][1]
-    assert q_blocks.forms and q_blocks.file_pre is not None
+    impl = q_blocks.integrals[0][1]
+    for marker in (
+        "_original(",
+        "_custom(",
+        "load_points_",
+        "w_custom_offset",
+        "qugar_register_element",
+        "qugar_get_scratch",
+        "ufcx_integral integral_",
+    ):
+        assert marker in impl, f"missing {marker!r} in generated kernel"
