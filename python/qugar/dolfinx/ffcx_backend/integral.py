@@ -35,7 +35,6 @@ import numpy.typing as npt
 from ffcx.codegeneration.backend import FFCXBackend
 from ffcx.codegeneration.C import integral_template as ufcx_integrals
 from ffcx.codegeneration.C.formatter import Formatter
-from ffcx.codegeneration.integral_generator import IntegralGenerator
 from ffcx.codegeneration.utils import dtype_to_c_type, dtype_to_scalar_dtype
 from ffcx.ir.representation import IntegralIR
 
@@ -43,7 +42,7 @@ from qugar.dolfinx.ffcx_backend import _assemble
 from qugar.dolfinx.ffcx_backend._context import integral_tdim, quad_data_from_ir
 from qugar.dolfinx.ffcx_backend._generator import (
     QugarIntegralGenerator,
-    _register_unfitted_normal,
+    generate_original_body,
 )
 from qugar.dolfinx.ffcx_backend._tables import extract_ir_tables
 from qugar.dolfinx.quadrature_data import QuadratureData
@@ -97,10 +96,15 @@ def generator(
         + "\n}\n\n"
     )
 
-    # Original (static) kernel; the unfitted normal lowers to 0.0.
-    backend_orig = FFCXBackend(ir, options)
-    _register_unfitted_normal(backend_orig, zero=True)
-    original_ast = IntegralGenerator(ir, backend_orig).generate(domain)
+    # Original (static, non-cut) kernel. Regular cell quadratures run; the
+    # unfitted-boundary quadratures (which an integral may also carry, e.g.
+    # f*v*dx + g*v*dsu) are skipped -- full cells contribute nothing to a
+    # boundary term, and skipping avoids evaluating the placeholder boundary
+    # geometry.
+    unfitted_quad_ids = {q.name for q in quads.values() if q.unfitted_boundary}
+    original_ast = generate_original_body(
+        ir, FFCXBackend(ir, options), domain, unfitted_quad_ids
+    )
     original_fn = (
         _assemble.std_signature(f"tabulate_tensor_{factory_name}_original", scalar_c, geom_c)
         + "\n{\n"

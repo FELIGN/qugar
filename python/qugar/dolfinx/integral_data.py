@@ -195,3 +195,47 @@ def extract_integral_data(
         is_mixed_dim,
         quad_FE_tables,
     )
+
+
+def extract_integral_data_from_ir(
+    ufl_analysis: ffcx.analysis.UFLData,
+    ir: ffcx.ir.representation.DataIR,
+    itg_ir: ffcx.ir.representation.IntegralIR,
+    ffcx_options: dict[str, int | float | npt.DTypeLike],
+) -> IntegralData:
+    """Like :func:`extract_integral_data` but builds the FE tables from the IR
+    (:func:`qugar.dolfinx.ffcx_backend.extract_ir_tables`) instead of parsing
+    the rendered C, so it needs no integral implementation string. Used by the
+    FFCx language-backend path. The quadrature data still comes from the UFL
+    analysis (the per-cell packer needs the real quadrature ``degree`` for
+    unfitted-boundary rules, which the IR does not retain)."""
+    from ffcx.codegeneration.utils import dtype_to_scalar_dtype
+
+    from qugar.dolfinx.ffcx_backend import extract_ir_tables
+
+    itg_name = itg_ir.expression.name
+    tdim = _get_integral_dimension(ir, itg_ir)
+    itg_ids = _get_integral_subdomain_ids(ir, itg_name)
+    assert len(itg_ids) > 0
+
+    short_itg_name = itg_name[len("integral_") :]
+    all_quads_data = extract_quadrature_data(ufl_analysis, ffcx_options)
+    real_dtype = np.dtype(dtype_to_scalar_dtype(ffcx_options["scalar_type"]))  # type: ignore[arg-type]
+    FE_tables = extract_ir_tables(itg_ir, all_quads_data, real_dtype)
+
+    is_mixed_dim = False
+    quad_FE_tables: dict[QuadratureData, list] = {}
+    for FE_table in FE_tables:
+        quad_data = all_quads_data[FE_table.quad_name]
+        quad_FE_tables.setdefault(quad_data, []).append(FE_table)
+        if FE_table.element_dim != tdim:
+            is_mixed_dim = True
+
+    return IntegralData(
+        short_itg_name,
+        itg_ids,
+        itg_ir.expression.integral_type,
+        tdim,
+        is_mixed_dim,
+        quad_FE_tables,
+    )

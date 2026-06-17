@@ -46,6 +46,40 @@ def _use_ast_backend() -> bool:
     return os.environ.get("QUGAR_FFCX_BACKEND", "1") not in ("0", "false", "False")
 
 
+_QUGAR_FFCX_LANGUAGE = "qugar.dolfinx.ffcx_backend"
+
+
+def _use_language_backend() -> bool:
+    """Whether to generate the whole integral via the FFCx language backend
+    (``options["language"]``), which owns the dual kernel and lowers the
+    unfitted normal in-backend (no global monkeypatch, no rendered-C parsing).
+
+    Opt-in during the migration via ``QUGAR_FFCX_LANGUAGE_BACKEND=1``; off by
+    default (the AST-hybrid path remains the default)."""
+    return os.environ.get("QUGAR_FFCX_LANGUAGE_BACKEND", "") in ("1", "true", "True")
+
+
+def _generate_code_language_backend(
+    ufl_data: UFLData, ir: DataIR, ffcx_options: dict[str, int | float | npt.DTypeLike]
+) -> tuple[CodeBlocks, list[IntegralData]]:
+    """Generate the runtime-quadrature kernels via the qugar FFCx language
+    backend (``options["language"]``). The kernels are produced by
+    ``qugar.dolfinx.ffcx_backend.integral.generator``; the per-cell packer's
+    integral data is rebuilt from the IR (no rendered-C parsing)."""
+    from qugar.dolfinx.integral_data import extract_integral_data_from_ir
+
+    opts = dict(ffcx_options)
+    opts["language"] = _QUGAR_FFCX_LANGUAGE
+    code_blocks, _suffixes = ffcx.codegeneration.codegeneration.generate_code(ir, opts)
+    code_blocks = _modify_header(code_blocks)
+
+    itg_datas = [
+        extract_integral_data_from_ir(ufl_data, ir, itg_ir, ffcx_options)
+        for itg_ir in ir.integrals
+    ]
+    return code_blocks, itg_datas
+
+
 def _modify_header(code_blocks: CodeBlocks) -> CodeBlocks:
     """Adds stddef.h include in the header of the given `code_blocks`.
 
@@ -886,6 +920,9 @@ def generate_code(
         information for generating the custom coefficients required at
         runtime by the created integrals.
     """
+
+    if _use_language_backend():
+        return _generate_code_language_backend(ufl_data, ir, ffcx_options)
 
     # FFCx 0.11 changed ``generate_code`` to return ``(CodeBlocks, suffixes)``;
     # qugar emits C only, so the file suffixes are not needed here.

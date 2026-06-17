@@ -79,6 +79,41 @@ def _zero_normal_access(access, mt, tabledata, quadrature_rule):
     return L.LiteralFloat(0.0)
 
 
+def _loop_quad_id(loop) -> str | None:
+    """FFCx quadrature id a quadrature loop belongs to (from a table/weights
+    symbol referenced inside it)."""
+    for node in _iter_nodes(loop):
+        if isinstance(node, L.Symbol):
+            q = _quad_id(node.name)
+            if q is not None:
+                return q
+    return None
+
+
+def generate_original_body(ir, backend, domain, unfitted_quad_ids: set[str]):
+    """Static (``_original``) kernel body for non-cut cells.
+
+    An integral may mix a regular cell quadrature with an unfitted-boundary
+    one (e.g. ``f*v*dx + g*v*dsu`` -> one cell integral, two quadratures). Full
+    cells must still contribute the regular term, but nothing to the boundary
+    term -- and the boundary quadrature's placeholder points would make the
+    (non-affine) geometry NaN. So: lower the unfitted normal to 0.0 and set the
+    unfitted-boundary quadrature loops' bound to 0 (skipped); the regular
+    quadrature loops run unchanged.
+    """
+    _register_unfitted_normal(backend, zero=True)
+    parts = IntegralGenerator(ir, backend).generate(domain)
+    if unfitted_quad_ids:
+        for node in _iter_nodes(parts):
+            if (
+                isinstance(node, L.ForRange)
+                and getattr(node.index, "name", None) == "iq"
+                and _loop_quad_id(node) in unfitted_quad_ids
+            ):
+                node.end = L.LiteralInt(0)
+    return parts
+
+
 def _register_unfitted_normal(backend, zero: bool) -> None:
     """Register the unfitted-normal terminal handlers on ``backend`` (no global
     monkeypatch). ``zero`` selects the 0.0 lowering for the ``_original``
