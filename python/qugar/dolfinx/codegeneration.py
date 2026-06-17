@@ -16,6 +16,7 @@ if not has_FEniCSx:
     raise ValueError("FEniCSx installation not found is required.")
 
 import math
+import os
 import re
 
 import basix
@@ -24,13 +25,23 @@ import ffcx.codegeneration.codegeneration
 import numpy as np
 import numpy.typing as npt
 from ffcx.analysis import UFLData
+from ffcx.codegeneration.backend import FFCXBackend
+from ffcx.codegeneration.C.formatter import Formatter
 from ffcx.codegeneration.codegeneration import CodeBlocks
 from ffcx.ir.representation import DataIR, IntegralIR
 
 from qugar.dolfinx._kernel_body import KernelBody
 from qugar.dolfinx.fe_table import FETable
+from qugar.dolfinx.ffcx_backend._generator import QugarIntegralGenerator
 from qugar.dolfinx.integral_data import IntegralData, extract_integral_data
 from qugar.dolfinx.parsing_utils import dtype_to_C_str
+
+
+def _use_ast_backend() -> bool:
+    """Whether to generate the custom kernel body via the FFCx language
+    backend (AST) instead of the legacy text transforms. Toggled by the
+    ``QUGAR_FFCX_BACKEND`` environment variable during the migration."""
+    return os.environ.get("QUGAR_FFCX_BACKEND", "") not in ("", "0", "false", "False")
 
 
 def _modify_header(code_blocks: CodeBlocks) -> CodeBlocks:
@@ -96,7 +107,13 @@ class _IntegralModifier:
             constants.
     """
 
-    def __init__(self, code: str, itg_ir: IntegralIR, itg_data: IntegralData) -> None:
+    def __init__(
+        self,
+        code: str,
+        itg_ir: IntegralIR,
+        itg_data: IntegralData,
+        ffcx_options: dict[str, int | float | npt.DTypeLike] | None = None,
+    ) -> None:
         """Constructor.
 
         Args:
@@ -107,10 +124,13 @@ class _IntegralModifier:
             data (IntegralData): Data structure containing information
                 associated to the quadrature, as integral type,
                 subdomain ids, quadratures, and FE tables.
+            ffcx_options: FFCx options (needed by the AST language
+                backend; optional for the legacy text path).
         """
 
         self._ir = itg_ir
         self._data = itg_data
+        self._ffcx_options = ffcx_options
         self._body = KernelBody.from_ffcx(code, itg_ir, itg_data)
         self._integral_name = self._body.integral_name
         self._coeffs_dtype = self._body.coeffs_dtype
@@ -684,6 +704,9 @@ class _IntegralModifier:
         # away and this kernel is already ABI-ready.
         dtype_str = dtype_to_C_str(self._data.dtype)
 
+        if _use_ast_backend() and self._ffcx_options is not None:
+            return self._create_custom_function_ast(dtype_str)
+
         # Apply the custom-variant transformation pipeline on the
         # structured body. Order matters:
         #   erase_static -> rewrite_table_accesses -> dynamic_loop_bounds
@@ -711,6 +734,35 @@ class _IntegralModifier:
             body.loops[0].pre_text = prologue + body.loops[0].pre_text
 
         return body.render(suffix="_custom")
+
+    def _create_custom_function_ast(self, dtype_str: str) -> str:
+        """Generate the custom kernel body via the FFCx language backend
+        (:class:`QugarIntegralGenerator`) instead of the text transforms.
+
+        The static tables/weights are stripped at the AST level and table
+        accesses flattened; the per-cell loader + runtime-tabulation
+        prologue (and the constant-for-points table re-declarations) are
+        reused verbatim from :meth:`_create_custom_data_callers`. The result
+        is equivalent to :meth:`_create_custom_function`.
+        """
+        assert self._ffcx_options is not None
+        domain = next(iter(self._ir.expression.unique_table_types))
+        tables = [t for tl in self._data.quad_data_FE_tables.values() for t in tl]
+
+        backend = FFCXBackend(self._ir, self._ffcx_options)
+        gen = QugarIntegralGenerator(self._ir, backend, tables, strip_all_tables=True)
+        body_c = Formatter(self._ffcx_options["scalar_type"])(gen.generate(domain))
+
+        recover = (
+            f"const {dtype_str}* restrict w_custom = "
+            f"(const {dtype_str}*)custom_data;\n"
+        )
+        prologue = recover + self._create_custom_data_callers()
+
+        sig = self._body.signature.replace(
+            self._integral_name, self._integral_name + "_custom", 1
+        )
+        return f"{sig}\n{{\n{prologue}{body_c}\n}}\n\n"
 
     def _create_new_function(self) -> str:
         """Creates a new function for replacing the original one.
@@ -847,7 +899,7 @@ def generate_code(
         itg_data = extract_integral_data(ufl_data, ir, itg_ir, ffcx_options, impl)
         itg_datas.append(itg_data)
 
-        itg_mod = _IntegralModifier(impl, itg_ir, itg_data)
+        itg_mod = _IntegralModifier(impl, itg_ir, itg_data, ffcx_options)
         new_impl = itg_mod.create_new_code()
 
         code_blocks.integrals[i] = (header, new_impl)

@@ -40,8 +40,6 @@ import basix
 import ffcx.codegeneration.lnodes as L
 from ffcx.codegeneration.integral_generator import IntegralGenerator
 
-from qugar.dolfinx.ffcx_backend._tables import IRTable
-
 _QUAD_ID_RE = re.compile(r"_Q(\w+)$")
 _WEIGHTS_RE = re.compile(r"^weights_(\w+)$")
 
@@ -76,12 +74,27 @@ def _iter_nodes(node, seen=None):
 class QugarIntegralGenerator(IntegralGenerator):
     """``IntegralGenerator`` that emits a runtime-quadrature kernel body."""
 
-    def __init__(self, ir, backend, tables: list[IRTable]):
+    def __init__(self, ir, backend, tables, strip_all_tables: bool = False):
+        """Args:
+            ir: FFCx integral IR.
+            backend: ``FFCXBackend`` built from ``ir``.
+            tables: the integral's tables (``IRTable`` or the legacy
+                ``FETable``; only ``.name``, ``.funcs`` and
+                ``.is_constant_for_pts()`` are used).
+            strip_all_tables: when ``True`` the constant-for-points table
+                declarations are also removed from the body (they are then
+                re-emitted by the caller's prologue); when ``False`` they are
+                kept in the body. Their accesses are never rewritten.
+        """
         super().__init__(ir, backend)
-        self._tables: dict[str, IRTable] = {t.name: t for t in tables}
+        self._tables = {t.name: t for t in tables}
         self._varying: set[str] = {
             t.name for t in tables if not t.is_constant_for_pts()
         }
+        if strip_all_tables:
+            self._strip_decl_names = set(self._tables)
+        else:
+            self._strip_decl_names = set(self._varying)
         self._has_perms = ir.expression.integral_type == "interior_facet"
 
     def generate(self, domain: basix.CellType):
@@ -90,6 +103,7 @@ class QugarIntegralGenerator(IntegralGenerator):
         self._strip_static_decls(parts)
         self._flatten_table_accesses(parts)
         self._dynamic_loop_bounds(parts)
+        self._inline_preloop_into_loops(parts)
         return parts
 
     # -- transforms ---------------------------------------------------------
@@ -105,7 +119,7 @@ class QugarIntegralGenerator(IntegralGenerator):
             for st in stmts:
                 if isinstance(st, L.ArrayDecl):
                     name = getattr(st.symbol, "name", "")
-                    if name in self._varying or _WEIGHTS_RE.match(name):
+                    if name in self._strip_decl_names or _WEIGHTS_RE.match(name):
                         continue
                 kept.append(st)
             stmts[:] = kept
@@ -114,24 +128,32 @@ class QugarIntegralGenerator(IntegralGenerator):
         """Rewrite 4-D varying-table accesses to the 1-D buffer form
         ``FE..[funcs * iq + dof]`` (mutating each ``ArrayAccess`` in place so
         every parent expression sees the change)."""
-        for node in _iter_nodes(parts):
-            if not isinstance(node, L.ArrayAccess):
-                continue
-            name = getattr(node.array, "name", None)
-            if name is None or name not in self._varying:
-                continue
+        # Collect the target accesses before mutating: rewriting an access
+        # introduces a new inner ``ArrayAccess`` on the same FE symbol, which
+        # the live walker would otherwise re-visit.
+        targets = [
+            n for n in _iter_nodes(parts)
+            if isinstance(n, L.ArrayAccess)
+            and getattr(n.array, "name", None) in self._varying
+        ]
+        for node in targets:
+            name = node.array.name
             idx = tuple(node.indices)
             assert len(idx) == 4, f"expected 4-D table access for {name}"
             perm, _entity, iq_expr, dof_expr = idx
 
-            if self._has_perms and not _is_literal_zero(perm):
-                raise NotImplementedError(
-                    "interior-facet permutation table access is handled in a "
-                    "later stage of the backend migration"
-                )
-
             funcs = self._tables[name].funcs
-            node.indices = (L.Add(L.Mul(L.LiteralInt(funcs), iq_expr), dof_expr),)
+            one_d = L.Add(L.Mul(L.LiteralInt(funcs), iq_expr), dof_expr)
+
+            # Interior-facet two-sided tables are declared as FE..[2] (one
+            # buffer per side); FFCx indexes them with quadrature_permutation
+            # [side]. Map FE..[quadrature_permutation[s]][.][iq][dof] to
+            # FE..[s][funcs*iq + dof]. Single-buffer tables (perm == 0) and
+            # cell/exterior-facet accesses become FE..[funcs*iq + dof].
+            side = _perm_side(perm) if self._has_perms else None
+            if side is not None:
+                node.array = L.ArrayAccess(node.array, (L.LiteralInt(side),))
+            node.indices = (one_d,)
 
     def _dynamic_loop_bounds(self, parts) -> None:
         """Replace the static upper bound of each quadrature loop (``index
@@ -146,6 +168,35 @@ class QugarIntegralGenerator(IntegralGenerator):
                 raise RuntimeError("could not resolve the quadrature of a loop")
             node.end = L.Symbol(f"n_pts_Q{quad}", L.DataType.INT)
 
+    def _inline_preloop_into_loops(self, parts) -> None:
+        """Move the pre-loop band (cell-affine setup + the piecewise
+        partition) into the quadrature loop body, mirroring the legacy
+        ``inline_pre_loop_into_loops``.
+
+        FFCx hoists cellwise-constant work before the quadrature loop. On the
+        runtime path the per-point unfitted normal is lowered there too (the
+        terminal is statically cellwise-constant from FFCx's viewpoint but
+        reads ``normals_<quad>[tdim*iq + i]``), so it must sit *inside* the
+        loop for ``iq`` to be in scope and for the normal to be re-read at
+        every point.
+        """
+        stmts = getattr(parts, "statements", None)
+        if not isinstance(stmts, list):
+            return
+        loop_positions = [
+            i for i, s in enumerate(stmts)
+            if isinstance(s, L.ForRange) and getattr(s.index, "name", None) == "iq"
+        ]
+        if not loop_positions:
+            return
+        first = loop_positions[0]
+        preloop = list(stmts[:first])
+        if not preloop:
+            return
+        for i in loop_positions:
+            _prepend_to_body(stmts[i], preloop)
+        del stmts[:first]
+
     def _quad_of_loop(self, loop) -> str | None:
         """Resolve the FFCx quadrature id of a loop from the table/weights
         symbols accessed inside it."""
@@ -159,3 +210,27 @@ class QugarIntegralGenerator(IntegralGenerator):
 
 def _is_literal_zero(expr) -> bool:
     return isinstance(expr, L.LiteralInt) and expr.value == 0
+
+
+def _perm_side(perm) -> int | None:
+    """Return the side index ``s`` of a ``quadrature_permutation[s]`` table
+    index (interior-facet two-sided tables), or ``None`` otherwise."""
+    if isinstance(perm, L.ArrayAccess) and getattr(perm.array, "name", None) == (
+        "quadrature_permutation"
+    ):
+        k = perm.indices[0]
+        if isinstance(k, L.LiteralInt):
+            return k.value
+    return None
+
+
+def _prepend_to_body(loop, stmts: list) -> None:
+    """Prepend ``stmts`` to the body of a ``ForRange`` loop, supporting both
+    ``StatementList`` and bare-list body representations."""
+    body = loop.body
+    if hasattr(body, "statements") and isinstance(body.statements, list):
+        body.statements[:0] = stmts
+    elif isinstance(body, list):
+        body[:0] = stmts
+    else:
+        loop.body = L.StatementList(list(stmts) + [body])
