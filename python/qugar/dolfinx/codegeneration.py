@@ -757,7 +757,9 @@ class _IntegralModifier:
 
         backend = FFCXBackend(self._ir, self._ffcx_options)
         gen = QugarIntegralGenerator(self._ir, backend, tables, strip_all_tables=True)
-        body_c = Formatter(self._ffcx_options["scalar_type"])(gen.generate(domain))
+        body_c = Formatter(self._ffcx_options["scalar_type"])(  # type: ignore[arg-type]
+            gen.generate(domain)
+        )
 
         recover = (
             f"const {dtype_str}* restrict w_custom = "

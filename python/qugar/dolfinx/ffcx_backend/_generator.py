@@ -167,7 +167,7 @@ class QugarIntegralGenerator(IntegralGenerator):
             perm, _entity, iq_expr, dof_expr = idx
 
             funcs = self._tables[name].funcs
-            one_d = L.Add(L.Mul(L.LiteralInt(funcs), iq_expr), dof_expr)
+            one_d: L.LExpr = L.Add(L.Mul(L.LiteralInt(funcs), iq_expr), dof_expr)
             # Strided access into the basix block (the buffer pointer carries
             # the derivative/value-axis offset): FE[vs * (funcs*iq + dof)].
             # For scalar (vs == 1) this is the plain FE[funcs*iq + dof]; for

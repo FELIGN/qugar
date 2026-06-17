@@ -34,10 +34,11 @@ from __future__ import annotations
 import hashlib
 import re
 from dataclasses import dataclass
+from typing import cast
 
 import numpy as np
 import numpy.typing as npt
-from basix.ufl import _BasixElement as BasixElement
+from basix.ufl import _ElementBase as BasixElement
 from ffcx.ir.elementtables import get_modified_terminal_element
 from ffcx.ir.representation import IntegralIR
 
@@ -212,7 +213,7 @@ def extract_ir_tables(
                 funcs=funcs,
                 offset=int(tr.offset),
                 block_size=int(tr.block_size),
-                dtype=real_np,
+                dtype=cast("type[np.floating]", real_np),
                 quad_data=quad_data_by_name[quad_id],
             )
         )
