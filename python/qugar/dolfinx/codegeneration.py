@@ -405,7 +405,7 @@ class _IntegralModifier:
 
         return code
 
-    def _create_custom_data_callers(self) -> str:
+    def _create_custom_data_callers(self, repack_free: bool = False) -> str:
         """Creates the code for calling the functions loading
         the weights arrays and FE tables from extra coefficients.
 
@@ -512,7 +512,7 @@ class _IntegralModifier:
                 if any_perm:
                     scratch_terms.append(blk_size_expr)
                 for table, info in items:
-                    if info["vs"] > 1:
+                    if info["vs"] > 1 and not repack_free:
                         scratch_terms.append(f"{n_pts_name} * {table.funcs}")
                         if is_interior_facet and table.permutations > 1:
                             scratch_terms.append(
@@ -582,12 +582,16 @@ class _IntegralModifier:
                     didx, vaxis = info["didx"], info["vaxis"]
                     two_sided = is_interior_facet and table.permutations > 1
 
-                    if vs == 1:
-                        # The basix block's layout already matches the
-                        # kernel's `FE..[iq * funcs + dof]` access at
-                        # offset `didx * n_pts * funcs`. Point FE..
-                        # directly into the block -- no copy.
-                        off_in_blk = f"{didx} * {n_pts_name} * {funcs}"
+                    if vs == 1 or repack_free:
+                        # Point FE.. directly into the basix block (no copy).
+                        # The block layout is [deriv][point][dof][vs]; the
+                        # kernel accesses FE..[vs * (funcs*iq + dof)], so the
+                        # buffer carries the derivative + value-axis offset
+                        # `didx * n_pts * (funcs*vs) + vaxis`. For vs == 1 this
+                        # reduces to the scalar `didx * n_pts * funcs`.
+                        off_in_blk = f"{didx} * {n_pts_name} * {funcs * vs}"
+                        if vaxis:
+                            off_in_blk += f" + {vaxis}"
                         if two_sided:
                             call_code += (
                                 f"const {dtype_str}* restrict "
@@ -759,7 +763,10 @@ class _IntegralModifier:
             f"const {dtype_str}* restrict w_custom = "
             f"(const {dtype_str}*)custom_data;\n"
         )
-        prologue = recover + self._create_custom_data_callers()
+        # The AST kernel accesses tables with the strided form
+        # FE..[vs * (funcs*iq + dof)], so the prologue points FE.. into the
+        # basix block directly (no per-cell repack copy, even for vs > 1).
+        prologue = recover + self._create_custom_data_callers(repack_free=True)
 
         sig = self._body.signature.replace(
             self._integral_name, self._integral_name + "_custom", 1

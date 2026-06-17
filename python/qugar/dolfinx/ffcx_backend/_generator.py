@@ -37,11 +37,34 @@ from __future__ import annotations
 import re
 
 import basix
+import basix.ufl
 import ffcx.codegeneration.lnodes as L
 from ffcx.codegeneration.integral_generator import IntegralGenerator
 
 _QUAD_ID_RE = re.compile(r"_Q(\w+)$")
 _WEIGHTS_RE = re.compile(r"^weights_(\w+)$")
+
+
+def _resolve_mixed_component(element, flat_component):
+    """Drill into the sub-element of a ``_MixedElement`` that owns
+    ``flat_component``; pass non-mixed elements through. Recursive."""
+    if not isinstance(element, basix.ufl._MixedElement):
+        return element, flat_component
+    acc = 0
+    for sub in element.sub_elements:
+        if flat_component < acc + sub.reference_value_size:
+            return _resolve_mixed_component(sub, flat_component - acc)
+        acc += sub.reference_value_size
+    raise ValueError(f"flat_component {flat_component} out of range")
+
+
+def _table_value_size(element, component) -> int:
+    """Value-size stride ``vs`` of a table's basix block: 1 for a blocked
+    (vector/tensor) element (the scalar block is tabulated and the block
+    expansion is interleaved), else the element's reference value size."""
+    el, _local = _resolve_mixed_component(element, component)
+    block_size = getattr(el, "block_size", 1)
+    return 1 if block_size > 1 else int(el.reference_value_size)
 
 
 def _quad_id(symbol_name: str) -> str | None:
@@ -88,6 +111,7 @@ class QugarIntegralGenerator(IntegralGenerator):
         """
         super().__init__(ir, backend)
         self._tables = {t.name: t for t in tables}
+        self._vs = {t.name: _table_value_size(t.element, t.component) for t in tables}
         self._varying: set[str] = {
             t.name for t in tables if not t.is_constant_for_pts()
         }
@@ -144,6 +168,14 @@ class QugarIntegralGenerator(IntegralGenerator):
 
             funcs = self._tables[name].funcs
             one_d = L.Add(L.Mul(L.LiteralInt(funcs), iq_expr), dof_expr)
+            # Strided access into the basix block (the buffer pointer carries
+            # the derivative/value-axis offset): FE[vs * (funcs*iq + dof)].
+            # For scalar (vs == 1) this is the plain FE[funcs*iq + dof]; for
+            # blocked/vector elements (vs > 1) it indexes the interleaved
+            # block directly, so no per-cell repack copy is needed.
+            vs = self._vs[name]
+            if vs != 1:
+                one_d = L.Mul(L.LiteralInt(vs), one_d)
 
             # Interior-facet two-sided tables are declared as FE..[2] (one
             # buffer per side); FFCx indexes them with quadrature_permutation
