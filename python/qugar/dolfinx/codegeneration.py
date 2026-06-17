@@ -54,9 +54,10 @@ def _use_language_backend() -> bool:
     (``options["language"]``), which owns the dual kernel and lowers the
     unfitted normal in-backend (no global monkeypatch, no rendered-C parsing).
 
-    Opt-in during the migration via ``QUGAR_FFCX_LANGUAGE_BACKEND=1``; off by
-    default (the AST-hybrid path remains the default)."""
-    return os.environ.get("QUGAR_FFCX_LANGUAGE_BACKEND", "") in ("1", "true", "True")
+    This is the default; set ``QUGAR_FFCX_LANGUAGE_BACKEND=0`` to fall back to
+    the AST-hybrid path (which rewrites the FFCx-rendered output in place and
+    relies on the global FFCx monkeypatch), kept during the migration."""
+    return os.environ.get("QUGAR_FFCX_LANGUAGE_BACKEND", "1") not in ("0", "false", "False")
 
 
 def _generate_code_language_backend(
