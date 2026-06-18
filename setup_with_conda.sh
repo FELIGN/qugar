@@ -8,7 +8,7 @@ set -euo pipefail
 # Supports: macOS (Intel/Apple Silicon), Linux (x86_64/ARM), Windows (via Git Bash/WSL)
 
 ENV_NAME="${QUGAR_ENV_NAME:-qugar-env}"
-PYTHON_VERSION="${PYTHON_VERSION:-3.10}"
+PYTHON_VERSION="${PYTHON_VERSION:-3.12}"
 INSTALL_LAPACKE="${INSTALL_LAPACKE:-true}"
 INSTALL_DOLFINX="${INSTALL_DOLFINX:-true}"
 USE_CONDA_COMPILERS="${USE_CONDA_COMPILERS:-false}"
@@ -149,7 +149,7 @@ build_package_list() {
     
     # Add DOLFINx packages if requested (platform-specific)
     if [[ "${INSTALL_DOLFINX}" == "true" ]]; then
-        PACKAGES+=("fenics-dolfinx=0.10.0")
+        PACKAGES+=("fenics-dolfinx=0.11.0")
         PACKAGES+=("pyvista")
         PACKAGES+=("scipy")
         case "${PLATFORM}" in
