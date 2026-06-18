@@ -37,10 +37,10 @@ class UnfittedReferenceNormal(GeometricCellQuantity):
     physical normal is obtained by mapping it through the cell Jacobian
     (Nanson's formula). It replaces the former ``ParamNormal`` zero-valued
     ``Constant`` placeholder. Modelling the normal as a proper geometric
-    quantity lets FFCx lower it *structurally* — see
-    :mod:`qugar.dolfinx._ffcx_patches`, which registers a backend handler
-    emitting ``normals_<quad>[tdim * iq + i]`` — instead of rewriting the
-    generated C text.
+    quantity lets FFCx lower it *structurally* — qugar's FFCx language
+    backend (:mod:`qugar.dolfinx.ffcx_backend`) registers a handler on its own
+    backend access object that emits ``normals_<quad>[tdim * iq + i]``, instead
+    of rewriting the generated C text.
 
     Note:
         The terminal is (deliberately) cellwise-constant, like every UFL
@@ -49,7 +49,7 @@ class UnfittedReferenceNormal(GeometricCellQuantity):
         table-less one, so we keep the cellwise-constant classification;
         the per-point variation is reintroduced downstream when qugar
         relocates the pre-loop block into the quadrature loop (see
-        :meth:`qugar.dolfinx._kernel_body.KernelBody.inline_pre_loop_into_loops`).
+        :meth:`qugar.dolfinx.ffcx_backend._generator.QugarIntegralGenerator`).
     """
 
     __slots__ = ()
@@ -58,7 +58,7 @@ class UnfittedReferenceNormal(GeometricCellQuantity):
     @property
     def ufl_shape(self):
         """Vector shape, one component per topological dimension."""
-        return (self._domain.topological_dimension(),)
+        return (self._domain.topological_dimension,)
 
 
 def _compute_vector_norm(vec):
@@ -273,7 +273,11 @@ class dsu(ufl.Measure):
         domain=None,
         metadata=None,
         subdomain_data=None,
+        intersect_measures=None,
     ):
+        # ``intersect_measures`` was added to ufl.Measure.reconstruct in UFL
+        # 2026.1.0; the unfitted measure has no notion of intersecting
+        # measures, so it is accepted for signature compatibility and ignored.
         # Without this override the syntax ``ds(cut_tag)`` (and the
         # tuple-id branch in ufl.Measure.__rmul__) would return a plain
         # ufl.Measure, silently dropping the Nanson correction.

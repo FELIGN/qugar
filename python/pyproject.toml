@@ -16,7 +16,7 @@ name = "QUGaR"
 version = "0.4.0"
 description = "QUGaR Python interface"
 readme = "README.md"
-requires-python = ">=3.10.0"
+requires-python = ">=3.11.0"
 license = { file = "../LICENSE" }
 authors = [{ name = "Pablo Antolin", email = "pablo.antolin@epfl.ch" }]
 dependencies = ["numpy>=1.21"]
@@ -34,10 +34,10 @@ docs = [
 lint = ["ruff", "mypy"]
 pyvista = ["pyvista"]
 fenicsx = [
-      "fenics-dolfinx>=0.10.0,<0.11.0",
-      "fenics-basix>=0.10.0,<0.11.0",
-      "fenics-ffcx>=0.10.0,<0.11.0",
-      "fenics-ufl>=2025.2.0,<2025.3.0",
+      "fenics-dolfinx>=0.11.0,<0.12.0",
+      "fenics-basix>=0.11.0,<0.12.0",
+      "fenics-ffcx>=0.11.0,<0.12.0",
+      "fenics-ufl>=2026.1.0,<2026.2.0",
 ]
 all = [
       "qugar[docs]",

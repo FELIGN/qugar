@@ -102,8 +102,10 @@ def test_taylor_hood_block_mass_matrix(dtype):
     # each sub-space.
     V_sub, V_map = W.sub(0).collapse()
     Q_sub, Q_map = W.sub(1).collapse()
-    V_dofs = np.asarray(V_map, dtype=np.int64)
-    Q_dofs = np.asarray(Q_map, dtype=np.int64)
+    # DOLFINx 0.11 ``FunctionSpace.collapse`` returns the dof map as a list of
+    # arrays (one per cell type); these meshes have a single cell type.
+    V_dofs = np.asarray(V_map[0], dtype=np.int64)
+    Q_dofs = np.asarray(Q_map[0], dtype=np.int64)
     cross_block = np.abs(M_dense[np.ix_(V_dofs, Q_dofs)]).max()
     atol_cross = 1.0e-6 if dtype is np.float32 else 1.0e-12
     assert cross_block < atol_cross, (
@@ -147,8 +149,10 @@ def test_mixed_lagrange_dg_on_impl_domain(dtype):
     # Block decoupling.
     _, V_map = W.sub(0).collapse()
     _, Q_map = W.sub(1).collapse()
-    V_dofs = np.asarray(V_map, dtype=np.int64)
-    Q_dofs = np.asarray(Q_map, dtype=np.int64)
+    # DOLFINx 0.11 ``FunctionSpace.collapse`` returns the dof map as a list of
+    # arrays (one per cell type); these meshes have a single cell type.
+    V_dofs = np.asarray(V_map[0], dtype=np.int64)
+    Q_dofs = np.asarray(Q_map[0], dtype=np.int64)
     cross_block = np.abs(M_dense[np.ix_(V_dofs, Q_dofs)]).max()
     atol_cross = 1.0e-6 if dtype is np.float32 else 1.0e-12
     assert cross_block < atol_cross

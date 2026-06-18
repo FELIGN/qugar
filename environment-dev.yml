@@ -3,8 +3,8 @@ channels:
   - conda-forge
 dependencies:
   # Explicit pins for compatibility
-  - python >=3.10        # dolfinx 0.10.0 supports >=3.10 very reliably on conda-forge
-  - fenics-dolfinx ==0.10.0
+  - python >=3.11        # dolfinx 0.11 / ffcx 0.11 dropped Python 3.10
+  - fenics-dolfinx ==0.11.0
 
   - mpich
   - pyvista

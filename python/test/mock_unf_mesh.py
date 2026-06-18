@@ -80,7 +80,7 @@ class MockUnfittedMesh(dolfinx.mesh.Mesh, UnfittedDomainABC):
         Returns:
             npt.NDArray[np.int32]: Ids of all the cells in the mesh.
         """
-        n_cells = self._mesh.geometry.dofmap.shape[0]
+        n_cells = self._mesh.geometry.dofmaps[0].shape[0]
         return np.arange(n_cells, dtype=np.int32)
 
     def _extract_custom_entities(

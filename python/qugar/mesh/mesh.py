@@ -385,12 +385,19 @@ class Mesh(dolfinx.mesh.Mesh):
             n_nodes_per_cell = cmap.dim
             conn = np.empty((0, n_nodes_per_cell), dtype=np.int64, order="C")
 
+        # DOLFINx 0.11 added a trailing ``max_facet_to_cell_links`` argument to
+        # ``create_mesh`` / ``create_cell_partitioner``. ``None`` keeps the
+        # pre-0.11 behaviour (no cap on facet-to-cell links in the dual graph).
+        max_facet_to_cell_links = None
+
         if comm.size > 1:
-            partitioner = dlf_cpp.mesh.create_cell_partitioner(ghost_mode)
+            partitioner = dlf_cpp.mesh.create_cell_partitioner(ghost_mode, max_facet_to_cell_links)
         else:
             partitioner = None
 
-        msh_cpp = dlf_cpp.mesh.create_mesh(comm, conn, cmap._cpp_object, nodes_coords, partitioner)
+        msh_cpp = dlf_cpp.mesh.create_mesh(
+            comm, conn, cmap._cpp_object, nodes_coords, partitioner, max_facet_to_cell_links
+        )
         super().__init__(msh_cpp, domain)
 
     def get_DOLFINx_local_cell_ids(
