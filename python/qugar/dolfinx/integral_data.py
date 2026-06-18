@@ -24,7 +24,6 @@ import numpy.typing as npt
 import ufl.domain
 import ufl.geometry
 
-from qugar.dolfinx.fe_table import FETable, extract_FE_tables
 from qugar.dolfinx.quadrature_data import QuadratureData, extract_quadrature_data
 
 
@@ -130,7 +129,7 @@ class IntegralData(NamedTuple):
     integral_type: str
     tdim: int
     is_mixed_dim: bool
-    quad_data_FE_tables: dict[QuadratureData, list[FETable]]
+    quad_data_FE_tables: dict[QuadratureData, list]
 
     @property
     def dtype(self) -> type[np.float32 | np.float64]:
@@ -138,64 +137,6 @@ class IntegralData(NamedTuple):
         FE_tables = next(iter(self.quad_data_FE_tables.values()))
         assert FE_tables
         return FE_tables[0].dtype
-
-def extract_integral_data(
-    ufl_analysis: ffcx.analysis.UFLData,
-    ir: ffcx.ir.representation.DataIR,
-    itg_ir: ffcx.ir.representation.IntegralIR,
-    ffcx_options: dict[str, int | float | npt.DTypeLike],
-    itg_impl: str,
-) -> IntegralData:
-    """Extracts the integral data from its intermediate representation.
-
-    Args:
-        ufl_analysis (ffcx.analysis.UFLData): UFL (anlysis) data
-            structure holding, among others, the UFL form data objects
-            that contain the sought integral.
-        ir (ffcx.ir.representation.DataIR): FFCx Intermediate
-            Representation that contains elements, forms, coordinate
-            mappings, and integrals.
-        itg_ir (ffcx.ir.representation.IntegralIR): FFCx Intermedia
-            Representation of the integral whose data is extracted.
-        ffcx_options (dict[str, int | float | npt.DTypeLike]): FFCx
-            options used for generating the code.
-        itg_impl (str): C code of the integral implementation.
-
-    Returns:
-        IntegralData: Data associated to the integral `itg_ir`.
-    """
-
-    itg_name = itg_ir.expression.name
-    tdim = _get_integral_dimension(ir, itg_ir)
-    itg_ids = _get_integral_subdomain_ids(ir, itg_name)
-    assert len(itg_ids) > 0
-
-    short_itg_name = itg_name[len("integral_") :]
-
-    all_quads_data = extract_quadrature_data(ufl_analysis, ffcx_options)
-    FE_tables = extract_FE_tables(itg_impl, itg_ir, all_quads_data, tdim)
-
-    is_mixed_dim = False
-
-    quad_FE_tables = {}
-    for FE_table in FE_tables:
-        quad_name = FE_table.quad_name
-        quad_data = all_quads_data[quad_name]
-        if quad_data not in quad_FE_tables.keys():
-            quad_FE_tables[quad_data] = []
-        quad_FE_tables[quad_data].append(FE_table)
-        if FE_table.element_dim != tdim:
-            is_mixed_dim = True
-
-    return IntegralData(
-        short_itg_name,
-        itg_ids,
-        itg_ir.expression.integral_type,
-        tdim,
-        is_mixed_dim,
-        quad_FE_tables,
-    )
-
 
 def extract_integral_data_from_ir(
     ufl_analysis: ffcx.analysis.UFLData,

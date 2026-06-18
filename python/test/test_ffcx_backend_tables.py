@@ -8,18 +8,15 @@
 #
 # --------------------------------------------------------------------------
 
-"""Validate the IR-only FE-table extractor (qugar.dolfinx.ffcx_backend) against
-the legacy C-text-parsing extractor (qugar.dolfinx.fe_table).
-
-Both must produce the same set of tables — name, element, derivatives,
-component, shape, constant-for-points classification and averaging — for a
-range of elements. The IR extractor is the foundation of the new FFCx
-language backend, so this pins its equivalence with the established path.
+"""Structural checks for the IR-only FE-table extractor
+(:func:`qugar.dolfinx.ffcx_backend.extract_ir_tables`), which recovers every
+table's metadata from the FFCx IR (no rendered-C parsing). End-to-end
+correctness is covered by the full assembly suite; this pins the extractor's
+shape for a range of elements as a fast unit test.
 """
 
 import basix
 import basix.ufl
-import ffcx.codegeneration.codegeneration
 import ffcx.options
 import numpy as np
 import pytest
@@ -27,7 +24,6 @@ import ufl
 from ffcx.analysis import analyze_ufl_objects
 from ffcx.ir.representation import compute_ir
 
-from qugar.dolfinx.fe_table import extract_FE_tables
 from qugar.dolfinx.ffcx_backend import extract_ir_tables
 from qugar.dolfinx.quadrature_data import extract_quadrature_data
 
@@ -62,44 +58,30 @@ def _taylor_hood(mesh, cell):
 
 
 FORMS = {
-    "P1-tri-poisson": lambda: _poisson(_TRI, "triangle", 1),
-    "P2-tri-poisson": lambda: _poisson(_TRI, "triangle", 2),
-    "P3-tri-poisson": lambda: _poisson(_TRI, "triangle", 3),
-    "P2-vec-tri-mass": lambda: _vector_mass(_TRI, "triangle", 2),
-    "P2-tet-poisson": lambda: _poisson(_TET, "tetrahedron", 2),
-    "TH-tri-mixed": lambda: _taylor_hood(_TRI, "triangle"),
+    "P2-tri-poisson": (lambda: _poisson(_TRI, "triangle", 2), 2, True),
+    "P3-tet-poisson": (lambda: _poisson(_TET, "tetrahedron", 3), 3, True),
+    "P2-vec-tri-mass": (lambda: _vector_mass(_TRI, "triangle", 2), 2, False),
+    "TH-tri-mixed": (lambda: _taylor_hood(_TRI, "triangle"), 2, True),
 }
 
 
-def _key(t):
-    """Comparable fingerprint of a table (legacy FETable or new IRTable)."""
-    return (
-        t.name,
-        str(t.element),
-        tuple(t.derivatives),
-        t.component,
-        (t.permutations, t.entities, t.points, t.funcs),
-        t.is_constant_for_pts(),
-        t.avg,
-    )
-
-
 @pytest.mark.parametrize("name", list(FORMS))
-def test_ir_tables_match_legacy(name):
-    form = FORMS[name]()
+def test_ir_tables_structure(name):
+    form_fn, tdim, has_grad = FORMS[name]
     opts = ffcx.options.get_options()
-    analysis = analyze_ufl_objects([form], opts["scalar_type"])
+    analysis = analyze_ufl_objects([form_fn()], opts["scalar_type"])
     ir = compute_ir(analysis, {}, "test", opts, False)
-    code_blocks, _ = ffcx.codegeneration.codegeneration.generate_code(ir, opts)
     quads = extract_quadrature_data(analysis, opts)
 
-    for i, ir_itg in enumerate(ir.integrals):
-        _, impl = code_blocks.integrals[i]
-        cell = next(iter(ir_itg.expression.unique_table_types))
-        tdim = len(basix.cell.topology(cell)) - 1
-
-        legacy = sorted(_key(t) for t in extract_FE_tables(impl, ir_itg, quads, tdim))
-        new = sorted(_key(t) for t in extract_ir_tables(ir_itg, quads, np.float64))
-
-        assert new == legacy, f"{name} integral #{i}"
-        assert new, "expected at least one table"
+    for ir_itg in ir.integrals:
+        tables = extract_ir_tables(ir_itg, quads, np.float64)
+        assert tables, "expected at least one FE table"
+        for t in tables:
+            assert t.name.startswith("FE")
+            assert len(t.derivatives) == t.element_dim
+            assert t.funcs >= 1 and t.points >= 1
+            assert t.quad_data is quads[t.quad_name]
+        if has_grad:
+            assert any(any(d > 0 for d in t.derivatives) for t in tables), (
+                "a gradient form should produce derivative tables"
+            )

@@ -37,10 +37,10 @@ class UnfittedReferenceNormal(GeometricCellQuantity):
     physical normal is obtained by mapping it through the cell Jacobian
     (Nanson's formula). It replaces the former ``ParamNormal`` zero-valued
     ``Constant`` placeholder. Modelling the normal as a proper geometric
-    quantity lets FFCx lower it *structurally* — see
-    :mod:`qugar.dolfinx._ffcx_patches`, which registers a backend handler
-    emitting ``normals_<quad>[tdim * iq + i]`` — instead of rewriting the
-    generated C text.
+    quantity lets FFCx lower it *structurally* — qugar's FFCx language
+    backend (:mod:`qugar.dolfinx.ffcx_backend`) registers a handler on its own
+    backend access object that emits ``normals_<quad>[tdim * iq + i]``, instead
+    of rewriting the generated C text.
 
     Note:
         The terminal is (deliberately) cellwise-constant, like every UFL
@@ -49,7 +49,7 @@ class UnfittedReferenceNormal(GeometricCellQuantity):
         table-less one, so we keep the cellwise-constant classification;
         the per-point variation is reintroduced downstream when qugar
         relocates the pre-loop block into the quadrature loop (see
-        :meth:`qugar.dolfinx._kernel_body.KernelBody.inline_pre_loop_into_loops`).
+        :meth:`qugar.dolfinx.ffcx_backend._generator.QugarIntegralGenerator`).
     """
 
     __slots__ = ()

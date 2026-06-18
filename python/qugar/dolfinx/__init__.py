@@ -16,11 +16,9 @@ from qugar.utils import has_FEniCSx
 if not has_FEniCSx:
     raise ValueError("FEniCSx installation not found is required.")
 
-# Teach FFCx's code-generation backend to lower the unfitted-boundary
-# normal terminal (see qugar.dolfinx._ffcx_patches).
-from qugar.dolfinx._ffcx_patches import apply_patches as _apply_ffcx_patches
-
-_apply_ffcx_patches()
+# Note: the unfitted-boundary normal terminal is lowered inside qugar's FFCx
+# language backend (qugar.dolfinx.ffcx_backend), on each backend's own access
+# object -- no global FFCx monkeypatch is needed.
 
 # Patch DOLFINx so its stock assemblers and high-level solvers
 # (``dolfinx.fem.assemble_*``, ``dolfinx.fem.petsc.LinearProblem`` /
