@@ -19,6 +19,12 @@ Documentation can be viewed at https://pantolin.github.io/qugar/main/index.html.
 
 # Breaking changes
 
+## v0.5.0
+
+QUGaR now requires **FEniCSx 0.11** (`fenics-dolfinx` 0.11.0, `fenics-ffcx` 0.11.0, `fenics-basix` 0.11.0, `fenics-ufl` 2026.1.0) and **Python ≥ 3.11**; it is no longer compatible with FEniCSx 0.10.
+
+Runtime-quadrature kernels are now generated through a dedicated FFCx language backend (`qugar.dolfinx.ffcx_backend`) instead of by rewriting FFCx-rendered C. This is internal and does not change the public API.
+
 ## v0.4.0
 
 The FEniCSx interface (`qugar.dolfinx`) has undergone several breaking changes with respect to [v0.3.0](https://pantolin.github.io/qugar/v0.3.0/index.html).
