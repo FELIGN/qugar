@@ -13,7 +13,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "QUGaR"
-version = "0.1.3"
+version = "0.2.1"
 description = "QUGaR Python interface"
 readme = "README.md"
 requires-python = ">=3.10.0"
