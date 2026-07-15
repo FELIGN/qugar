@@ -619,6 +619,38 @@ def create_functions_subtraction(lhs_func: ImplicitFunc, rhs_func: ImplicitFunc)
     )
 
 
+def create_functions_intersection(funcs: list[ImplicitFunc]) -> ImplicitFunc:
+    r"""
+    Creates a new implicit function whose domain is the intersection of the negative regions
+    of the given functions.
+
+    The resulting domain is the subregion where *all* the input functions are simultaneously
+    negative, i.e., :math:`\Omega = \{\mathbf{x}\,|\,\phi_i(\mathbf{x})\leq 0\ \forall i\}`.
+    This maps onto Algoim's multi-polynomial quadrature (a domain defined by several Bernstein
+    polynomials) and can be used, e.g., to carve several disjoint holes out of a domain by
+    intersecting negated disks.
+
+    Args:
+        funcs (list[ImplicitFunc]): The functions whose negative regions are intersected.
+            All of them must be Bezier polynomials (created with ``use_bzr=True``) and share
+            the same dimension. At least one function is required.
+
+    Returns:
+        ImplicitFunc: A new implicit function representing the intersection domain.
+
+    Raises:
+        AssertionError: If ``funcs`` is empty or the functions do not share the same dimension.
+        ValueError: If any of the functions is not a Bezier polynomial.
+    """
+    assert len(funcs) > 0, "At least one function is required."
+
+    dim = funcs[0].dim
+    assert all(func.dim == dim for func in funcs), "All functions must share the same dimension."
+
+    cpp_objects = [func.cpp_object for func in funcs]
+    return ImplicitFunc(qugar.cpp.create_functions_intersection(cpp_objects))
+
+
 def create_affinely_transformed_functions(
     func: ImplicitFunc, affine_transf: qugar.cpp.AffineTransf_2D | qugar.cpp.AffineTransf_3D
 ) -> ImplicitFunc:

@@ -18,6 +18,7 @@
 #include <qugar/impl_reparam.hpp>
 
 #include <qugar/bezier_tp.hpp>
+#include <qugar/impl_funcs_lib.hpp>
 #include <qugar/impl_reparam_bezier.hpp>
 #include <qugar/impl_reparam_general.hpp>
 #include <qugar/impl_reparam_mesh.hpp>
@@ -74,12 +75,22 @@ std::shared_ptr<const ImplReparamMesh<levelset ? dim - 1 : dim, dim>> create_rep
   const auto phi = unf_domain.get_impl_func();
   const auto *bzr = dynamic_cast<const BezierTP<dim, 1> *>(phi.get());
   const bool is_bzr = bzr != nullptr;
+  const auto *multi = dynamic_cast<const funcs::BeziersIntersection<dim> *>(phi.get());
 
 
   for (const auto &cell_id : cut_cells) {
     const auto domain = grid->get_cell_domain(cell_id);
 
-    if (is_bzr) {
+    if (multi != nullptr) {
+      std::vector<std::shared_ptr<const BezierTP<dim, 1>>> bzrs;
+      bzrs.reserve(multi->get_beziers().size());
+      for (const auto &poly : multi->get_beziers()) {
+        auto bzr_domain = std::make_shared<BezierTP<dim, 1>>(*poly);
+        bzr_domain->rescale_domain(domain);
+        bzrs.push_back(std::move(bzr_domain));
+      }
+      reparam_Beziers<dim, levelset>(bzrs, domain, *reparam);
+    } else if (is_bzr) {
       BezierTP<dim> bzr_domain(*bzr);
       bzr_domain.rescale_domain(domain);
 
