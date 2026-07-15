@@ -18,6 +18,7 @@
 #include <qugar/impl_funcs_lib.hpp>
 
 #include <qugar/affine_transf.hpp>
+#include <qugar/bezier_tp.hpp>
 #include <qugar/domain_function.hpp>
 #include <qugar/impl_funcs_lib_macros.hpp>
 #include <qugar/numbers.hpp>
@@ -25,11 +26,16 @@
 #include <qugar/types.hpp>
 #include <qugar/vector.hpp>
 
+#include <algorithm>
 #include <array>
 #include <cassert>
 #include <cmath>
+#include <cstddef>
+#include <iterator>
 #include <memory>
+#include <stdexcept>
 #include <type_traits>
+#include <vector>
 
 namespace qugar::impl::funcs {
 
@@ -280,6 +286,64 @@ auto SubtractFunctions<dim>::hessian_(const Point<dim, T> &point) const -> Hessi
   return this->lhs_->hessian(point) - this->rhs_->hessian(point);
 }
 
+template<int dim>
+BeziersIntersection<dim>::BeziersIntersection(const std::vector<BezierPtr> &beziers) : beziers_(beziers)
+{
+  assert(!beziers_.empty());
+  assert(std::ranges::none_of(beziers_, [](const BezierPtr &bzr) { return bzr == nullptr; }));
+}
+
+implement_impl_func(BeziersIntersection);
+
+template<int dim>
+auto BeziersIntersection<dim>::get_active_bezier(const Point<dim> &point) const -> const BezierTP<dim, 1> &
+{
+  auto best = beziers_.cbegin();
+  real best_val = (**best)(point);
+  for (auto it = std::next(beziers_.cbegin()); it != beziers_.cend(); ++it) {
+    const real val = (**it)(point);
+    if (val > best_val) {
+      best_val = val;
+      best = it;
+    }
+  }
+  return **best;
+}
+
+template<int dim> template<typename T> T BeziersIntersection<dim>::eval_(const Point<dim, T> &point) const
+{
+  if constexpr (std::is_same_v<T, real>) {
+    real value = (*beziers_.front())(point);
+    for (auto it = std::next(beziers_.cbegin()); it != beziers_.cend(); ++it) {
+      value = std::max(value, (**it)(point));
+    }
+    return value;
+  } else {
+    throw std::logic_error("Interval evaluation is not supported for BeziersIntersection.");
+  }
+}
+
+template<int dim> template<typename T> Vector<T, dim> BeziersIntersection<dim>::grad_(const Point<dim, T> &point) const
+{
+  if constexpr (std::is_same_v<T, real>) {
+    return this->get_active_bezier(point).grad(point);
+  } else {
+    throw std::logic_error("Interval gradient is not supported for BeziersIntersection.");
+  }
+}
+
+template<int dim>
+template<typename T>
+auto BeziersIntersection<dim>::hessian_(const Point<dim, T> &point) const -> Hessian<T>
+{
+  return this->get_active_bezier(point).hessian(point);
+}
+
+template<int dim> auto BeziersIntersection<dim>::get_beziers() const -> const std::vector<BezierPtr> &
+{
+  return this->beziers_;
+}
+
 // Instantiations
 
 template class Square<2>;
@@ -299,6 +363,9 @@ template class AddFunctions<3>;
 
 template class SubtractFunctions<2>;
 template class SubtractFunctions<3>;
+
+template class BeziersIntersection<2>;
+template class BeziersIntersection<3>;
 
 template class FuncWithAffineTransf<2>;
 template class FuncWithAffineTransf<3>;

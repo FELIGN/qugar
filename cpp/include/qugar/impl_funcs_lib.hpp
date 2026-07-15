@@ -30,6 +30,12 @@
 #include <array>
 #include <memory>
 #include <type_traits>
+#include <vector>
+
+namespace qugar::impl {
+//! @brief Forward declaration of the tensor-product Bezier class.
+template<int dim, int range> class BezierTP;
+}// namespace qugar::impl
 
 //! Namespace for defining implicit function examples.
 //! These function are ready to be consumed by Algoim.
@@ -264,6 +270,58 @@ private:
   std::shared_ptr<const ImplicitFunc<dim>> lhs_;
   //! Right-hand-side operand.
   std::shared_ptr<const ImplicitFunc<dim>> rhs_;
+};
+
+
+//! @brief Domain implicitly defined by the intersection of the negative regions of
+//! several Bezier polynomials.
+//!
+//! The represented domain is the subregion where <em>all</em> the stored Bezier
+//! polynomials are simultaneously negative, i.e.,
+//! @f$\Omega = \{\mathbf{x}\,|\,\phi_i(\mathbf{x})\leq 0\ \forall i\}@f$.
+//!
+//! As a scalar implicit function it evaluates to @f$\max_i \phi_i@f$, so that its
+//! negative region coincides with the intersection above. This representation maps
+//! directly onto Algoim's multi-polynomial quadrature (a domain defined by several
+//! Bernstein polynomials), and it is the mechanism used, e.g., to carve several
+//! disjoint holes out of a domain.
+//!
+//! @note Interval (Taylor-model) evaluation is not supported: cell signs are computed
+//! component-wise (per polynomial) by the classification routines, which special-case
+//! this type.
+//!
+//! @tparam dim Parametric dimension.
+template<int dim> class BeziersIntersection : public ImplicitFunc<dim>
+{
+public:
+  //! Type of the stored Bezier polynomials.
+  using BezierPtr = std::shared_ptr<const BezierTP<dim, 1>>;
+
+  //! @brief Constructor.
+  //!
+  //! @param beziers Bezier polynomials whose negative regions are intersected.
+  //! It must contain at least one polynomial.
+  explicit BeziersIntersection(const std::vector<BezierPtr> &beziers);
+
+  declare_impl_func_virtual_interface;
+
+public:
+  //! @brief Gets the Bezier polynomials defining the domain.
+  //! @return Stored Bezier polynomials.
+  [[nodiscard]] const std::vector<BezierPtr> &get_beziers() const;
+
+private:
+  //! @brief Gets the polynomial attaining the maximum value at @p point (the active constraint).
+  //!
+  //! The gradient and Hessian of the intersection at a point coincide with those of the
+  //! polynomial attaining the maximum there.
+  //!
+  //! @param point Point at which the active polynomial is queried.
+  //! @return Reference to the active Bezier polynomial.
+  [[nodiscard]] const BezierTP<dim, 1> &get_active_bezier(const Point<dim> &point) const;
+
+  //! Bezier polynomials whose negative regions define the domain.
+  std::vector<BezierPtr> beziers_;
 };
 
 

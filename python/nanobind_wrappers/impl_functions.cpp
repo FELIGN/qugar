@@ -35,9 +35,12 @@
 // NOLINTBEGIN (misc-include-cleaner)
 #include <nanobind/stl/array.h>
 #include <nanobind/stl/shared_ptr.h>
+#include <nanobind/stl/vector.h>
 // NOLINTEND (misc-include-cleaner)
 
 #include <memory>
+#include <stdexcept>
+#include <vector>
 
 namespace nb = nanobind;
 
@@ -808,6 +811,35 @@ namespace {
       nb::arg("rhs_func"));
   }
 
+  template<int dim> void declare_beziers_intersection(nanobind::module_ &module)
+  {
+    using ImplicitFunc = impl::ImplicitFunc<dim>;
+    using ImplicitFuncPtr = std::shared_ptr<const ImplicitFunc>;
+    using BeziersIntersection = impl::funcs::BeziersIntersection<dim>;
+
+    const std::string pyclass_name{ std::string("BeziersIntersection_") + std::to_string(dim) + "D" };
+    // NOLINTNEXTLINE (bugprone-unused-raii)
+    nb::class_<BeziersIntersection, ImplicitFunc>(
+      module, pyclass_name.c_str(), "Intersection of the negative regions of several Bezier polynomials");
+
+    module.def(
+      "create_functions_intersection",
+      [](const std::vector<ImplicitFuncPtr> &funcs) -> ImplicitFuncPtr {
+        std::vector<std::shared_ptr<const impl::BezierTP<dim, 1>>> beziers;
+        beziers.reserve(funcs.size());
+        for (const auto &func : funcs) {
+          auto bezier = std::dynamic_pointer_cast<const impl::BezierTP<dim, 1>>(func);
+          if (bezier == nullptr) {
+            throw std::invalid_argument(
+              "create_functions_intersection requires all the functions to be Bezier polynomials.");
+          }
+          beziers.push_back(std::move(bezier));
+        }
+        return std::make_shared<BeziersIntersection>(beziers);
+      },
+      nb::arg("funcs"));
+  }
+
   template<int dim> void declare_general_functions(nanobind::module_ &module)
   {
     declare_base_implicit<dim>(module);
@@ -831,6 +863,7 @@ namespace {
     declare_negative<dim>(module);
     declare_add_functions<dim>(module);
     declare_subtract_functions<dim>(module);
+    declare_beziers_intersection<dim>(module);
   }
 
   //  NOLINTBEGIN(bugprone-easily-swappable-parameters)

@@ -22,6 +22,7 @@
 #include <qugar/cart_grid_tp.hpp>
 #include <qugar/cut_quadrature.hpp>
 #include <qugar/domain_function.hpp>
+#include <qugar/impl_funcs_lib.hpp>
 #include <qugar/impl_utils.hpp>
 #include <qugar/numbers.hpp>
 #include <qugar/tolerance.hpp>
@@ -31,8 +32,10 @@
 #include <qugar/utils.hpp>
 #include <qugar/vector.hpp>
 
+#include <algoim/booluarray.hpp>
 #include <algoim/hyperrectangle.hpp>
 #include <algoim/interval.hpp>
+#include <algoim/polyset.hpp>
 #include <algoim/quadrature_general.hpp>
 #include <algoim/quadrature_multipoly.hpp>
 
@@ -133,17 +136,58 @@ namespace {
   }
 
 
+  //! @brief Sets up the interval arithmetic (Taylor model) for a box.
+  //!
+  //! @tparam dim Parametric dimension.
+  //! @param domain Box over which the interval is defined.
+  //! @return Interval-valued point spanning @p domain.
+  template<int dim> Vector<alg::Interval<dim>, dim> create_interval_point(const BoundBox<dim> &domain)
+  {
+    Vector<alg::Interval<dim>, dim> xint;
+    const auto mid_pt = domain.mid_point();
+    for (int dir = 0; dir < dim; ++dir) {
+      const auto beta = set_component<real, dim>(numbers::zero, dir, numbers::one);
+      xint(dir) = alg::Interval<dim>(mid_pt(dir), beta);
+      alg::Interval<dim>::delta(dir) = numbers::half * domain.length(dir);
+    }
+    return xint;
+  }
+
+  template<int dim>
+  std::function<FuncSign(const BoundBox<dim> &)> create_compute_sign_function_multi(
+    const funcs::BeziersIntersection<dim> &multi)
+  {
+    return [&multi](const BoundBox<dim> &domain) {
+      const auto xint = create_interval_point<dim>(domain);
+
+      // The domain is the intersection of the negative regions of every polynomial:
+      // - if any polynomial is uniformly non-negative over the box, the box lies outside;
+      // - if every polynomial is uniformly negative, the box lies inside;
+      // - otherwise, the sign is undetermined.
+      bool all_negative = true;
+      for (const auto &bzr : multi.get_beziers()) {
+        const auto res = (*bzr)(xint);
+        if (res.uniformSign()) {
+          if (!(res.alpha < 0.0)) {
+            return FuncSign::positive;
+          }
+        } else {
+          all_negative = false;
+        }
+      }
+      return all_negative ? FuncSign::negative : FuncSign::undetermined;
+    };
+  }
+
   template<int dim>
   std::function<FuncSign(const BoundBox<dim> &)> create_compute_sign_function(const ImplicitFunc<dim> &phi)
   {
+    if (const auto *multi = dynamic_cast<const funcs::BeziersIntersection<dim> *>(&phi); multi != nullptr) {
+      return create_compute_sign_function_multi<dim>(*multi);
+    }
+
     return [&phi](const BoundBox<dim> &domain) {
-      Vector<alg::Interval<dim>, dim> xint;
-      const auto mid_pt = domain.mid_point();
-      for (int dir = 0; dir < dim; ++dir) {
-        const auto beta = set_component<real, dim>(numbers::zero, dir, numbers::one);
-        xint(dir) = alg::Interval<dim>(mid_pt(dir), beta);
-        alg::Interval<dim>::delta(dir) = numbers::half * domain.length(dir);
-      }
+      const auto xint = create_interval_point<dim>(domain);
 
       const auto res = phi(xint);
       if (res.uniformSign()) {
@@ -222,9 +266,69 @@ namespace {
     return classify_cell_from_quad(quad, domain_0_1);
   }
 
+  //! @brief Rescales the polynomials of an intersection domain to a cell domain.
+  template<int dim>
+  std::vector<std::shared_ptr<BezierTP<dim, 1>>> rescale_beziers(const funcs::BeziersIntersection<dim> &multi,
+    const BoundBox<dim> &domain)
+  {
+    std::vector<std::shared_ptr<BezierTP<dim, 1>>> bzrs;
+    bzrs.reserve(multi.get_beziers().size());
+    for (const auto &bzr : multi.get_beziers()) {
+      auto bzr_domain = std::make_shared<BezierTP<dim, 1>>(*bzr);
+      bzr_domain->rescale_domain(domain);
+      bzrs.push_back(std::move(bzr_domain));
+    }
+    return bzrs;
+  }
+
+  template<int dim>
+  ImmersedCellStatusTmp classify_cell_MultiBezier(const funcs::BeziersIntersection<dim> &multi,
+    const BoundBox<dim> &domain)
+  {
+    const auto bzrs = rescale_beziers<dim>(multi, domain);
+
+    // If any polynomial is uniformly positive, the intersection is empty in this cell.
+    if (std::ranges::any_of(bzrs, [](const auto &bzr) { return bzr->sign() == FuncSign::positive; })) {
+      return ImmersedCellStatusTmp::empty;
+    }
+    // If every polynomial is uniformly negative, the whole cell is inside the domain.
+    if (std::ranges::all_of(bzrs, [](const auto &bzr) { return bzr->sign() == FuncSign::negative; })) {
+      return ImmersedCellStatusTmp::full;
+    }
+
+    constexpr auto quad_strategy = alg::QuadStrategy::AlwaysGL;
+    constexpr int n_pts_dir{ 1 };
+
+    alg::ImplicitPolyQuadrature<dim> ipquad;
+    for (const auto &bzr : bzrs) {
+      const auto mask = alg::detail::nonzeroMask(bzr->get_xarray(), alg::booluarray<dim, ALGOIM_M>(true));
+      if (!alg::detail::maskEmpty(mask)) {
+        ipquad.phi.push_back(bzr->get_xarray(), mask);
+      }
+    }
+    ipquad.build(true, false);
+
+    // Creates a quadrature for the region where all the polynomials are negative.
+    QuadRule<dim> quad;
+    ipquad.integrate(
+      quad_strategy, n_pts_dir, [&bzrs, &quad](const Vector<real, dim> &perm_point, const real weight) {
+        const auto point = permute_vector_directions(perm_point);
+        const bool inside =
+          std::ranges::all_of(bzrs, [&point](const auto &bzr) { return (*bzr)(point) < numbers::zero; });
+        if (inside) {
+          quad.nodes.emplace_back(point, weight);
+        }
+      });
+
+    const BoundBox<dim> domain_0_1(numbers::zero, numbers::one);
+    return classify_cell_from_quad(quad, domain_0_1);
+  }
+
   template<int dim> ImmersedCellStatusTmp classify_cell(const ImplicitFunc<dim> &phi, const BoundBox<dim> &domain)
   {
-    if (is_bezier(phi)) {
+    if (const auto *multi = dynamic_cast<const funcs::BeziersIntersection<dim> *>(&phi); multi != nullptr) {
+      return classify_cell_MultiBezier(*multi, domain);
+    } else if (is_bezier(phi)) {
       const auto &bezier = dynamic_cast<const BezierTP<dim> &>(phi);
       return classify_cell_Bezier(bezier, domain);
     } else {
@@ -382,6 +486,52 @@ namespace {
   }
 
   template<int dim>
+  ImmersedFacetStatus classify_facet_MultiBezier(const funcs::BeziersIntersection<dim> &multi,
+    const BoundBox<dim> &domain,
+    const int local_facet_id,
+    const ImmersedCellStatusTmp cell_status)
+  {
+    const auto bzrs = rescale_beziers<dim>(multi, domain);
+
+    const int const_dir = get_facet_constant_dir<dim>(local_facet_id);
+    const int side = get_facet_side<dim>(local_facet_id);
+    constexpr int n_pts_dir{ 1 };
+    constexpr auto quad_strategy = alg::QuadStrategy::AlwaysGL;
+
+    std::vector<std::shared_ptr<BezierTP<dim - 1, 1>>> facets;
+    facets.reserve(bzrs.size());
+    alg::ImplicitPolyQuadrature<dim - 1> ipquad;
+    for (const auto &bzr : bzrs) {
+      auto facet = bzr->extract_facet(local_facet_id);
+      const auto mask = alg::detail::nonzeroMask(facet->get_xarray(), alg::booluarray<dim - 1, ALGOIM_M>(true));
+      if (!alg::detail::maskEmpty(mask)) {
+        ipquad.phi.push_back(facet->get_xarray(), mask);
+      }
+      facets.push_back(std::move(facet));
+    }
+    ipquad.build(true, false);
+
+    QuadRule<dim> facet_quad;
+    ipquad.integrate(quad_strategy,
+      n_pts_dir,
+      [&facets, &facet_quad, side, const_dir](const Vector<real, dim - 1> &perm_point, const real weight) {
+        const auto point = permute_vector_directions(perm_point);
+        const bool inside =
+          std::ranges::all_of(facets, [&point](const auto &facet) { return (*facet)(point) < numbers::zero; });
+        if (inside) {
+          const auto sup_point = add_component(point, const_dir, static_cast<real>(side));
+          facet_quad.nodes.emplace_back(sup_point, weight);
+        }
+      });
+
+    const funcs::BeziersIntersection<dim> multi_domain(
+      std::vector<std::shared_ptr<const BezierTP<dim, 1>>>(bzrs.cbegin(), bzrs.cend()));
+    const BoundBox<dim> domain_01;
+    return classify_facet_from_quad(
+      multi_domain, domain_01.to_hyperrectangle(), local_facet_id, cell_status, facet_quad);
+  }
+
+  template<int dim>
   ImmersedFacetStatus classify_facet(const ImplicitFunc<dim> &phi,
     const SubCartGridTP<dim> &subgrid,
     const int local_facet_id,
@@ -400,7 +550,9 @@ namespace {
     // facet state of neighbor cells. However, this involves a more
     // complicated algorithm that may not be worth it.
 
-    if (is_bezier(phi)) {
+    if (const auto *multi = dynamic_cast<const funcs::BeziersIntersection<dim> *>(&phi); multi != nullptr) {
+      return classify_facet_MultiBezier(*multi, subgrid.get_domain(), local_facet_id, cell_status);
+    } else if (is_bezier(phi)) {
       const auto &bzr = dynamic_cast<const BezierTP<dim> &>(phi);
       return classify_facet_Bezier(bzr, subgrid.get_domain(), local_facet_id, cell_status);
     } else {

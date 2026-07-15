@@ -804,6 +804,21 @@ void reparam_Bezier(const BezierTP<dim, 1> &bzr,
   ImplicitPolyReparam<dim, dim, S>::reparameterize(polys, domain, reparam);
 }
 
+template<int dim, bool S>
+void reparam_Beziers(const std::vector<std::shared_ptr<const BezierTP<dim, 1>>> &bzrs,
+  const BoundBox<dim> &domain,
+  ImplReparamMesh<S ? dim - 1 : dim, dim> &reparam)
+{
+  assert(!bzrs.empty());
+
+  std::vector<std::reference_wrapper<const BezierTP<dim, 1>>> polys;
+  polys.reserve(bzrs.size());
+  for (const auto &bzr : bzrs) {
+    polys.emplace_back(*bzr);
+  }
+  ImplicitPolyReparam<dim, dim, S>::reparameterize(polys, domain, reparam);
+}
+
 
 // Instantations
 
@@ -820,5 +835,18 @@ template void reparam_Bezier<2, false>(const BezierTP<2, 1> &, const BoundBox<2>
 template void reparam_Bezier<2, true>(const BezierTP<2, 1> &, const BoundBox<2> &, ImplReparamMesh<1, 2> &);
 template void reparam_Bezier<3, false>(const BezierTP<3, 1> &, const BoundBox<3> &, ImplReparamMesh<3, 3> &);
 template void reparam_Bezier<3, true>(const BezierTP<3, 1> &, const BoundBox<3> &, ImplReparamMesh<2, 3> &);
+
+template void reparam_Beziers<2, false>(const std::vector<std::shared_ptr<const BezierTP<2, 1>>> &,
+  const BoundBox<2> &,
+  ImplReparamMesh<2, 2> &);
+template void reparam_Beziers<2, true>(const std::vector<std::shared_ptr<const BezierTP<2, 1>>> &,
+  const BoundBox<2> &,
+  ImplReparamMesh<1, 2> &);
+template void reparam_Beziers<3, false>(const std::vector<std::shared_ptr<const BezierTP<3, 1>>> &,
+  const BoundBox<3> &,
+  ImplReparamMesh<3, 3> &);
+template void reparam_Beziers<3, true>(const std::vector<std::shared_ptr<const BezierTP<3, 1>>> &,
+  const BoundBox<3> &,
+  ImplReparamMesh<2, 3> &);
 
 }// namespace qugar::impl
