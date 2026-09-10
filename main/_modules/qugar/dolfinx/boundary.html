@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>qugar.dolfinx.boundary &mdash; QUGaR 0.4.0 documentation</title>
+  <title>qugar.dolfinx.boundary &mdash; QUGaR 0.5.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css?v=c0a7eb24" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../../_static/documentation_options.js?v=1dd76d02"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
@@ -115,10 +115,10 @@
 <span class="sd">    physical normal is obtained by mapping it through the cell Jacobian</span>
 <span class="sd">    (Nanson&#39;s formula). It replaces the former ``ParamNormal`` zero-valued</span>
 <span class="sd">    ``Constant`` placeholder. Modelling the normal as a proper geometric</span>
-<span class="sd">    quantity lets FFCx lower it *structurally* — see</span>
-<span class="sd">    :mod:`qugar.dolfinx._ffcx_patches`, which registers a backend handler</span>
-<span class="sd">    emitting ``normals_&lt;quad&gt;[tdim * iq + i]`` — instead of rewriting the</span>
-<span class="sd">    generated C text.</span>
+<span class="sd">    quantity lets FFCx lower it *structurally* — qugar&#39;s FFCx language</span>
+<span class="sd">    backend (:mod:`qugar.dolfinx.ffcx_backend`) registers a handler on its own</span>
+<span class="sd">    backend access object that emits ``normals_&lt;quad&gt;[tdim * iq + i]``, instead</span>
+<span class="sd">    of rewriting the generated C text.</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        The terminal is (deliberately) cellwise-constant, like every UFL</span>
@@ -127,7 +127,7 @@
 <span class="sd">        table-less one, so we keep the cellwise-constant classification;</span>
 <span class="sd">        the per-point variation is reintroduced downstream when qugar</span>
 <span class="sd">        relocates the pre-loop block into the quadrature loop (see</span>
-<span class="sd">        :meth:`qugar.dolfinx._kernel_body.KernelBody.inline_pre_loop_into_loops`).</span>
+<span class="sd">        :meth:`qugar.dolfinx.ffcx_backend._generator.QugarIntegralGenerator`).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
@@ -136,7 +136,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">ufl_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Vector shape, one component per topological dimension.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_domain</span><span class="o">.</span><span class="n">topological_dimension</span><span class="p">(),)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_domain</span><span class="o">.</span><span class="n">topological_dimension</span><span class="p">,)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_compute_vector_norm</span><span class="p">(</span><span class="n">vec</span><span class="p">):</span>
@@ -358,7 +358,11 @@
         <span class="n">domain</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">subdomain_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">intersect_measures</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="c1"># ``intersect_measures`` was added to ufl.Measure.reconstruct in UFL</span>
+        <span class="c1"># 2026.1.0; the unfitted measure has no notion of intersecting</span>
+        <span class="c1"># measures, so it is accepted for signature compatibility and ignored.</span>
         <span class="c1"># Without this override the syntax ``ds(cut_tag)`` (and the</span>
         <span class="c1"># tuple-id branch in ufl.Measure.__rmul__) would return a plain</span>
         <span class="c1"># ufl.Measure, silently dropping the Nanson correction.</span>

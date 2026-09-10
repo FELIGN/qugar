@@ -1,6 +1,6 @@
 var impl__utils_8hpp =
 [
-    [ "qugar::impl::RootsIntervals< dim >", "d7/d46/structqugar_1_1impl_1_1RootsIntervals.html", "d7/d46/structqugar_1_1impl_1_1RootsIntervals" ],
+    [ "qugar::impl::RootsIntervals&lt; dim &gt;", "d7/d46/structqugar_1_1impl_1_1RootsIntervals.html", "d7/d46/structqugar_1_1impl_1_1RootsIntervals" ],
     [ "qugar::impl::get_edge_constant_dirs", "d2/d5e/namespacequgar_1_1impl.html#a071c3e24f3d4a9db67315a6a39e36a02", null ],
     [ "qugar::impl::get_edge_sides", "d2/d5e/namespacequgar_1_1impl.html#a3c10001e993bd0d9ef1a4eb6161d4596", null ],
     [ "qugar::impl::get_facet_constant_dir", "d2/d5e/namespacequgar_1_1impl.html#a3885fffa69cb82a5463a32239aa77c18", null ],

@@ -1,6 +1,6 @@
 var domain__function_8hpp =
 [
-    [ "qugar::impl::DomainFunc< dim, range >", "dd/d80/classqugar_1_1impl_1_1DomainFunc.html", "dd/d80/classqugar_1_1impl_1_1DomainFunc" ],
+    [ "qugar::impl::DomainFunc&lt; dim, range &gt;", "dd/d80/classqugar_1_1impl_1_1DomainFunc.html", "dd/d80/classqugar_1_1impl_1_1DomainFunc" ],
     [ "qugar::impl::ImplicitFunc", "d2/d5e/namespacequgar_1_1impl.html#a86700fba9e5deb1d550a7537ec8c8b02", null ],
     [ "qugar::impl::ScalarFunc", "d2/d5e/namespacequgar_1_1impl.html#a4eb0b10808db422fc21d669b326b8174", null ],
     [ "qugar::impl::FuncSign", "d2/d5e/namespacequgar_1_1impl.html#a1958862994b81ad16e70737c86ca8f00", [

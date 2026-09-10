@@ -70,6 +70,6 @@ var NAVTREEINDEX =
 "df/de4/classqugar_1_1UnfittedBinarySpacePart.html#a8ad805d511758db9717f838360cc3a7b"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronization';
-var SYNCOFFMSG = 'click to enable panel synchronization';
-var LISTOFALLMEMBERS = 'List of all members';
+const SYNCONMSG = 'click to disable panel synchronization';
+const SYNCOFFMSG = 'click to enable panel synchronization';
+const LISTOFALLMEMBERS = 'List of all members';

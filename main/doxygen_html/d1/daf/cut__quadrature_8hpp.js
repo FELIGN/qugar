@@ -1,8 +1,8 @@
 var cut__quadrature_8hpp =
 [
-    [ "qugar::CutCellsQuad< dim >", "d8/dd5/structqugar_1_1CutCellsQuad.html", "d8/dd5/structqugar_1_1CutCellsQuad" ],
-    [ "qugar::CutIsoBoundsQuad< dim >", "df/d6d/structqugar_1_1CutIsoBoundsQuad.html", "df/d6d/structqugar_1_1CutIsoBoundsQuad" ],
-    [ "qugar::CutUnfBoundsQuad< dim >", "d2/d41/structqugar_1_1CutUnfBoundsQuad.html", "d2/d41/structqugar_1_1CutUnfBoundsQuad" ],
+    [ "qugar::CutCellsQuad&lt; dim &gt;", "d8/dd5/structqugar_1_1CutCellsQuad.html", "d8/dd5/structqugar_1_1CutCellsQuad" ],
+    [ "qugar::CutIsoBoundsQuad&lt; dim &gt;", "df/d6d/structqugar_1_1CutIsoBoundsQuad.html", "df/d6d/structqugar_1_1CutIsoBoundsQuad" ],
+    [ "qugar::CutUnfBoundsQuad&lt; dim &gt;", "d2/d41/structqugar_1_1CutUnfBoundsQuad.html", "d2/d41/structqugar_1_1CutUnfBoundsQuad" ],
     [ "qugar::ImmersedStatus", "d0/d6b/namespacequgar.html#a402f12f6759afc2de1fbd12066f73d26", [
       [ "qugar::cut", "d0/d6b/namespacequgar.html#a402f12f6759afc2de1fbd12066f73d26a05abac1c013f414ccad31d2121b35066", null ],
       [ "qugar::full", "d0/d6b/namespacequgar.html#a402f12f6759afc2de1fbd12066f73d26ae0ab9fe58f840a0a682e83026396c9aa", null ],

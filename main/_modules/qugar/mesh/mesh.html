@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>qugar.mesh.mesh &mdash; QUGaR 0.4.0 documentation</title>
+  <title>qugar.mesh.mesh &mdash; QUGaR 0.5.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/dark_mode_css/general.css?v=c0a7eb24" />
@@ -14,7 +14,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=6c02275b"></script>
+      <script src="../../../_static/documentation_options.js?v=1dd76d02"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/dark_mode_js/default_dark.js?v=fd565c74"></script>
@@ -465,12 +465,19 @@
             <span class="n">n_nodes_per_cell</span> <span class="o">=</span> <span class="n">cmap</span><span class="o">.</span><span class="n">dim</span>
             <span class="n">conn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_nodes_per_cell</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">)</span>
 
+        <span class="c1"># DOLFINx 0.11 added a trailing ``max_facet_to_cell_links`` argument to</span>
+        <span class="c1"># ``create_mesh`` / ``create_cell_partitioner``. ``None`` keeps the</span>
+        <span class="c1"># pre-0.11 behaviour (no cap on facet-to-cell links in the dual graph).</span>
+        <span class="n">max_facet_to_cell_links</span> <span class="o">=</span> <span class="kc">None</span>
+
         <span class="k">if</span> <span class="n">comm</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">partitioner</span> <span class="o">=</span> <span class="n">dlf_cpp</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">create_cell_partitioner</span><span class="p">(</span><span class="n">ghost_mode</span><span class="p">)</span>
+            <span class="n">partitioner</span> <span class="o">=</span> <span class="n">dlf_cpp</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">create_cell_partitioner</span><span class="p">(</span><span class="n">ghost_mode</span><span class="p">,</span> <span class="n">max_facet_to_cell_links</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">partitioner</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="n">msh_cpp</span> <span class="o">=</span> <span class="n">dlf_cpp</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="n">cmap</span><span class="o">.</span><span class="n">_cpp_object</span><span class="p">,</span> <span class="n">nodes_coords</span><span class="p">,</span> <span class="n">partitioner</span><span class="p">)</span>
+        <span class="n">msh_cpp</span> <span class="o">=</span> <span class="n">dlf_cpp</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">create_mesh</span><span class="p">(</span>
+            <span class="n">comm</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="n">cmap</span><span class="o">.</span><span class="n">_cpp_object</span><span class="p">,</span> <span class="n">nodes_coords</span><span class="p">,</span> <span class="n">partitioner</span><span class="p">,</span> <span class="n">max_facet_to_cell_links</span>
+        <span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">msh_cpp</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Mesh.get_DOLFINx_local_cell_ids">

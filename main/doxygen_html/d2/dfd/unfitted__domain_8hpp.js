@@ -1,6 +1,6 @@
 var unfitted__domain_8hpp =
 [
-    [ "qugar::UnfittedDomain< dim >", "df/d58/classqugar_1_1UnfittedDomain.html", "df/d58/classqugar_1_1UnfittedDomain" ],
+    [ "qugar::UnfittedDomain&lt; dim &gt;", "df/d58/classqugar_1_1UnfittedDomain.html", "df/d58/classqugar_1_1UnfittedDomain" ],
     [ "qugar::ImmersedFacetStatus", "d0/d6b/namespacequgar.html#a2a8e94584d3f66820b45e705a99aa8ba", [
       [ "qugar::ImmersedFacetStatus::cut", "d0/d6b/namespacequgar.html#a2a8e94584d3f66820b45e705a99aa8baafe47aa7c733c490d36e80508d5dc4019", null ],
       [ "qugar::ImmersedFacetStatus::full", "d0/d6b/namespacequgar.html#a2a8e94584d3f66820b45e705a99aa8baae9dc924f238fa6cc29465942875fe8f0", null ],

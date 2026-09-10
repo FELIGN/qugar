@@ -5,17 +5,17 @@ var annotated_dup =
         [ "funcs", "d8/d40/namespacequgar_1_1impl_1_1funcs.html", [
           [ "_impl", "d1/d03/namespacequgar_1_1impl_1_1funcs_1_1__impl.html", [
             [ "IsAlgoimVector", "da/dec/structqugar_1_1impl_1_1funcs_1_1__impl_1_1IsAlgoimVector.html", null ],
-            [ "IsAlgoimVector< Point< dim > >", "d3/d52/structqugar_1_1impl_1_1funcs_1_1__impl_1_1IsAlgoimVector_3_01Point_3_01dim_01_4_01_4.html", "d3/d52/structqugar_1_1impl_1_1funcs_1_1__impl_1_1IsAlgoimVector_3_01Point_3_01dim_01_4_01_4" ],
-            [ "IsAlgoimVector< Vector< T, dim > >", "dc/db2/structqugar_1_1impl_1_1funcs_1_1__impl_1_1IsAlgoimVector_3_01Vector_3_01T_00_01dim_01_4_01_4.html", "dc/db2/structqugar_1_1impl_1_1funcs_1_1__impl_1_1IsAlgoimVector_3_01Vector_3_01T_00_01dim_01_4_01_4" ],
+            [ "IsAlgoimVector&lt; Vector&lt; T, dim &gt; &gt;", "dc/db2/structqugar_1_1impl_1_1funcs_1_1__impl_1_1IsAlgoimVector_3_01Vector_3_01T_00_01dim_01_4_01_4.html", "dc/db2/structqugar_1_1impl_1_1funcs_1_1__impl_1_1IsAlgoimVector_3_01Vector_3_01T_00_01dim_01_4_01_4" ],
+            [ "IsAlgoimVector&lt; Point&lt; dim &gt; &gt;", "d3/d52/structqugar_1_1impl_1_1funcs_1_1__impl_1_1IsAlgoimVector_3_01Point_3_01dim_01_4_01_4.html", "d3/d52/structqugar_1_1impl_1_1funcs_1_1__impl_1_1IsAlgoimVector_3_01Point_3_01dim_01_4_01_4" ],
             [ "NewVector", "d8/d00/structqugar_1_1impl_1_1funcs_1_1__impl_1_1NewVector.html", null ],
-            [ "NewVector< Point< dim >, new_dim >", "d5/df2/structqugar_1_1impl_1_1funcs_1_1__impl_1_1NewVector_3_01Point_3_01dim_01_4_00_01new__dim_01_4.html", "d5/df2/structqugar_1_1impl_1_1funcs_1_1__impl_1_1NewVector_3_01Point_3_01dim_01_4_00_01new__dim_01_4" ],
-            [ "NewVector< Vector< T, dim >, new_dim >", "dd/d0d/structqugar_1_1impl_1_1funcs_1_1__impl_1_1NewVector_3_01Vector_3_01T_00_01dim_01_4_00_01new__dim_01_4.html", "dd/d0d/structqugar_1_1impl_1_1funcs_1_1__impl_1_1NewVector_3_01Vector_3_01T_00_01dim_01_4_00_01new__dim_01_4" ],
+            [ "NewVector&lt; Vector&lt; T, dim &gt;, new_dim &gt;", "dd/d0d/structqugar_1_1impl_1_1funcs_1_1__impl_1_1NewVector_3_01Vector_3_01T_00_01dim_01_4_00_01new__dim_01_4.html", "dd/d0d/structqugar_1_1impl_1_1funcs_1_1__impl_1_1NewVector_3_01Vector_3_01T_00_01dim_01_4_00_01new__dim_01_4" ],
+            [ "NewVector&lt; Point&lt; dim &gt;, new_dim &gt;", "d5/df2/structqugar_1_1impl_1_1funcs_1_1__impl_1_1NewVector_3_01Point_3_01dim_01_4_00_01new__dim_01_4.html", "d5/df2/structqugar_1_1impl_1_1funcs_1_1__impl_1_1NewVector_3_01Point_3_01dim_01_4_00_01new__dim_01_4" ],
             [ "VectorDim", "d1/d51/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorDim.html", null ],
-            [ "VectorDim< Point< dim_ > >", "df/d89/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorDim_3_01Point_3_01dim___01_4_01_4.html", "df/d89/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorDim_3_01Point_3_01dim___01_4_01_4" ],
-            [ "VectorDim< Vector< T, dim_ > >", "d6/d5b/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorDim_3_01Vector_3_01T_00_01dim___01_4_01_4.html", "d6/d5b/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorDim_3_01Vector_3_01T_00_01dim___01_4_01_4" ],
+            [ "VectorDim&lt; Vector&lt; T, dim_ &gt; &gt;", "d6/d5b/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorDim_3_01Vector_3_01T_00_01dim___01_4_01_4.html", "d6/d5b/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorDim_3_01Vector_3_01T_00_01dim___01_4_01_4" ],
+            [ "VectorDim&lt; Point&lt; dim_ &gt; &gt;", "df/d89/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorDim_3_01Point_3_01dim___01_4_01_4.html", "df/d89/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorDim_3_01Point_3_01dim___01_4_01_4" ],
             [ "VectorType", "d2/db6/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorType.html", null ],
-            [ "VectorType< Point< dim > >", "d2/d3f/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorType_3_01Point_3_01dim_01_4_01_4.html", "d2/d3f/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorType_3_01Point_3_01dim_01_4_01_4" ],
-            [ "VectorType< Vector< T, dim > >", "d6/d2b/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorType_3_01Vector_3_01T_00_01dim_01_4_01_4.html", "d6/d2b/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorType_3_01Vector_3_01T_00_01dim_01_4_01_4" ]
+            [ "VectorType&lt; Vector&lt; T, dim &gt; &gt;", "d6/d2b/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorType_3_01Vector_3_01T_00_01dim_01_4_01_4.html", "d6/d2b/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorType_3_01Vector_3_01T_00_01dim_01_4_01_4" ],
+            [ "VectorType&lt; Point&lt; dim &gt; &gt;", "d2/d3f/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorType_3_01Point_3_01dim_01_4_01_4.html", "d2/d3f/structqugar_1_1impl_1_1funcs_1_1__impl_1_1VectorType_3_01Point_3_01dim_01_4_01_4" ]
           ] ],
           [ "AddFunctions", "d3/deb/classqugar_1_1impl_1_1funcs_1_1AddFunctions.html", "d3/deb/classqugar_1_1impl_1_1funcs_1_1AddFunctions" ],
           [ "Annulus", "da/dd6/classqugar_1_1impl_1_1funcs_1_1Annulus.html", "da/dd6/classqugar_1_1impl_1_1funcs_1_1Annulus" ],
@@ -77,6 +77,6 @@ var annotated_dup =
       [ "UnfittedDomain", "df/d58/classqugar_1_1UnfittedDomain.html", "df/d58/classqugar_1_1UnfittedDomain" ]
     ] ],
     [ "std", "d8/dcc/namespacestd.html", [
-      [ "hash< qugar::TensorIndexTP< dim > >", "d6/dc2/structstd_1_1hash_3_01qugar_1_1TensorIndexTP_3_01dim_01_4_01_4.html", "d6/dc2/structstd_1_1hash_3_01qugar_1_1TensorIndexTP_3_01dim_01_4_01_4" ]
+      [ "hash&lt; qugar::TensorIndexTP&lt; dim &gt; &gt;", "d6/dc2/structstd_1_1hash_3_01qugar_1_1TensorIndexTP_3_01dim_01_4_01_4.html", "d6/dc2/structstd_1_1hash_3_01qugar_1_1TensorIndexTP_3_01dim_01_4_01_4" ]
     ] ]
 ];
